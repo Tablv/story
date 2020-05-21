@@ -44,7 +44,7 @@ module.exports = {
     // }
   },
   devServer: {
-    port: 3000,
+    port: 3100,
     proxy: {
       "/admin": {
         target: "http://127.0.0.1:8080/admin",

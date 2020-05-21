@@ -1,46 +1,52 @@
 <template>
   <div class="page-gallery-box">
-    <div
-      class="thumbnail-wrapper"
-      v-for="page in pages"
-      :key="page.id"
-    >
-      <page-thumbnail :data="page" @click.native="setCurrentPage(page.index)" />
+    <div class="thumbnail-list" v-if="state.data">
+      <draggable>
+        <div
+          class="thumbnail-wrapper"
+          v-for="page in state.data.pages"
+          :key="page.id"
+        >
+          <page-thumbnail
+            :data="page" @select-story="setCurrentPage" />
+        </div>
+      </draggable>
     </div>
+
+    <div class="thumbnail-container">
+      <div class="thumbnail-box" @click="addPage">
+        <button class="add-btn">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+    </div>
+    
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide } from 'vue-property-decorator';
+import { Vue, Component, Provide, Inject } from 'vue-property-decorator';
+import draggable from "vuedraggable";
 import PageThumbnail from "./PageThumbnail.vue";
+import Page from "@/types/Page";
 
 @Component({
   components: {
+    draggable,
     PageThumbnail
   }
 })
 export default class PageGallery extends Vue {
 
-  @Provide()
-  current = {
-    index: 0
-  };
-
-  pages: Array<any> = [
-    {
-      id: "abc",
-      index: 0,
-      thumbnail: "//www.baidu.com/img/flexible/logo/pc/result.png"
-    },
-    {
-      id: "ab123124c",
-      index: 1,
-      thumbnail: "//www.baidu.com/img/flexible/logo/pc/result.png"
-    }
-  ];
+  @Inject()
+  state!: Page.State;
 
   setCurrentPage(index: number) {
-    this.current.index = index;
+    this.state.currentIndex = index;
+  }
+
+  addPage() {
+    this.state.data?.pages.push();
   }
 
 }
@@ -49,12 +55,20 @@ export default class PageGallery extends Vue {
 <style lang="scss" scoped>
 .page-gallery-box {
   height: 100%;
+  user-select: none;
   
-  .thumbnail-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-flow: column nowrap;
+  .thumbnail-list {
+    .thumbnail-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: column nowrap;
+      margin-top: 24px;
+
+      &:last-of-type {
+        margin-bottom: 24px;
+      }
+    }
   }
 }
 </style>

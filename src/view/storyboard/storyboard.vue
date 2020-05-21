@@ -5,64 +5,43 @@
         type="flex"
         justify="space-between"
         align="middle"
+        class="story-title"
       >
-          <h3>故事板</h3>
+          <span class="title-text">故事板</span>
           <el-button type="text" icon="fa fa-ellipsis-v"></el-button>
       </el-row>
     </el-header>
-    <el-container class="container">
-      <el-aside width="240px">
+    <el-container class="story-container">
+      <el-aside class="story-aside" width="240px">
         <page-gallery />
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main class="story-main">Main</el-main>
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch, Provide } from "vue-property-decorator";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import UUID from "glaway-bi-util/UUID";
 import { CommonStore, EditorStore } from "@/store/modules-model";
 import PathUtil from "glaway-bi-util/PathUtil";
 import PageGallery from "@/components/PageGallery.vue";
+import Page from "@/types/Page";
 
 @Component({
   components: {
     PageGallery
   }
 })
-export default class Storyboard extends Vue { 
-  /**
-   * CommonStore
-   */
+export default class Storyboard extends Vue {
 
-  // 仪表盘集ID
-  @CommonStore.State("dashboardSetId")
-  setId!: string;
-
-  // 当前仪表盘集ID
-  @CommonStore.Mutation("setDashboardSetId")
-  setDashboardSetId!: Function;
-
-  // 删除仪表盘
-  @CommonStore.Mutation("deleteDashboard")
-  deleteDashboard!: Function;
-
-  // 加载仪表盘集
-  @CommonStore.Action("loadDashboardSet")
-  loadDashboardSet!: Function;
-
-  // 当前选中仪表盘下标
-  @CommonStore.State("dashboardIndex")
-  activeIndex!: number;
-
-  /**
-   * EditorStore
-   */
-
-  // 菜单是否可见
-  @EditorStore.State("menuVisible")
-  menuVisible!: boolean;
+  @Provide()
+  state: Page.State = {
+    currentIndex: null,
+    currentElement: null,
+    data: null
+  };
 
   /**
    * 创建时执行方法
@@ -89,7 +68,7 @@ export default class Storyboard extends Vue {
     }
 
     // 加载数据
-    // this.loadData(id);
+    this.loadData(id);
   }
 
   /**
@@ -97,6 +76,33 @@ export default class Storyboard extends Vue {
    * 并对加载失败的结果进行处理
    */
   loadData(id: string): void {
+    const storyboardId = UUID.generate();
+
+    this.state.data = {
+      id: storyboardId,
+      name: "测试故事板",
+      teamId: "",
+      config: {},
+      viewUsers: [ "Finok" ],
+      pages: [
+        {
+          id: "111",
+          sortNum: 0,
+          storyboardId,
+          lockUser: null,
+          thumbnail: "//127.0.0.1:3364/demo.png",
+          elements: []
+        },
+        {
+          id: "222",
+          sortNum: 1,
+          storyboardId,
+          lockUser: null,
+          thumbnail: "//127.0.0.1:3364/demo.png",
+          elements: []
+        }
+      ]
+    };
   }
 }
 </script>
@@ -108,14 +114,27 @@ export default class Storyboard extends Vue {
 
 .storyboard {
   height: 100%;
+  
+  .story-title {
+    height: 100%;
 
-  .container {
-    background-color: #f1f3f6;
-    overflow: auto;
+    .title-text {
+      color: #666;
+      font-size: 16px;
+    }
   }
 
-  .el-aside {
-    border-right: 1px solid #e6e6e6;
+  .story-container {
+    background-color: #f1f3f6;
+    overflow: auto;
+    
+    .story-aside {
+      border-right: 1px solid #e6e6e6;
+    }
+
+    .story-main {
+      padding: 0;
+    }
   }
 }
 </style>
