@@ -1,4 +1,4 @@
-import { StoryElement } from './StoryElement';
+import { StoryWidget } from "./StoryWidget";
 
 /**
  * 故事板容器
@@ -23,11 +23,6 @@ export interface StoryContainer {
    * 容器配置项
    */
   config: ContainerConfig;
-
-  /**
-   * 查看的所有用户
-   */
-  viewUsers: Array<string>;
 
   /**
    * 故事页
@@ -58,7 +53,7 @@ export interface StoryPage {
    * 所在下标
    */
   sortNum: number;
-  
+
   /**
    * 锁定用户
    */
@@ -72,5 +67,5 @@ export interface StoryPage {
   /**
    * 元素
    */
-  elements: Array<StoryElement>;
+  widgets: Array<StoryWidget<any>>;
 }

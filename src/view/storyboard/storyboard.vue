@@ -1,21 +1,15 @@
 <template>
-  <el-container class="storyboard">
+  <el-container class="storyboard-editor">
     <el-header>
-      <el-row
-        type="flex"
-        justify="space-between"
-        align="middle"
-        class="story-title"
-      >
-          <span class="title-text">故事板</span>
-          <el-button type="text" icon="fa fa-ellipsis-v"></el-button>
-      </el-row>
+      <story-header></story-header>
     </el-header>
-    <el-container class="story-container">
-      <el-aside class="story-aside" width="240px">
-        <page-gallery />
+    <el-container class="container">
+      <el-aside class="aside" width="240px">
+        <story-aside></story-aside>
       </el-aside>
-      <el-main class="story-main">Main</el-main>
+      <el-main class="main">
+        <story-main></story-main>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -24,22 +18,25 @@
 import { Component, Vue, Watch, Provide } from "vue-property-decorator";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
-import { CommonStore, EditorStore } from "@/store/modules-model";
 import PathUtil from "glaway-bi-util/PathUtil";
-import PageGallery from "@/components/PageGallery.vue";
 import Page from "@/types/Page";
+
+import StoryHeader from "@/layout/story-editor/StoryHeader.vue";
+import StoryAside from "@/layout/story-editor/StoryAside.vue";
+import StoryMain from "@/layout/story-editor/StoryMain.vue";
 
 @Component({
   components: {
-    PageGallery
+    StoryHeader,
+    StoryAside,
+    StoryMain
   }
 })
 export default class Storyboard extends Vue {
-
   @Provide()
   state: Page.State = {
     currentIndex: null,
-    currentElement: null,
+    currentWidget: null,
     data: null
   };
 
@@ -83,7 +80,6 @@ export default class Storyboard extends Vue {
       name: "测试故事板",
       teamId: "",
       config: {},
-      viewUsers: [ "Finok" ],
       pages: [
         {
           id: "111",
@@ -91,7 +87,7 @@ export default class Storyboard extends Vue {
           storyboardId,
           lockUser: null,
           thumbnail: "//127.0.0.1:3364/demo.png",
-          elements: []
+          widgets: []
         },
         {
           id: "222",
@@ -99,7 +95,7 @@ export default class Storyboard extends Vue {
           storyboardId,
           lockUser: null,
           thumbnail: "//127.0.0.1:3364/demo.png",
-          elements: []
+          widgets: []
         }
       ]
     };
@@ -108,31 +104,18 @@ export default class Storyboard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.el-button--text {
-  width: 32px;
-}
-
-.storyboard {
+.storyboard-editor {
   height: 100%;
-  
-  .story-title {
-    height: 100%;
 
-    .title-text {
-      color: #666;
-      font-size: 16px;
-    }
-  }
-
-  .story-container {
+  .container {
     background-color: #f1f3f6;
     overflow: auto;
-    
-    .story-aside {
+
+    .aside {
       border-right: 1px solid #e6e6e6;
     }
 
-    .story-main {
+    .main {
       padding: 0;
     }
   }

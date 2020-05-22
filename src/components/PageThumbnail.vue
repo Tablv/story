@@ -1,5 +1,5 @@
 <template>
-  <div class="thumbnail-container" :class="{ 'active': isActivePage }">
+  <div class="thumbnail-container" :class="{ active: isActivePage }">
     <div class="thumbnail-box" :data-page-num="pageNum" @click="onSelectStory">
       <main class="thumbnail-main">
         <el-image
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Prop, Component, Inject, Emit } from 'vue-property-decorator';
+import { Vue, Prop, Component, Inject, Emit } from "vue-property-decorator";
 import { StoryPage } from "@/types/Story";
 import Page from "@/types/Page";
 
@@ -37,7 +37,7 @@ export default class PageThumbnail extends Vue {
   @Emit("select-story")
   onSelectStory() {
     return this.data.sortNum;
-  };
+  }
 
   get isActivePage() {
     return this.state.currentIndex === this.data.sortNum;
@@ -86,7 +86,7 @@ $radius: 4px;
       display: flex;
       justify-content: center;
       align-items: center;
-      
+
       border-radius: $radius;
       border: 2px solid transparent;
     }

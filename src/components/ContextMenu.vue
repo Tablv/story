@@ -14,13 +14,14 @@
       }"
       class="el-dropdown-menu__item"
       @click="handler(item.handle, $event)"
-    >{{ item.name }}</li>
+    >
+      {{ item.name }}
+    </li>
   </ul>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { CreateElement } from 'vue';
 
 @Component({})
 export default class ContextMenu extends Vue {
@@ -31,7 +32,7 @@ export default class ContextMenu extends Vue {
   visible!: boolean;
 
   @Prop({ default: { top: 0, left: 0 } })
-  position!: { top: number, left: number };
+  position!: { top: number; left: number };
 
   @Prop({ default: true })
   hideOnClick!: boolean;
@@ -47,7 +48,7 @@ export default class ContextMenu extends Vue {
     return {
       top: this.position.top + "px",
       left: this.position.left + "px"
-    }
+    };
   }
 
   handler(handle: Function, event: Event) {
@@ -70,13 +71,14 @@ export default class ContextMenu extends Vue {
   }
 
   clearPopover(e: any) {
-    const isCtxMenu = e.path.filter((pathDOM: HTMLElement) => {
-      if (pathDOM.classList) {
-        let arr = [...pathDOM.classList];
-        let val = arr.some(className => className === "gw-context-menu");
-        return val;
-      }
-    }).length !== 0;
+    const isCtxMenu =
+      e.path.filter((pathDOM: HTMLElement) => {
+        if (pathDOM.classList) {
+          let arr = [...pathDOM.classList];
+          let val = arr.some(className => className === "gw-context-menu");
+          return val;
+        }
+      }).length !== 0;
 
     if (!isCtxMenu) {
       this.closeMenu();

@@ -1,25 +1,26 @@
-import { elementConfig } from '@/types/StoryElement';
+import { widgetConfig } from "@/types/StoryWidget";
+import { WidgetType } from "@/config/WidgetType";
 
 /**
  * 元素模板
  */
 export class ElementTemplate {
   constructor(
-    public type: elementConfig.Type,
-    public position: elementConfig.Position
+    public type: WidgetType,
+    public position: widgetConfig.Position
   ) {}
 
   public getConfig() {
-    const configBuilder = this.elementConfigBuilders[this.type];
+    const configBuilder = this.widgetConfigBuilders[this.type];
     if (!configBuilder) {
       return {};
     }
-    
+
     return configBuilder();
   }
 
-  private elementConfigBuilders: { [ type: string ]: Function } = {
-    text: (): elementConfig.TextArea => {
+  private widgetConfigBuilders: { [type: string]: Function } = {
+    text: (): widgetConfig.TextArea => {
       return {
         position: this.position,
         size: {
@@ -42,9 +43,9 @@ export class ElementTemplate {
           horizontal: "left",
           vertical: "top"
         }
-      }
+      };
     },
-    img: (): elementConfig.Image => {
+    img: (): widgetConfig.Image => {
       return {
         position: this.position,
         size: {
@@ -56,9 +57,9 @@ export class ElementTemplate {
           props: null
         },
         url: null
-      }
+      };
     },
-    dashboard: (): elementConfig.DashboardConf => {
+    dashboard: (): widgetConfig.DashboardConf => {
       return {
         position: this.position,
         size: {
@@ -71,8 +72,7 @@ export class ElementTemplate {
         },
         dashboardId: "",
         data: null
-      }
+      };
     }
-
-  }
+  };
 }

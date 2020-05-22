@@ -1,15 +1,14 @@
 <template>
-  <div class="page-gallery-box">
+  <div class="story-aside">
     <div class="thumbnail-list" v-if="state.data">
-      <draggable>
+      <draggable :animation="200">
         <div
           class="thumbnail-wrapper"
           v-for="(page, index) in state.data.pages"
           :key="page.id"
           @contextmenu.prevent="openMenu($event, page.id, index)"
         >
-          <page-thumbnail
-            :data="page" @select-story="setCurrentPage" />
+          <page-thumbnail :data="page" @select-story="setCurrentPage" />
         </div>
       </draggable>
     </div>
@@ -29,20 +28,19 @@
       :visible.sync="menuVisible"
       :position="position"
     ></context-menu>
-    
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Inject } from 'vue-property-decorator';
+import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 import draggable from "vuedraggable";
-import PageThumbnail from "./PageThumbnail.vue";
 import Page from "@/types/Page";
 import StoryBuilder from "@/util/StoryBuilder";
-import ContextMenu, { ContextMenuItem } from "./ContextMenu.vue";
+import PageThumbnail from "@/components/PageThumbnail.vue";
+import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
-import { StoryPage } from '../types/Story';
+import { StoryPage } from "@/types/Story";
 
 @Component({
   components: {
@@ -51,8 +49,7 @@ import { StoryPage } from '../types/Story';
     ContextMenu
   }
 })
-export default class PageGallery extends Vue {
-
+export default class StoryAside extends Vue {
   @Inject()
   state!: Page.State;
 
@@ -75,11 +72,11 @@ export default class PageGallery extends Vue {
       divided: true
     }
   ];
-  
+
   position = {
     top: 0,
     left: 0
-  }
+  };
 
   setCurrentPage(index: number) {
     this.state.currentIndex = index;
@@ -90,9 +87,7 @@ export default class PageGallery extends Vue {
       const storyboardId = this.state.data.id,
         sortNum = this.state.data.pages.length;
 
-      this.state.data.pages.push(
-        StoryBuilder.buildPage(storyboardId, sortNum)
-      );
+      this.state.data.pages.push(StoryBuilder.buildPage(storyboardId, sortNum));
     }
   }
 
@@ -110,7 +105,9 @@ export default class PageGallery extends Vue {
     if (this.state.data?.pages) {
       const lastIndex = this.state.data.pages.length - 1;
 
-      let newPage = ObjectUtil.copy(this.state.data.pages.filter(page => page.id === this.currentPageId)[0]);
+      let newPage = ObjectUtil.copy(
+        this.state.data.pages.filter(page => page.id === this.currentPageId)[0]
+      );
       newPage.id = UUID.generate();
       newPage.sortNum = lastIndex + 1;
 
@@ -120,13 +117,15 @@ export default class PageGallery extends Vue {
 
   deletePage() {
     if (this.state.data?.pages && this.currentPageId) {
-      const index = this.state.data.pages.map(page => page.id).indexOf(this.currentPageId);
+      const index = this.state.data.pages
+        .map(page => page.id)
+        .indexOf(this.currentPageId);
       this.state.data.pages.splice(index, 1);
 
       // 重新排序
       this.state.data.pages.forEach((page, index) => {
         page.sortNum = index;
-      })
+      });
     }
   }
 }
@@ -142,10 +141,10 @@ $themeColor: (
 
 $thumbnailGap: 24px;
 
-.page-gallery-box {
+.story-aside {
   height: 100%;
   user-select: none;
-  
+
   .thumbnail-list {
     .thumbnail-wrapper {
       display: flex;
@@ -162,7 +161,6 @@ $thumbnailGap: 24px;
   }
 
   .thumbnail-btn-box {
-    
     .add-btn {
       width: $addBtnSize;
       height: $addBtnSize;
@@ -171,7 +169,7 @@ $thumbnailGap: 24px;
       background-color: transparent;
       color: map-get($themeColor, normal);
       border: 2px solid map-get($themeColor, normal);
-      transition: color .2s, border .2s;
+      transition: color 0.2s, border 0.2s;
     }
 
     &:hover .add-btn {
