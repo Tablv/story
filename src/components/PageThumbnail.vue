@@ -1,19 +1,22 @@
 <template>
   <div class="thumbnail-container" :class="{ 'active': isActivePage }">
     <div class="thumbnail-box" :data-page-num="pageNum" @click="onSelectStory">
-      <el-image
-        class="thumbnail-img"
-        :src="data.thumbnail"
-        fit="cover"
-        @load="onLoadFinish"
-      >
-        <div slot="placeholder" class="image-slot">
-          <span>正在加载...</span>
-        </div>
-        <div slot="error" class="image-slot">
-          <i class="el-icon-picture-outline"></i>
-        </div>
-      </el-image>
+      <main class="thumbnail-main">
+        <el-image
+          v-if="data.thumbnail"
+          class="thumbnail-img"
+          :src="data.thumbnail"
+          fit="cover"
+          @load="onLoadFinish"
+        >
+          <div slot="placeholder" class="image-slot">
+            <span>正在加载...</span>
+          </div>
+          <div slot="error" class="image-slot">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+      </main>
     </div>
   </div>
 </template>
@@ -51,6 +54,8 @@ export default class PageThumbnail extends Vue {
 </script>
 
 <style lang="scss">
+$radius: 4px;
+
 .thumbnail-container {
   position: relative;
 
@@ -72,14 +77,22 @@ export default class PageThumbnail extends Vue {
       left: 5px;
     }
 
-    .thumbnail-img {
+    .thumbnail-main {
       width: 160px;
       height: 90px;
-      border-radius: 4px;
       background-color: #fff;
       box-shadow: 0 1px 4px 2px rgba(0, 0, 0, 0.1);
-      border: 2px solid transparent;
       cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      border-radius: $radius;
+      border: 2px solid transparent;
+    }
+
+    .thumbnail-img {
+      border-radius: $radius;
 
       .image-slot {
         height: 100%;
@@ -95,7 +108,7 @@ export default class PageThumbnail extends Vue {
   }
 
   &.active {
-    .thumbnail-img {
+    .thumbnail-main {
       border: 2px solid #09f;
     }
   }

@@ -6,14 +6,14 @@ import { StoryElement, elementConfig } from '@/types/StoryElement';
 /**
  * 故事板构建类
  */
-export class StoryBuilder {
+export default class StoryBuilder {
   /**
    * 构建页面
    * 
    * @param storyboardId 故事板ID
    * @param sortNum 排序下标
    */
-  public buildPage(storyboardId: string, sortNum: number): StoryPage {
+  static buildPage(storyboardId: string, sortNum: number): StoryPage {
     return {
       id: UUID.generate(),
       storyboardId,
@@ -30,7 +30,7 @@ export class StoryBuilder {
    * @param type 元素类型
    * @param position 元素位置
    */
-  public buildElement(type: elementConfig.Type, position: elementConfig.Position): StoryElement {
+  public static buildElement(type: elementConfig.Type, position: elementConfig.Position): StoryElement {
     return {
       id: UUID.generate(),
       type,
@@ -38,7 +38,4 @@ export class StoryBuilder {
     };
   }
 
-  /**
-   * 元素配置项构建
-   */
 }
