@@ -6,7 +6,7 @@
         <tool-bar></tool-bar>
       </el-header>
       <!-- 画布 -->
-      <el-main>
+      <el-main class="canvas-wrapper">
         <story-canvas></story-canvas>
       </el-main>
     </el-container>
@@ -44,6 +44,10 @@ export default class StoryMain extends Vue {
 .story-main {
   width: 100%;
   height: 100%;
+
+  .canvas-wrapper {
+    padding: 0 20px;
+  }
 
   .story-canvas {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 9px 0px;

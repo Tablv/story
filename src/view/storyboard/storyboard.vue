@@ -24,6 +24,7 @@ import Page from "@/types/Page";
 import StoryHeader from "@/layout/story-editor/StoryHeader.vue";
 import StoryAside from "@/layout/story-editor/StoryAside.vue";
 import StoryMain from "@/layout/story-editor/StoryMain.vue";
+import { StoryPage } from "@/types/Story";
 
 @Component({
   components: {
@@ -39,6 +40,11 @@ export default class Storyboard extends Vue {
     currentWidget: null,
     data: null
   };
+
+  @Provide()
+  getCurrentPage(): StoryPage {
+    return this.state.data?.pages[this.state.currentIndex as number] as StoryPage;
+  }
 
   /**
    * 创建时执行方法

@@ -4,24 +4,15 @@
     class="story-canvas"
     @dragover.prevent
     @drop="dropWidgetHandle"
+    @click="clearSelect"
   >
-    <vdr
+    <editable-widget
       v-for="widget in widgets"
       :key="widget.id"
-      @dragstop="onDragStop"
-      @resizestop="onResizeStop"
-      :grid="[1, 1]"
-      :w="widget.config.size.width"
-      :h="widget.config.size.height"
-      :x="widget.config.position.x"
-      :y="widget.config.position.y"
-      :z="widget.config.position.z"
-      :class="isActiveWidget(widget.id)"
-    >
-      <div class="widget-item">
-        {{ widget }}
-      </div>
-    </vdr>
+      :widget-data.sync="widget"
+      @activated="setActivedWidget"
+      @click.native.stop
+    ></editable-widget>
   </div>
 </template>
 
@@ -30,26 +21,33 @@ import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 
 // Vue-Draggable-Resizable
 import vdr from "vue-draggable-resizable-gorkys";
+import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
+
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/util/StoryBuilder";
 import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
+import EditableWidget from "./EditableWidget.vue";
+
 @Component({
   components: {
-    vdr
+    EditableWidget
   }
 })
 export default class StoryCanvas extends Vue {
   @Inject()
   state!: Page.State;
 
+  @Inject()
+  getCurrentPage!: () => StoryPage;
+
   get currentPage(): StoryPage {
-    return this.state.data?.pages[this.state.currentIndex as number] as StoryPage;
+    return this.getCurrentPage();
   }
 
-  get widgets(): Array<StoryWidget<any>> {
+  get widgets() {
     return this.currentPage.widgets;
   }
 
@@ -57,44 +55,45 @@ export default class StoryCanvas extends Vue {
     return this.state.currentWidget;
   }
 
-  isActiveWidget(widgetId: string): boolean {
-    return widgetId === this.state.currentWidget?.id;
+  set currentWidget(widget: StoryWidget<any> | null) {
+    this.state.currentWidget = widget;
   }
 
+  /**
+   * 清除部件选择
+   */
+  clearSelect() {
+    this.currentWidget = null;
+  }
+
+  setActivedWidget(widget: StoryWidget<any>) {
+    this.currentWidget = widget;
+  }
+  
   dropWidgetHandle(event: DragEvent) {
     const widgetType = event.dataTransfer?.getData("widgetType"),
       $canvasDOM = document.querySelector(".story-canvas");
+    
     if (widgetType && this.currentPage && $canvasDOM) {
       const domRect = $canvasDOM.getBoundingClientRect();
       const newWidget = StoryBuilder.buildWidget(widgetType as WidgetType, {
-        x: domRect.top,
-        y: domRect.left,
+        x: event.clientX - domRect.left,
+        y: event.clientY - domRect.top,
         z: this.widgets.length
-      })
+      });
+
       this.widgets.push(newWidget);
     }
   }
 
-  onDragStop() {
-    console.log(arguments);
-  }
-
-  onResizeStop() {
-    console.log(arguments);
-    
-  }
 }
 </script>
 
 <style lang="scss" scoped>
 .story-canvas {
-  height: 100%;
-
-  .widget-item {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    border: 1px solid #00f;
-  }
+  display: block;
+  position: relative;
+  height: 560px;
+  background-color: #fff;
 }
 </style>

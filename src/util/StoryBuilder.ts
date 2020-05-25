@@ -21,7 +21,7 @@ export default class StoryBuilder {
       sortNum,
       lockUser: null,
       thumbnail: null,
-      elements: []
+      widgets: []
     };
   }
 

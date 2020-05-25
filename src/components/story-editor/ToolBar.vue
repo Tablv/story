@@ -22,7 +22,7 @@ export default class ToolBar extends Vue {
   render(h: CreateElement) {
     if (this.state.currentWidget) {
       const component = this.toolbarRegistry[this.state.currentWidget.type];
-      if (component) h(component);
+      if (component) return h(component);
     }
   }
 }

@@ -7,7 +7,7 @@ declare namespace Page {
    */
   type State = {
     currentIndex: number | null;
-    currentWidget: StoryWidget | null;
+    currentWidget: StoryWidget<any> | null;
     data: StoryContainer | null;
   };
 }

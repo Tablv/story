@@ -77,7 +77,7 @@ export namespace widgetConfig {
     /**
      * 数值
      */
-    value: "";
+    value: string;
 
     /**
      * 字体

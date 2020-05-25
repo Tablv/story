@@ -1,0 +1,130 @@
+/**
+ * Vue-Draggable-Resizable
+ */
+$bgColor: #fff;
+$handleColor: #09f;
+$borderColor: #00a2ff;
+$shadowColor: #58bee9;
+$shadow: 0 0 6px $shadowColor;
+
+@mixin topAndLeft($top, $left) {
+  margin-top: $top;
+  margin-left: $left;
+}
+
+.vdr {
+  background-color: $bgColor;
+  cursor: grab;
+  border: 1px solid transparent;
+
+  // 悬停效果
+  &:hover {
+    box-shadow: $shadow;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  // 当前激活的元素
+  &.active {
+    border: 1px solid $borderColor;
+  }
+
+  .handle {
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 0;
+    border: 3px solid $handleColor;
+    background-color: transparent;
+    z-index: 999;
+  }
+
+  // top
+  .handle-tl,
+  .handle-tm,
+  .handle-tr {
+    top: 0;
+    border-bottom: none;
+  }
+
+  // right
+  .handle-tr,
+  .handle-mr,
+  .handle-br {
+    left: 100%;
+    border-left: none;
+  }
+
+  // bottom
+  .handle-bl,
+  .handle-bm,
+  .handle-br {
+    top: 100%;
+    border-top: none;
+  }
+
+  // left
+  .handle-tl,
+  .handle-ml,
+  .handle-bl {
+    left: 0;
+    border-right: none;
+  }
+
+  // center
+  .handle-tm,
+  .handle-bm {
+    border-left: none;
+    border-right: none;
+    border-width: 5px;
+  }
+
+  // middle
+  .handle-ml,
+  .handle-mr {
+    border-top: none;
+    border-bottom: none;
+    border-width: 5px;
+  }
+
+  // topLeft
+  .handle-tl {
+    @include topAndLeft(3px, 3px);
+  }
+
+  // topMiddle
+  .handle-tm {
+    @include topAndLeft(3px, -5px);
+  }
+
+  // topRight
+  .handle-tr {
+    @include topAndLeft(3px, -5px);
+  }
+
+  // middleLeft
+  .handle-ml {
+    @include topAndLeft(0, 2px);
+  }
+
+  // middleRight
+  .handle-mr {
+    @include topAndLeft(0, -4px);
+  }
+
+  // bottomLeft
+  .handle-bl {
+    @include topAndLeft(-5px, 3px);
+  }
+
+  // bottomMiddle
+  .handle-bm {
+    @include topAndLeft(-4px, -5px);
+  }
+
+  // bottomRight
+  .handle-br {
+    @include topAndLeft(-5px, -5px);
+  }
+}
