@@ -4,7 +4,7 @@
     <div
       class="block-btn draggable"
       draggable="true"
-      @dragstart="dragWidgetHandle('text')"
+      @dragstart="dragWidgetHandle($event, 'text')"
     >
       <i class="fa fa-i-cursor"></i>
     </div>
@@ -14,6 +14,7 @@
 <script lang="ts">
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 import Page from "@/types/Page";
+import { WidgetType } from "@/config/WidgetType";
 
 @Component({
   components: {}
@@ -21,6 +22,10 @@ import Page from "@/types/Page";
 export default class WidgetsBar extends Vue {
   @Inject()
   state!: Page.State;
+
+  dragWidgetHandle(event: DragEvent, widgetType: WidgetType) {
+    event.dataTransfer?.setData("widgetType", widgetType);
+  }
 }
 </script>
 

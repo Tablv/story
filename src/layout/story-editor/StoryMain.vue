@@ -6,11 +6,8 @@
         <tool-bar></tool-bar>
       </el-header>
       <!-- 画布 -->
-      <el-main @dragover.native.prevent @drop.native="dropWidgetHandle">
-        <el-button @click="selectElement">text</el-button>
-
-        <div class="story-canvas"></div>
-        <div class="story-canvas2"></div>
+      <el-main>
+        <story-canvas></story-canvas>
       </el-main>
     </el-container>
 
@@ -25,6 +22,7 @@
 import { Vue, Component, Inject } from "vue-property-decorator";
 import ToolBar from "@/components/story-editor/ToolBar.vue";
 import WidgetsBar from "@/components/story-editor/WidgetsBar.vue";
+import StoryCanvas from "@/components/story-editor/StoryCanvas.vue";
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/util/StoryBuilder";
@@ -32,24 +30,13 @@ import StoryBuilder from "@/util/StoryBuilder";
 @Component({
   components: {
     ToolBar,
-    WidgetsBar
+    WidgetsBar,
+    StoryCanvas
   }
 })
 export default class StoryMain extends Vue {
   @Inject()
   state!: Page.State;
-
-  selectElement() {
-    this.state.currentWidget = StoryBuilder.buildElement(WidgetType.TEXT_AREA, {
-      x: 0,
-      y: 0,
-      z: 100
-    });
-  }
-
-  dropWidgetHandle(event: DragEvent) {
-    console.error(event.dataTransfer?.getData("widgetType"));
-  }
 }
 </script>
 

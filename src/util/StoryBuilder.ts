@@ -31,10 +31,10 @@ export default class StoryBuilder {
    * @param type 元素类型
    * @param position 元素位置
    */
-  static buildElement(
+  static buildWidget(
     type: WidgetType,
     position: widgetConfig.Position
-  ): StoryWidget {
+  ): StoryWidget<any> {
     return {
       id: UUID.generate(),
       type,

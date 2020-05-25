@@ -99,6 +99,8 @@ export default class Storyboard extends Vue {
         }
       ]
     };
+
+    this.state.currentIndex = 0;
   }
 }
 </script>
