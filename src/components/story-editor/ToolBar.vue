@@ -12,7 +12,7 @@ export default class ToolBar extends Vue {
   @Inject()
   state!: Page.State;
 
-  toolbarRegistry = {
+  toolbarRegistry: any = {
     text,
     img,
     shape: null,
@@ -20,10 +20,10 @@ export default class ToolBar extends Vue {
   };
 
   render(h: CreateElement) {
-    // if (this.state.currentWidget) {
-    //   this.toolbarRegistry[this.state.currentWidget.type]
-    //   h();
-    // }
+    if (this.state.currentWidget) {
+      const component = this.toolbarRegistry[this.state.currentWidget.type];
+      if (component) h(component);
+    }
   }
 }
 </script>

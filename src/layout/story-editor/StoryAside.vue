@@ -142,7 +142,7 @@ $themeColor: (
 $thumbnailGap: 24px;
 
 .story-aside {
-  height: 100%;
+  margin: $thumbnailGap 0;
   user-select: none;
 
   .thumbnail-list {
@@ -151,13 +151,15 @@ $thumbnailGap: 24px;
       justify-content: center;
       align-items: center;
       flex-flow: column nowrap;
-      margin-top: $thumbnailGap;
+
+      & + .thumbnail-wrapper {
+        margin-top: $thumbnailGap;
+      }
     }
   }
 
-  .thumbnail-wrapper:last-of-type,
   .add-page-box {
-    margin-bottom: $thumbnailGap;
+    margin-top: $thumbnailGap;
   }
 
   .thumbnail-btn-box {
