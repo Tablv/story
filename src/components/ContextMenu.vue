@@ -1,29 +1,35 @@
 <template>
   <ul
     v-if="visible"
+    v-clickoutside="closeMenu"
     class="el-dropdown-menu el-popper gw-context-menu"
     :class="menuSize ? 'el-dropdown-menu--' + menuSize : ''"
     :style="positionStyle"
   >
     <li
-      v-for="(item, index) in list"
+      v-for="(menu, index) in menuList"
       :key="index"
       :class="{
-        'is-disabled': item.disabled,
-        'el-dropdown-menu__item--divided': item.divided
+        'is-disabled': menu.disabled,
+        'el-dropdown-menu__item--divided': menu.divided
       }"
       class="el-dropdown-menu__item"
-      @click="handler(item.handle, $event)"
+      @click="handler($event, menu.handle)"
     >
-      {{ item.name }}
+      <span>{{ menu.name }}</span>
     </li>
+    
   </ul>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
+import { CreateElement, VNode } from 'vue';
+import clickoutside from "element-ui/src/utils/clickoutside";
 
-@Component({})
+@Component({
+  directives: { clickoutside }
+})
 export default class ContextMenu extends Vue {
   @Prop()
   list!: Array<ContextMenuItem>;
@@ -31,7 +37,7 @@ export default class ContextMenu extends Vue {
   @Prop({ default: false })
   visible!: boolean;
 
-  @Prop({ default: { top: 0, left: 0 } })
+  @Prop({ default: () => { return { top: 0, left: 0 } } })
   position!: { top: number; left: number };
 
   @Prop({ default: true })
@@ -44,6 +50,35 @@ export default class ContextMenu extends Vue {
     return this.size || ((this as any).$ELEMENT || {}).size;
   }
 
+  get menuList() {
+    return this.list || this.slotList;
+  }
+
+  get slotList(): Array<ContextMenuItem> {
+    const list = this.$slots.default?.map((node: VNode) => {
+      return {
+        name: node.children?.map((child: VNode) => child.text).join(""),
+        divided: node.data?.attrs?.divided !== undefined,
+        disabled: node.data?.attrs?.disabled !== undefined,
+        handle: (e: MouseEvent) => {
+          const clickEvents = node.data?.on?.click;
+          if (clickEvents) {
+            const callbacks = typeof clickEvents === "function" ? [ clickEvents ] : clickEvents;
+            callbacks.forEach((callback: Function) => {
+              callback.apply(node.context, e);
+            });
+          }
+        }
+      };
+    }) as Array<ContextMenuItem> | undefined;
+
+    return list || [];
+  }
+
+  created() {
+    const a = this.slotList;
+  }
+
   get positionStyle() {
     return {
       top: this.position.top + "px",
@@ -51,40 +86,20 @@ export default class ContextMenu extends Vue {
     };
   }
 
-  handler(handle: Function, event: Event) {
-    handle(event);
+  handler(event: Event, handle: Function) {
+    handle && handle(event);
 
     if (this.hideOnClick) {
       this.closeMenu();
     }
   }
 
+  mounted() {
+    document.body.appendChild(this.$el);
+  }
+
   closeMenu() {
     this.$emit("update:visible", false);
-  }
-
-  @Watch("visible")
-  onVisibleUpdate() {
-    if (this.visible) {
-      window.addEventListener("click", this.clearPopover);
-    }
-  }
-
-  clearPopover(e: any) {
-    const isCtxMenu =
-      e.path.filter((pathDOM: HTMLElement) => {
-        if (pathDOM.classList) {
-          let arr = [...pathDOM.classList];
-          let val = arr.some(className => className === "gw-context-menu");
-          return val;
-        }
-      }).length !== 0;
-
-    if (!isCtxMenu) {
-      this.closeMenu();
-    }
-
-    window.removeEventListener("click", this.clearPopover);
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-item img-widget">
+  <div class="widget-item img-widget" :style="getBorderStyle()">
     <el-image
       v-if="imgUrl"
       :src="imgUrl"
@@ -18,9 +18,10 @@ import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
+import BorderConfigurable from "./BorderConfigurable";
 
 @Component({
-  components: {}
+  mixins: [ BorderConfigurable ]
 })
 export default class ImageToolBar extends Vue {
   @Inject()

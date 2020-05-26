@@ -23,10 +23,10 @@ import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
+import BorderConfigurable from "./BorderConfigurable";
 
 @Component({
-  components: {
-  }
+  mixins: [ BorderConfigurable ]
 })
 export default class TextToolBar extends Vue {
   @Inject()
@@ -90,19 +90,6 @@ export default class TextToolBar extends Vue {
       "text-decoration": this.textFont.underline ? "underline" : "none",
       "text-align": this.textAlignment.horizontal
     };
-  }
-
-  getBorderStyle() {
-    const borderProps = this.borderConfig.props;
-
-    if (this.borderConfig.enable && borderProps) {
-      const { width, style, color } = borderProps;
-      return {
-        "border": `${width}px ${style} ${color}`
-      }
-    }
-
-    return {};
   }
 
   alignmentMapping = {

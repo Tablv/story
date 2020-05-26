@@ -11,8 +11,8 @@ export class WidgetBuilder {
   ) {}
 
   public buildConfig() {
-    if (this.type === null) {
-      throw new Error("部件构造器的构造函数中 类型为null");
+    if (!this.type || !this.position) {
+      throw new Error("部件构造器的构造函数参数有误");
     }
     
     const configBuilder = this.widgetConfigBuilders[this.type];
@@ -42,7 +42,7 @@ export class WidgetBuilder {
   private widgetConfigBuilders: { [type: string]: Function } = {
     text: (): widgetConfig.TextArea => {
       return {
-        position: this.position,
+        position: this.position as widgetConfig.Position,
         border: this.buildBorder(false),
         size: {
           width: 400,
@@ -64,7 +64,7 @@ export class WidgetBuilder {
     },
     img: (): widgetConfig.Image => {
       return {
-        position: this.position,
+        position: this.position as widgetConfig.Position,
         border: this.buildBorder(false),
         size: {
           width: 400,
@@ -75,7 +75,7 @@ export class WidgetBuilder {
     },
     dashboard: (): widgetConfig.DashboardConf => {
       return {
-        position: this.position,
+        position: this.position as widgetConfig.Position,
         border: this.buildBorder(false),
         size: {
           width: 600,

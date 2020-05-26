@@ -2,12 +2,20 @@
   <div class="tool-bar-inner text-tool-bar">
     <!-- 字号 -->
     <label class="label-text">字号</label>
-    <el-input-number
+    <el-select
       v-model="textFont.size"
-      controls-position="right"
-      :min="10"
-      :max="100"
-    />
+      filterable
+      allow-create
+      default-first-option
+      placeholder=""
+      style="width: 100px"
+    >
+      <el-option
+        v-for="fontSize in fontSizeOptions"
+        :key="fontSize"
+        :value="fontSize">
+      </el-option>
+    </el-select>
 
     <div class="switch-btn-group">
       <!-- 加粗 -->
@@ -97,6 +105,8 @@ import BorderStyle from "./common/BorderStyle.vue";
 export default class TextToolBar extends Vue {
   @Inject()
   state!: Page.State;
+
+  fontSizeOptions = [8, 9, 10, 10.5, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192];
 
   get widget(): StoryWidget<widgetConfig.TextArea> {
     return this.state.currentWidget as StoryWidget<widgetConfig.TextArea>;

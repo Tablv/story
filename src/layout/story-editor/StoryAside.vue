@@ -24,10 +24,12 @@
     </div>
 
     <context-menu
-      :list="pageMethods"
       :visible.sync="menuVisible"
       :position="position"
-    ></context-menu>
+    >
+      <li @click="copyPage">复制本页</li>
+      <li @click="deletePage" divided>删除本页</li>
+    </context-menu>
   </div>
 </template>
 
@@ -59,19 +61,6 @@ export default class StoryAside extends Vue {
   currentPageId: string | null = null;
 
   menuVisible = false;
-
-  // 页面右键菜单方法
-  pageMethods: Array<ContextMenuItem> = [
-    {
-      name: "复制本页",
-      handle: this.copyPage
-    },
-    {
-      name: "删除本页",
-      handle: this.deletePage,
-      divided: true
-    }
-  ];
 
   position = {
     top: 0,

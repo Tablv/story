@@ -2,11 +2,11 @@
   <!-- 边框 -->
   <el-popover
     placement="bottom"
-    width="400"
+    width="180"
     trigger="click">
     <el-button slot="reference" icon="fa fa-border-style"></el-button>
 
-    <el-form label-width="60px">
+    <el-form class="border-style-form" label-width="70px">
       <el-form-item label="边框">
         <el-switch
           v-model="border.enable"
@@ -28,7 +28,11 @@
 
         <el-form-item label="样式">
           <!-- 样式 -->
-          <el-select v-model="borderProps.style" placeholder="请选择边框样式">
+          <el-select
+            v-model="borderProps.style"
+            placeholder="请选择边框样式"
+            popper-class="border-style-selector"
+          >
             <el-option
               v-for="option in borderStyleOptions"
               :key="option.value"
@@ -102,17 +106,34 @@ export default class BorderStyle extends Vue {
 <style lang="scss">
 $sliderBtnSize: 8px;
 
-.border-width-slider {
-  .el-slider__button {
-    width: $sliderBtnSize;
-    height: $sliderBtnSize;
+.border-style-form {
+  .el-form-item {
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .el-form-item__label {
+      padding-right: 30px;
+    }
+  }
+
+  .border-width-slider {
+    .el-slider__button {
+      width: $sliderBtnSize;
+      height: $sliderBtnSize;
+    }
+    .el-slider__runway {
+      margin: 13px 0;
+    }
   }
 }
 
-.border-style-example {
-  display: inline-block;
-  width: 100%;
-  border-width: 3px 0 0;
-  margin-bottom: 3px;
+.border-style-selector {
+  .border-style-example {
+    display: inline-block;
+    width: 100%;
+    border-width: 3px 0 0;
+    margin-bottom: 3px;
+  }
 }
 </style>

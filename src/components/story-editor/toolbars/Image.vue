@@ -1,6 +1,16 @@
 <template>
   <div class="tool-bar-inner img-tool-bar">
-    <el-input v-model="imgUrl" />
+    <el-popover
+      placement="bottom-start"
+      width="400"
+      trigger="click">
+      <el-button slot="reference" icon="fa fa-image"></el-button>
+
+      <h2>123</h2>
+    </el-popover>
+
+    <!-- 边框 -->
+    <border-style :data="widget.config.border"></border-style>
   </div>
 </template>
 
@@ -9,9 +19,12 @@ import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
+import BorderStyle from "./common/BorderStyle.vue";
 
 @Component({
-  components: {}
+  components: {
+    BorderStyle
+  }
 })
 export default class ImageToolBar extends Vue {
   @Inject()
@@ -33,9 +46,8 @@ export default class ImageToolBar extends Vue {
 
 <style lang="scss">
 .img-tool-bar {
-  .el-image {
-    width: 100%;
-    height: 100%;
+  > * + * {
+    margin-left: 10px;
   }
 }
 </style>

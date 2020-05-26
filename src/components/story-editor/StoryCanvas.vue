@@ -6,13 +6,24 @@
     @drop="dropWidgetHandle"
     @click="clearSelect"
   >
-    <editable-widget
-      v-for="widget in widgets"
-      :key="widget.id"
-      :widget-data.sync="widget"
-      @activated="setActivedWidget"
-      @click.native.stop
-    ></editable-widget>
+    <div class="editable-widgets">
+      <editable-widget
+        v-for="widget in widgets"
+        :key="widget.id"
+        :widget-data.sync="widget"
+        @activated="setActivedWidget"
+        @click.native.stop
+        @contextmenu.native.prevent="openContextMenu($event, widget)"
+      ></editable-widget>
+    </div>
+    
+    <context-menu :visible.sync="widgetMenu.visible" :position="widgetMenu.position">
+      <li>上移一层</li>
+      <li>下移一层</li>
+      <li>置于顶层</li>
+      <li>置于底层</li>
+      <li divided>删除</li>
+    </context-menu>
   </div>
 </template>
 
@@ -29,11 +40,13 @@ import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
+import ContextMenu from "@/components/ContextMenu.vue";
 import EditableWidget from "./EditableWidget.vue";
 
 @Component({
   components: {
-    EditableWidget
+    EditableWidget,
+    ContextMenu
   }
 })
 export default class StoryCanvas extends Vue {
@@ -42,6 +55,25 @@ export default class StoryCanvas extends Vue {
 
   @Inject()
   getCurrentPage!: () => StoryPage;
+
+  widgetMenu = {
+    visible: false,
+    position: {
+      top: 0,
+      left: 0
+    }
+  }
+
+  openContextMenu(event: MouseEvent, currentWidget: StoryWidget<any>) {
+    this.state.currentWidget = currentWidget;
+    
+    this.widgetMenu.position = {
+      top: event.clientY,
+      left: event.clientX
+    };
+
+    this.widgetMenu.visible = true;
+  }
 
   get currentPage(): StoryPage {
     return this.getCurrentPage();
@@ -96,5 +128,10 @@ export default class StoryCanvas extends Vue {
   height: 560px;
   background-color: #fff;
   user-select: none;
+
+  .editable-widgets {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
