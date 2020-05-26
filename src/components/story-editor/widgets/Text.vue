@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-item text-widget">
+  <div class="widget-item text-widget" :style="getBorderStyle()">
     <textarea
       v-if="editable"
       class="text-box edit-box"
@@ -9,7 +9,7 @@
     ></textarea>
 
     <div v-else class="text-box preview-box">
-      <span v-show="!textValue" class="placeholderTip">
+      <span v-show="!textValue" class="placeholder-tip">
         <span>双击输入文本</span>
       </span>
       <span class="preview-text" :style="[ getTextStyle(), getPreviewAlignment() ]" v-html="formatedText"></span>
@@ -74,6 +74,13 @@ export default class TextToolBar extends Vue {
     return this.widgetData.config.alignment;
   }
 
+  /**
+   * 边框配置
+   */
+  get borderConfig(): widgetConfig.Border {
+    return this.widgetData.config.border;
+  }
+
   getTextStyle() {
     return {
       "color": this.textFont.color,
@@ -83,6 +90,19 @@ export default class TextToolBar extends Vue {
       "text-decoration": this.textFont.underline ? "underline" : "none",
       "text-align": this.textAlignment.horizontal
     };
+  }
+
+  getBorderStyle() {
+    const borderProps = this.borderConfig.props;
+
+    if (this.borderConfig.enable && borderProps) {
+      const { width, style, color } = borderProps;
+      return {
+        "border": `${width}px ${style} ${color}`
+      }
+    }
+
+    return {};
   }
 
   alignmentMapping = {
@@ -123,7 +143,7 @@ export default class TextToolBar extends Vue {
   }
 
   .preview-box {
-    .placeholderTip {
+    .placeholder-tip {
       width: 100%;
       height: 100%;
       font-size: 20px;

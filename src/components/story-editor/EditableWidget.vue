@@ -124,6 +124,7 @@ export default class EditableWidget extends Vue {
     height: 100%;
     overflow: hidden;
     user-select: none;
+    box-sizing: border-box;
   }
 }
 </style>

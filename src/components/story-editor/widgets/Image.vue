@@ -6,8 +6,9 @@
       fit="contain"
     ></el-image>
 
-    <div class="placeHolderTip" v-else>
-      <span>请先选择图片</span>
+    <div class="placeholder-tip" v-else>
+      <i class="fa fa-image tip-icon"></i>
+      <span class="tip-text">请先选择图片</span>
     </div>
   </div>
 </template>
@@ -37,5 +38,19 @@ export default class ImageToolBar extends Vue {
 <style lang="scss">
 .img-widget {
   width: 100%;
+
+  .placeholder-tip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column nowrap;
+    height: 100%;
+    color: #797979;
+
+    .tip-icon {
+      font-size: 34px;
+      margin-bottom: 6px;
+    }
+  }
 }
 </style>

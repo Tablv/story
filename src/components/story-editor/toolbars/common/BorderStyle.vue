@@ -6,7 +6,7 @@
     trigger="click">
     <el-button slot="reference" icon="fa fa-border-style"></el-button>
 
-    <el-form label-width="80px">
+    <el-form label-width="60px">
       <el-form-item label="边框">
         <el-switch
           v-model="border.enable"
@@ -16,7 +16,7 @@
       </el-form-item>
       
       <div v-if="borderProps">
-        <el-form-item label="边框样式">
+        <el-form-item label="宽度">
           <!-- 宽度 -->
           <el-slider
             v-model="borderProps.width"
@@ -26,16 +26,21 @@
           ></el-slider>
         </el-form-item>
 
-        <el-form-item label="边框样式">
+        <el-form-item label="样式">
           <!-- 样式 -->
-          <el-select v-model="borderProps.style" placeholder="请选择">
-            <el-option value="dashed">
-              <span class=""></span>
+          <el-select v-model="borderProps.style" placeholder="请选择边框样式">
+            <el-option
+              v-for="option in borderStyleOptions"
+              :key="option.value"
+              :value="option.value"
+              :label="option.label"
+            >
+              <span class="border-style-example" :style="{ 'border-style': option.value }"></span>
             </el-option>
           </el-select>
         </el-form-item>
           
-        <el-form-item label="边框颜色">
+        <el-form-item label="颜色">
           <!-- 颜色 -->
           <el-color-picker
             v-model="borderProps.color"
@@ -52,7 +57,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
-import { WidgetBuilder } from '../../../../config/WidgetBuilder';
+import { WidgetBuilder } from "@/config/WidgetBuilder";
 
 @Component({
   components: {}
@@ -60,6 +65,13 @@ import { WidgetBuilder } from '../../../../config/WidgetBuilder';
 export default class BorderStyle extends Vue {
   @Prop()
   data!: widgetConfig.Border;
+
+  borderStyleOptions = [
+    { value: "dotted", label: "点状" },
+    { value: "solid", label: "实线" },
+    { value: "double", label: "双线" },
+    { value: "dashed", label: "虚线" }
+  ];
 
   get border(): widgetConfig.Border {
     return this.data;
@@ -95,5 +107,12 @@ $sliderBtnSize: 8px;
     width: $sliderBtnSize;
     height: $sliderBtnSize;
   }
+}
+
+.border-style-example {
+  display: inline-block;
+  width: 100%;
+  border-width: 3px 0 0;
+  margin-bottom: 3px;
 }
 </style>
