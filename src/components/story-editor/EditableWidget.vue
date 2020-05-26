@@ -22,7 +22,7 @@
 import { Vue, Component, Provide, Inject, Prop, Emit } from "vue-property-decorator";
 
 // Vue-Draggable-Resizable
-import vdr from "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.common.js";
+import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 
 import Page from "@/types/Page";
