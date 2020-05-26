@@ -10,14 +10,21 @@
     </span>
 
     <span class="right">
-      <el-button type="text" icon="fa fa-television"></el-button>
+      
+      <el-button
+        type="text"
+        icon="fa fa-expand-arrows-alt"
+        title="放映"
+      ></el-button>
 
       <el-dropdown trigger="click" class="more-dropdown">
         <el-button
           type="text"
           class="el-dropdown-link"
           icon="fa fa-ellipsis-v"
+          title="更多"
         ></el-button>
+
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>重命名</el-dropdown-item>
           <el-dropdown-item divided>删除</el-dropdown-item>
@@ -37,6 +44,7 @@ export default class StoryHeader extends Vue {}
 <style lang="scss" scoped>
 .story-header {
   height: 100%;
+  user-select: none;
 
   .title-text {
     color: #666;
@@ -52,10 +60,14 @@ export default class StoryHeader extends Vue {}
     font-size: 16px;
   }
 
+  .el-button,
   .more-dropdown {
     width: 32px;
     text-align: center;
     cursor: pointer;
+  }
+
+  .more-dropdown {
 
     > .el-dropdown-link {
       display: inline-block;

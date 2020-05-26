@@ -1,4 +1,4 @@
-import { ElementTemplate } from "@/config/DefaultTemplate";
+import { WidgetBuilder } from "@/config/WidgetBuilder";
 import UUID from "glaway-bi-util/UUID";
 import { StoryPage } from "@/types/Story";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
@@ -38,7 +38,7 @@ export default class StoryBuilder {
     return {
       id: UUID.generate(),
       type,
-      config: new ElementTemplate(type, position).getConfig()
+      config: new WidgetBuilder(type, position).buildConfig()
     };
   }
 }

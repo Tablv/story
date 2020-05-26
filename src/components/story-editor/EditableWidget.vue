@@ -29,7 +29,7 @@ import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
-import StoryBuilder from "@/util/StoryBuilder";
+import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 import Widget from "./Widget.vue";
@@ -123,6 +123,7 @@ export default class EditableWidget extends Vue {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    user-select: none;
   }
 }
 </style>

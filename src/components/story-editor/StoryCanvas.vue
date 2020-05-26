@@ -25,7 +25,7 @@ import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
-import StoryBuilder from "@/util/StoryBuilder";
+import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
@@ -95,5 +95,6 @@ export default class StoryCanvas extends Vue {
   position: relative;
   height: 560px;
   background-color: #fff;
+  user-select: none;
 }
 </style>

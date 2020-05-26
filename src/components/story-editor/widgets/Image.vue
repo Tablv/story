@@ -1,9 +1,14 @@
 <template>
   <div class="widget-item img-widget">
     <el-image
+      v-if="imgUrl"
       :src="imgUrl"
       fit="contain"
     ></el-image>
+
+    <div class="placeHolderTip" v-else>
+      <span>请先选择图片</span>
+    </div>
   </div>
 </template>
 

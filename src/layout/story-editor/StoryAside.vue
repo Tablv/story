@@ -35,7 +35,7 @@
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 import draggable from "vuedraggable";
 import Page from "@/types/Page";
-import StoryBuilder from "@/util/StoryBuilder";
+import StoryBuilder from "@/config/StoryBuilder";
 import PageThumbnail from "@/components/PageThumbnail.vue";
 import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";

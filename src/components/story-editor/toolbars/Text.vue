@@ -74,6 +74,11 @@
         <i class="fa fa-angle-double-down"></i>
       </el-radio-button>
     </el-radio-group>
+
+    <!-- 边框 -->
+    <border-style
+      :data="widget.config.border"
+    ></border-style>
   </div>
 </template>
 
@@ -82,9 +87,12 @@ import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
+import BorderStyle from "./common/BorderStyle.vue";
 
 @Component({
-  components: {}
+  components: {
+    BorderStyle
+  }
 })
 export default class TextToolBar extends Vue {
   @Inject()

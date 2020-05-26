@@ -4,13 +4,17 @@ import { WidgetType } from "@/config/WidgetType";
 /**
  * 元素模板
  */
-export class ElementTemplate {
+export class WidgetBuilder {
   constructor(
-    public type: WidgetType,
-    public position: widgetConfig.Position
+    public type: WidgetType | null,
+    public position?: widgetConfig.Position
   ) {}
 
-  public getConfig() {
+  public buildConfig() {
+    if (this.type === null) {
+      throw new Error("部件构造器的构造函数中 类型为null");
+    }
+    
     const configBuilder = this.widgetConfigBuilders[this.type];
     if (!configBuilder) {
       return {};
@@ -19,17 +23,30 @@ export class ElementTemplate {
     return configBuilder();
   }
 
+  public buildBorder(enable: boolean): widgetConfig.Border {
+    return enable ?
+      {
+        enable: true,
+        props: {
+          width: 1,
+          style: "solid",
+          color: "#000"
+        }
+      } : 
+      {
+        enable: false,
+        props: null
+      };
+  }
+
   private widgetConfigBuilders: { [type: string]: Function } = {
     text: (): widgetConfig.TextArea => {
       return {
         position: this.position,
+        border: this.buildBorder(false),
         size: {
           width: 400,
           height: 100
-        },
-        border: {
-          enable: false,
-          props: null
         },
         value: "",
         font: {
@@ -48,13 +65,10 @@ export class ElementTemplate {
     img: (): widgetConfig.Image => {
       return {
         position: this.position,
+        border: this.buildBorder(false),
         size: {
           width: 400,
           height: 400
-        },
-        border: {
-          enable: false,
-          props: null
         },
         url: null
       };
@@ -62,13 +76,10 @@ export class ElementTemplate {
     dashboard: (): widgetConfig.DashboardConf => {
       return {
         position: this.position,
+        border: this.buildBorder(false),
         size: {
           width: 600,
           height: 600
-        },
-        border: {
-          enable: false,
-          props: null
         },
         dashboardId: "",
         data: null

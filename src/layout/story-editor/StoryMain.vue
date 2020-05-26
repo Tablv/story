@@ -12,7 +12,7 @@
     </el-container>
 
     <!-- 侧边工具栏 -->
-    <el-aside class="widgets-bar" width="auto">
+    <el-aside class="widgets-aside" width="auto">
       <widgets-bar></widgets-bar>
     </el-aside>
   </el-container>
@@ -25,7 +25,7 @@ import WidgetsBar from "@/components/story-editor/WidgetsBar.vue";
 import StoryCanvas from "@/components/story-editor/StoryCanvas.vue";
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
-import StoryBuilder from "@/util/StoryBuilder";
+import StoryBuilder from "@/config/StoryBuilder";
 
 @Component({
   components: {
@@ -54,11 +54,7 @@ export default class StoryMain extends Vue {
   }
 }
 
-.widgets-bar {
+.widgets-aside {
   border-left: 1px solid #e6e6e6;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-flow: row nowrap;
 }
 </style>

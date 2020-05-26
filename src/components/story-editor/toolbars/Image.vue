@@ -24,10 +24,18 @@ export default class ImageToolBar extends Vue {
   get imgUrl(): widgetConfig.Image['url'] {
     return this.widget.config.url;
   }
+
+  set imgUrl(url: widgetConfig.Image['url']) {
+    this.widget.config.url = url;
+  }
 }
 </script>
 
 <style lang="scss">
 .img-tool-bar {
+  .el-image {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

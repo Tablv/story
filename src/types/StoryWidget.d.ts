@@ -46,6 +46,7 @@ export namespace widgetConfig {
     enable: boolean;
     props: {
       width: number;
+      style: "dotted" | "solid" | "double" | "dashed";
       color: string; // Hex
     } | null;
   };

@@ -2,8 +2,8 @@
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { CreateElement } from "vue";
-import text from "./custom-toolbar/Text.vue";
-import img from "./custom-toolbar/Image.vue";
+import text from "./toolbars/Text.vue";
+import img from "./toolbars/Image.vue";
 
 @Component({
   components: {}

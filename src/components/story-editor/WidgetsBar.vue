@@ -6,7 +6,16 @@
       draggable="true"
       @dragstart="dragWidgetHandle($event, 'text')"
     >
-      <i class="fa fa-i-cursor"></i>
+      <i class="fa fa-pen"></i>
+    </div>
+
+    <!-- 图片 -->
+    <div
+      class="block-btn draggable"
+      draggable="true"
+      @dragstart="dragWidgetHandle($event, 'img')"
+    >
+      <i class="fa fa-images"></i>
     </div>
   </div>
 </template>
@@ -30,10 +39,14 @@ export default class WidgetsBar extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.widgets-bar {
-  height: 100%;
+$blockSize: 84px;
 
-  $blockSize: 84px;
+.widgets-bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-flow: column nowrap;
+  height: 100%;
 
   .block-btn {
     width: $blockSize;

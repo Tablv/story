@@ -2,8 +2,8 @@
 import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { CreateElement } from "vue";
-import text from "./custom-widget/Text.vue";
-import img from "./custom-widget/Image.vue";
+import text from "./widgets/Text.vue";
+import img from "./widgets/Image.vue";
 import { StoryWidget } from '../../types/StoryWidget';
 
 @Component({})
