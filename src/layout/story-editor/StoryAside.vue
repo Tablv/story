@@ -40,7 +40,7 @@ import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
 import { StoryPage } from "@/types/Story";
-import api from '../../api/editor';
+import api from "../../api/editor";
 
 @Component({
   components: {
@@ -105,12 +105,9 @@ export default class StoryAside extends Vue {
     const pageLength = this.state.data?.pages.length,
       sortNum = pageLength === undefined ? 0 : pageLength;
 
-      debugger
-      console.log(this.state.data.id);
-      
-    
     const newPage = StoryBuilder.buildPage(this.state.data.id, sortNum);
-    api.storyPage.create(newPage)
+    api.storyPage
+      .create(newPage)
       .then(() => {
         this.state.data?.pages.splice(sortNum, 0, newPage);
         (this as any).$message.success("创建故事页");
@@ -144,7 +141,9 @@ export default class StoryAside extends Vue {
 
   deletePage() {
     if (this.state.data?.pages) {
-      const index = this.state.data.pages.indexOf(this.state.currentPage as StoryPage);
+      const index = this.state.data.pages.indexOf(
+        this.state.currentPage as StoryPage
+      );
       this.state.data.pages.splice(index, 1);
 
       // 重新排序

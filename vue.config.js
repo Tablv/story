@@ -1,6 +1,6 @@
 const common = {
     templatePath: "src/view/template.html",
-    serverSidePath: "/admin/dashboard/visual-core/"
+    serverSidePath: "/admin/story/editor"
   },
   publicPath =
     process.env.NODE_ENV === "production" ? common.serverSidePath : "./",
@@ -22,7 +22,7 @@ module.exports = {
     }
   },
   pages: {
-    storyboard: {
+    editor: {
       entry: "src/view/storyboard/storyboard.ts",
       template: common.templatePath,
       title: "故事板"

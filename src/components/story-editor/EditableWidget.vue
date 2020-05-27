@@ -115,7 +115,7 @@ export default class EditableWidget extends Vue {
   onResizeStop(x: number, y: number, width: number, height: number) {
     this.widget.config.size.width = width;
     this.widget.config.size.height = height;
-    
+
     this.state.isSaveRequired = true;
   }
 }

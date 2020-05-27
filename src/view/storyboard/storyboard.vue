@@ -26,7 +26,7 @@ import StoryAside from "@/layout/story-editor/StoryAside.vue";
 import StoryMain from "@/layout/story-editor/StoryMain.vue";
 import { StoryPage, StoryContainer } from "@/types/Story";
 import api from "@/api/editor";
-import StoryBuilder from '../../config/StoryBuilder';
+import StoryBuilder from "../../config/StoryBuilder";
 
 @Component({
   components: {
@@ -85,11 +85,13 @@ export default class Storyboard extends Vue {
    * 并对加载失败的结果进行处理
    */
   loadData(id: string): void {
-    api.story.find(id)
+    api.story
+      .find(id)
       .then(res => {
         const story = res.result;
         if (story === null) throw new Error("ERROR");
-        if (story.config === null) story.config = StoryBuilder.buildContainerConfig();
+        if (story.config === null)
+          story.config = StoryBuilder.buildContainerConfig();
 
         this.state.data = res.result;
 
@@ -97,8 +99,8 @@ export default class Storyboard extends Vue {
           this.state.currentPage = this.state.data?.pages[0] as StoryPage;
         }
       })
-      .catch((err) => {
-        console.error(err)
+      .catch(err => {
+        console.error(err);
         this.brokenStory();
       });
     // const storyboardId = UUID.generate();
@@ -127,7 +129,6 @@ export default class Storyboard extends Vue {
     //     }
     //   ]
     // };
-
   }
 
   /**

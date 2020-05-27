@@ -23,7 +23,8 @@ export default class ToolBar extends Vue {
   savePage() {
     if (!this.state.currentPage) return;
 
-    api.storyPage.save(this.state.currentPage)
+    api.storyPage
+      .save(this.state.currentPage)
       .then(() => {
         (this as any).$message.success("保存成功");
         this.state.isSaveRequired = false;
@@ -56,16 +57,14 @@ export default class ToolBar extends Vue {
             disabled={!this.state.isSaveRequired}
             onClick={this.savePage}
           >
-            {
-              this.state.isSaveRequired ? (
-                  <span>保存</span>
-              ) : (
-                <span>
-                  <i class="el-icon-check"></i>
-                  <span>已保存</span>
-                </span>
-              )
-            }
+            {this.state.isSaveRequired ? (
+              <span>保存</span>
+            ) : (
+              <span>
+                <i class="el-icon-check"></i>
+                <span>已保存</span>
+              </span>
+            )}
           </el-button>
         </div>
       </el-row>
