@@ -4,6 +4,7 @@ import Page from "@/types/Page";
 import { CreateElement } from "vue";
 import text from "./toolbars/Text.vue";
 import img from "./toolbars/Image.vue";
+import api from "@/api/editor";
 
 @Component({
   components: {}
@@ -20,7 +21,16 @@ export default class ToolBar extends Vue {
   };
 
   savePage() {
-    alert(123);
+    if (!this.state.currentPage) return;
+
+    api.storyPage.save(this.state.currentPage)
+      .then(() => {
+        (this as any).$message.success("保存成功");
+        this.state.isSaveRequired = false;
+      })
+      .catch(() => {
+        (this as any).$message.error("保存失败");
+      });
   }
 
   render(h: CreateElement) {
@@ -41,17 +51,27 @@ export default class ToolBar extends Vue {
 
         <div class="btn-group">
           <el-button
+            class="save-button"
             type="primary"
             disabled={!this.state.isSaveRequired}
             onClick={this.savePage}
           >
-            保存
+            {
+              this.state.isSaveRequired ? (
+                  <span>保存</span>
+              ) : (
+                <span>
+                  <i class="el-icon-check"></i>
+                  <span>已保存</span>
+                </span>
+              )
+            }
           </el-button>
         </div>
       </el-row>
     );
 
-    return element;
+    return this.state.currentPage !== null ? element : null;
   }
 }
 </script>
@@ -70,6 +90,16 @@ export default class ToolBar extends Vue {
 
     .label-text {
       margin-right: 6px;
+    }
+  }
+
+  .btn-group {
+    .save-button.is-disabled {
+      &,
+      &:focus,
+      &:hover {
+        cursor: default;
+      }
     }
   }
 }

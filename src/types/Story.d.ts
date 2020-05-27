@@ -47,7 +47,7 @@ export interface StoryPage {
   /**
    * 所在故事板ID
    */
-  storyboardId: string;
+  storyId: string;
 
   /**
    * 所在下标

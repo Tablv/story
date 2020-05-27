@@ -36,11 +36,11 @@ export default class PageThumbnail extends Vue {
 
   @Emit("select-story")
   onSelectStory() {
-    return this.data.sortNum;
+    return this.data;
   }
 
   get isActivePage() {
-    return this.state.currentIndex === this.data.sortNum;
+    return this.data.sortNum === this.state.currentPage?.sortNum;
   }
 
   get pageNum() {

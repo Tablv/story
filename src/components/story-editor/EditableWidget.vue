@@ -49,9 +49,6 @@ export default class EditableWidget extends Vue {
   @Inject()
   state!: Page.State;
 
-  @Inject()
-  getCurrentPage!: () => StoryPage;
-
   @Prop()
   @Provide()
   widgetData!: StoryWidget<any>;
@@ -108,6 +105,8 @@ export default class EditableWidget extends Vue {
   onDragStop(x: number, y: number) {
     this.widget.config.position.x = x;
     this.widget.config.position.y = y;
+
+    this.state.isSaveRequired = true;
   }
 
   /**
@@ -116,6 +115,8 @@ export default class EditableWidget extends Vue {
   onResizeStop(x: number, y: number, width: number, height: number) {
     this.widget.config.size.width = width;
     this.widget.config.size.height = height;
+    
+    this.state.isSaveRequired = true;
   }
 }
 </script>

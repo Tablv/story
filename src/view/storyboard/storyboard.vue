@@ -24,7 +24,9 @@ import Page from "@/types/Page";
 import StoryHeader from "@/layout/story-editor/StoryHeader.vue";
 import StoryAside from "@/layout/story-editor/StoryAside.vue";
 import StoryMain from "@/layout/story-editor/StoryMain.vue";
-import { StoryPage } from "@/types/Story";
+import { StoryPage, StoryContainer } from "@/types/Story";
+import api from "@/api/editor";
+import StoryBuilder from '../../config/StoryBuilder';
 
 @Component({
   components: {
@@ -39,7 +41,7 @@ export default class Storyboard extends Vue {
     /**
      * 当前页下标
      */
-    currentIndex: null,
+    currentPage: null,
 
     /**
      * 当前选中组件
@@ -57,13 +59,6 @@ export default class Storyboard extends Vue {
     isSaveRequired: false
   };
 
-  @Provide()
-  getCurrentPage(): StoryPage {
-    return this.state.data?.pages[
-      this.state.currentIndex as number
-    ] as StoryPage;
-  }
-
   /**
    * 创建时执行方法
    */
@@ -77,14 +72,7 @@ export default class Storyboard extends Vue {
     }
 
     if (ObjectUtil.isEmptyString(id)) {
-      (this as any).$loading({
-        text: "故事板参数错误",
-        spinner: "el-icon-error"
-      });
-      (this as any).$message.error({
-        message: "故事板参数错误，系统无法正常加载数据",
-        duration: 0
-      });
+      this.brokenStory();
       return;
     }
 
@@ -97,34 +85,64 @@ export default class Storyboard extends Vue {
    * 并对加载失败的结果进行处理
    */
   loadData(id: string): void {
-    const storyboardId = UUID.generate();
+    api.story.find(id)
+      .then(res => {
+        const story = res.result;
+        if (story === null) throw new Error("ERROR");
+        if (story.config === null) story.config = StoryBuilder.buildContainerConfig();
 
-    this.state.data = {
-      id: storyboardId,
-      name: "测试故事板",
-      teamId: "",
-      config: {},
-      pages: [
-        {
-          id: "111",
-          sortNum: 0,
-          storyboardId,
-          lockUser: null,
-          thumbnail: "//127.0.0.1:3364/demo.png",
-          widgets: []
-        },
-        {
-          id: "222",
-          sortNum: 1,
-          storyboardId,
-          lockUser: null,
-          thumbnail: "//127.0.0.1:3364/demo.png",
-          widgets: []
+        this.state.data = res.result;
+
+        if (this.state.data?.pages.length !== 0) {
+          this.state.currentPage = this.state.data?.pages[0] as StoryPage;
         }
-      ]
-    };
+      })
+      .catch((err) => {
+        console.error(err)
+        this.brokenStory();
+      });
+    // const storyboardId = UUID.generate();
 
-    this.state.currentIndex = 0;
+    // this.state.data = {
+    //   id: storyboardId,
+    //   name: "测试故事板",
+    //   teamId: "",
+    //   config: {},
+    //   pages: [
+    //     {
+    //       id: "111",
+    //       sortNum: 0,
+    //       storyboardId,
+    //       lockUser: null,
+    //       thumbnail: "//127.0.0.1:3364/demo.png",
+    //       widgets: []
+    //     },
+    //     {
+    //       id: "222",
+    //       sortNum: 1,
+    //       storyboardId,
+    //       lockUser: null,
+    //       thumbnail: "//127.0.0.1:3364/demo.png",
+    //       widgets: []
+    //     }
+    //   ]
+    // };
+
+  }
+
+  /**
+   * 故事板参数有误
+   *  - 禁止操作
+   */
+  brokenStory() {
+    (this as any).$loading({
+      text: "故事板参数错误",
+      spinner: "el-icon-error"
+    });
+    (this as any).$message.error({
+      message: "故事板参数错误，系统无法正常加载数据",
+      duration: 0
+    });
   }
 }
 </script>

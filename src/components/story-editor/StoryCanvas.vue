@@ -56,9 +56,6 @@ export default class StoryCanvas extends Vue {
   @Inject()
   state!: Page.State;
 
-  @Inject()
-  getCurrentPage!: () => StoryPage;
-
   widgetMenu = {
     visible: false,
     position: {
@@ -79,7 +76,7 @@ export default class StoryCanvas extends Vue {
   }
 
   get currentPage(): StoryPage {
-    return this.getCurrentPage();
+    return this.state.currentPage as StoryPage;
   }
 
   get widgets() {

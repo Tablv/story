@@ -56,6 +56,7 @@ $blockSize: 84px;
     align-items: center;
     font-size: 22px;
     cursor: pointer;
+    color: #666;
 
     &.draggable {
       cursor: grab;

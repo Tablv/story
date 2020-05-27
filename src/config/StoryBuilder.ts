@@ -9,15 +9,22 @@ import { WidgetType } from "@/config/WidgetType";
  */
 export default class StoryBuilder {
   /**
+   * 构建容器配置
+   */
+  static buildContainerConfig() {
+    return {};
+  }
+
+  /**
    * 构建页面
    *
    * @param storyboardId 故事板ID
    * @param sortNum 排序下标
    */
-  static buildPage(storyboardId: string, sortNum: number): StoryPage {
+  static buildPage(storyId: string, sortNum: number): StoryPage {
     return {
       id: UUID.generate(),
-      storyboardId,
+      storyId,
       sortNum,
       lockUser: null,
       thumbnail: null,

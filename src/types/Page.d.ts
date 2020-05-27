@@ -1,5 +1,5 @@
 import { StoryWidget } from "@/types/StoryWidget";
-import { StoryContainer } from "./Story";
+import { StoryContainer, StoryPage } from "./Story";
 
 declare namespace Page {
   /**
@@ -9,7 +9,7 @@ declare namespace Page {
     /**
      * 当前页下标
      */
-    currentIndex: number | null;
+    currentPage: StoryPage | null;
 
     /**
      * 当前选中组件

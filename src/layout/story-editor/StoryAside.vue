@@ -4,9 +4,9 @@
       <draggable v-model="pages" :animation="200">
         <div
           class="thumbnail-wrapper"
-          v-for="(page, index) in pages"
+          v-for="page in pages"
           :key="page.id"
-          @contextmenu.prevent="openMenu($event, page.id, index)"
+          @contextmenu.prevent="openMenu($event, page)"
         >
           <page-thumbnail :data="page" @select-story="setCurrentPage" />
         </div>
@@ -40,6 +40,7 @@ import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
 import { StoryPage } from "@/types/Story";
+import api from '../../api/editor';
 
 @Component({
   components: {
@@ -55,8 +56,6 @@ export default class StoryAside extends Vue {
   /**
    * 右键菜单
    */
-  currentPageId: string | null = null;
-
   menuVisible = false;
 
   position = {
@@ -71,12 +70,14 @@ export default class StoryAside extends Vue {
   set pages(draggedPages: Array<StoryPage>) {
     if (this.state.data) {
       // 当前页
-      const currentPage = this.pages[this.state.currentIndex as number];
-      let currentIndex = this.state.currentIndex;
+      const currentPage = this.state.currentPage as StoryPage;
+      let currentIndex = currentPage.sortNum;
 
       // 重新排序
       const sortedPages = draggedPages.map((page: StoryPage, index: number) => {
+        // 更新下标
         if (page.id === currentPage.id) currentIndex = index;
+
         page.sortNum = index;
         return page;
       });
@@ -90,30 +91,42 @@ export default class StoryAside extends Vue {
       this.state.data.pages = sortedPages;
 
       // 设置当前页
-      this.state.currentIndex = currentIndex;
+      this.state.currentPage = this.state.data.pages[currentIndex];
     }
   }
 
-  setCurrentPage(index: number) {
-    this.state.currentIndex = index;
+  setCurrentPage(page: StoryPage) {
+    this.state.currentPage = page;
   }
 
   addPage() {
-    if (this.state.data) {
-      const storyboardId = this.state.data.id,
-        sortNum = this.state.data.pages.length;
+    if (!this.state.data) return;
 
-      this.state.data.pages.push(StoryBuilder.buildPage(storyboardId, sortNum));
-    }
+    const pageLength = this.state.data?.pages.length,
+      sortNum = pageLength === undefined ? 0 : pageLength;
+
+      debugger
+      console.log(this.state.data.id);
+      
+    
+    const newPage = StoryBuilder.buildPage(this.state.data.id, sortNum);
+    api.storyPage.create(newPage)
+      .then(() => {
+        this.state.data?.pages.splice(sortNum, 0, newPage);
+        (this as any).$message.success("创建故事页");
+      })
+      .catch(() => {
+        (this as any).$message.error("创建故事页失败");
+      });
   }
 
-  openMenu(evt: MouseEvent, pageId: string, pageIndex: number) {
-    this.state.currentIndex = pageIndex;
+  openMenu(evt: MouseEvent, page: StoryPage) {
+    this.state.currentPage = page;
+
     this.position = {
       top: evt.clientY,
       left: evt.clientX
     };
-    this.currentPageId = pageId;
     this.menuVisible = true;
   }
 
@@ -121,9 +134,7 @@ export default class StoryAside extends Vue {
     if (this.state.data?.pages) {
       const lastIndex = this.state.data.pages.length - 1;
 
-      let newPage = ObjectUtil.copy(
-        this.state.data.pages.filter(page => page.id === this.currentPageId)[0]
-      );
+      let newPage = ObjectUtil.copy(this.state.currentPage as StoryPage);
       newPage.id = UUID.generate();
       newPage.sortNum = lastIndex + 1;
 
@@ -132,10 +143,8 @@ export default class StoryAside extends Vue {
   }
 
   deletePage() {
-    if (this.state.data?.pages && this.currentPageId) {
-      const index = this.state.data.pages
-        .map(page => page.id)
-        .indexOf(this.currentPageId);
+    if (this.state.data?.pages) {
+      const index = this.state.data.pages.indexOf(this.state.currentPage as StoryPage);
       this.state.data.pages.splice(index, 1);
 
       // 重新排序
