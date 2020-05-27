@@ -9,7 +9,7 @@
     :y="widget.config.position.y"
     :z-index="widget.config.position.z"
     :parent="true"
-    :class="{ 'active': isActiveWidget() }"
+    :class="{ active: isActiveWidget() }"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"
@@ -19,7 +19,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Inject, Prop, Emit } from "vue-property-decorator";
+import {
+  Vue,
+  Component,
+  Provide,
+  Inject,
+  Prop,
+  Emit
+} from "vue-property-decorator";
 
 // Vue-Draggable-Resizable
 import vdr from "vue-draggable-resizable-gorkys";
@@ -67,11 +74,14 @@ export default class EditableWidget extends Vue {
 
   clickOnEditing(evt: MouseEvent) {
     const toolbarClicked = (evt as any).path?.some((node: HTMLElement) => {
-      return node.classList && [...node.classList].some(className => className === "text-tool-bar");
+      return (
+        node.classList &&
+        [...node.classList].some(className => className === "text-tool-bar")
+      );
     });
 
     if (toolbarClicked) return;
-    
+
     this.widgetEditable.value = false;
     window.removeEventListener("click", this.clickOnEditing);
   }
@@ -116,7 +126,6 @@ export default class EditableWidget extends Vue {
 
 <style lang="scss" scoped>
 .editable-widget {
-
   .widget-item {
     width: 100%;
     height: 100%;

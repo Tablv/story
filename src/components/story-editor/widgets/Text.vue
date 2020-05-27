@@ -12,7 +12,11 @@
       <span v-show="!textValue" class="placeholder-tip">
         <span>双击输入文本</span>
       </span>
-      <span class="preview-text" :style="[ getTextStyle(), getPreviewAlignment() ]" v-html="formatedText"></span>
+      <span
+        class="preview-text"
+        :style="[getTextStyle(), getPreviewAlignment()]"
+        v-html="formatedText"
+      ></span>
     </div>
   </div>
 </template>
@@ -23,10 +27,10 @@ import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
-import BorderConfigurable from "./BorderConfigurable";
+import BorderConfigurable from "./mixins/BorderConfigurable";
 
 @Component({
-  mixins: [ BorderConfigurable ]
+  mixins: [BorderConfigurable]
 })
 export default class TextToolBar extends Vue {
   @Inject()
@@ -83,7 +87,7 @@ export default class TextToolBar extends Vue {
 
   getTextStyle() {
     return {
-      "color": this.textFont.color,
+      color: this.textFont.color,
       "font-size": this.textFont.size + "px",
       "font-weight": this.textFont.bold ? "bold" : "normal",
       "font-style": this.textFont.italic ? "italic" : "normal",
@@ -103,20 +107,21 @@ export default class TextToolBar extends Vue {
       middle: "center",
       bottom: "flex-end"
     }
-  }
+  };
 
   getPreviewAlignment() {
     return {
-      "justify-content": this.alignmentMapping.horizontal[this.textAlignment.horizontal],
+      "justify-content": this.alignmentMapping.horizontal[
+        this.textAlignment.horizontal
+      ],
       "align-items": this.alignmentMapping.vertical[this.textAlignment.vertical]
-    }
+    };
   }
 }
 </script>
 
 <style lang="scss">
 .text-widget {
-
   .text-box {
     font-family: auto;
     width: 100%;

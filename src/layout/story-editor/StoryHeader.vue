@@ -10,7 +10,6 @@
     </span>
 
     <span class="right">
-      
       <el-button
         type="text"
         icon="fa fa-expand-arrows-alt"
@@ -68,7 +67,6 @@ export default class StoryHeader extends Vue {}
   }
 
   .more-dropdown {
-
     > .el-dropdown-link {
       display: inline-block;
       width: 100%;

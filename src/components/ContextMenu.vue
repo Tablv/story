@@ -18,13 +18,12 @@
     >
       <span>{{ menu.name }}</span>
     </li>
-    
   </ul>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { CreateElement, VNode } from 'vue';
+import { CreateElement, VNode } from "vue";
 import clickoutside from "element-ui/src/utils/clickoutside";
 
 @Component({
@@ -37,7 +36,11 @@ export default class ContextMenu extends Vue {
   @Prop({ default: false })
   visible!: boolean;
 
-  @Prop({ default: () => { return { top: 0, left: 0 } } })
+  @Prop({
+    default: () => {
+      return { top: 0, left: 0 };
+    }
+  })
   position!: { top: number; left: number };
 
   @Prop({ default: true })
@@ -63,7 +66,8 @@ export default class ContextMenu extends Vue {
         handle: (e: MouseEvent) => {
           const clickEvents = node.data?.on?.click;
           if (clickEvents) {
-            const callbacks = typeof clickEvents === "function" ? [ clickEvents ] : clickEvents;
+            const callbacks =
+              typeof clickEvents === "function" ? [clickEvents] : clickEvents;
             callbacks.forEach((callback: Function) => {
               callback.apply(node.context, e);
             });

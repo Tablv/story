@@ -36,14 +36,32 @@ import { StoryPage } from "@/types/Story";
 export default class Storyboard extends Vue {
   @Provide()
   state: Page.State = {
+    /**
+     * 当前页下标
+     */
     currentIndex: null,
+
+    /**
+     * 当前选中组件
+     */
     currentWidget: null,
-    data: null
+
+    /**
+     * 故事板数据
+     */
+    data: null,
+
+    /**
+     * 是否需要保存
+     */
+    isSaveRequired: false
   };
 
   @Provide()
   getCurrentPage(): StoryPage {
-    return this.state.data?.pages[this.state.currentIndex as number] as StoryPage;
+    return this.state.data?.pages[
+      this.state.currentIndex as number
+    ] as StoryPage;
   }
 
   /**

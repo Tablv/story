@@ -1,9 +1,6 @@
 <template>
   <div class="tool-bar-inner img-tool-bar">
-    <el-popover
-      placement="bottom-start"
-      width="400"
-      trigger="click">
+    <el-popover placement="bottom-start" width="400" trigger="click">
       <el-button slot="reference" icon="fa fa-image"></el-button>
 
       <h2>123</h2>
@@ -34,11 +31,11 @@ export default class ImageToolBar extends Vue {
     return this.state.currentWidget as StoryWidget<widgetConfig.Image>;
   }
 
-  get imgUrl(): widgetConfig.Image['url'] {
+  get imgUrl(): widgetConfig.Image["url"] {
     return this.widget.config.url;
   }
 
-  set imgUrl(url: widgetConfig.Image['url']) {
+  set imgUrl(url: widgetConfig.Image["url"]) {
     this.widget.config.url = url;
   }
 }

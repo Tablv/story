@@ -1,9 +1,6 @@
 <template>
   <!-- 边框 -->
-  <el-popover
-    placement="bottom"
-    width="180"
-    trigger="click">
+  <el-popover placement="bottom" width="180" trigger="click">
     <el-button slot="reference" icon="fa fa-border-style"></el-button>
 
     <el-form class="border-style-form" label-width="70px">
@@ -14,7 +11,7 @@
           @change="toggleBorderEnable"
         ></el-switch>
       </el-form-item>
-      
+
       <div v-if="borderProps">
         <el-form-item label="宽度">
           <!-- 宽度 -->
@@ -39,18 +36,18 @@
               :value="option.value"
               :label="option.label"
             >
-              <span class="border-style-example" :style="{ 'border-style': option.value }"></span>
+              <span
+                class="border-style-example"
+                :style="{ 'border-style': option.value }"
+              ></span>
             </el-option>
           </el-select>
         </el-form-item>
-          
+
         <el-form-item label="颜色">
           <!-- 颜色 -->
-          <el-color-picker
-            v-model="borderProps.color"
-          ></el-color-picker>
+          <el-color-picker v-model="borderProps.color"></el-color-picker>
         </el-form-item>
-
       </div>
     </el-form>
   </el-popover>
@@ -88,7 +85,7 @@ export default class BorderStyle extends Vue {
   get borderProps(): widgetConfig.Border["props"] {
     return this.border.props;
   }
-  
+
   set borderProps(props: widgetConfig.Border["props"]) {
     this.border.props = props;
   }

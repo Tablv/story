@@ -1,10 +1,6 @@
 <template>
   <div class="widget-item img-widget" :style="getBorderStyle()">
-    <el-image
-      v-if="imgUrl"
-      :src="imgUrl"
-      fit="contain"
-    ></el-image>
+    <el-image v-if="imgUrl" :src="imgUrl" fit="contain"></el-image>
 
     <div class="placeholder-tip" v-else>
       <i class="fa fa-image tip-icon"></i>
@@ -18,10 +14,10 @@ import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/Page";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
-import BorderConfigurable from "./BorderConfigurable";
+import BorderConfigurable from "./mixins/BorderConfigurable";
 
 @Component({
-  mixins: [ BorderConfigurable ]
+  mixins: [BorderConfigurable]
 })
 export default class ImageToolBar extends Vue {
   @Inject()
@@ -30,7 +26,7 @@ export default class ImageToolBar extends Vue {
   @Inject()
   widgetData!: StoryWidget<widgetConfig.Image>;
 
-  get imgUrl(): widgetConfig.Image['url'] {
+  get imgUrl(): widgetConfig.Image["url"] {
     return this.widgetData.config.url;
   }
 }

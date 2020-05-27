@@ -16,8 +16,11 @@
         @contextmenu.native.prevent="openContextMenu($event, widget)"
       ></editable-widget>
     </div>
-    
-    <context-menu :visible.sync="widgetMenu.visible" :position="widgetMenu.position">
+
+    <context-menu
+      :visible.sync="widgetMenu.visible"
+      :position="widgetMenu.position"
+    >
       <li>上移一层</li>
       <li>下移一层</li>
       <li>置于顶层</li>
@@ -62,11 +65,11 @@ export default class StoryCanvas extends Vue {
       top: 0,
       left: 0
     }
-  }
+  };
 
   openContextMenu(event: MouseEvent, currentWidget: StoryWidget<any>) {
     this.state.currentWidget = currentWidget;
-    
+
     this.widgetMenu.position = {
       top: event.clientY,
       left: event.clientX
@@ -101,11 +104,11 @@ export default class StoryCanvas extends Vue {
   setActivedWidget(widget: StoryWidget<any>) {
     this.currentWidget = widget;
   }
-  
+
   dropWidgetHandle(event: DragEvent) {
     const widgetType = event.dataTransfer?.getData("widgetType"),
       $canvasDOM = document.querySelector(".story-canvas");
-    
+
     if (widgetType && this.currentPage && $canvasDOM) {
       const domRect = $canvasDOM.getBoundingClientRect();
       const newWidget = StoryBuilder.buildWidget(widgetType as WidgetType, {
@@ -117,7 +120,6 @@ export default class StoryCanvas extends Vue {
       this.widgets.push(newWidget);
     }
   }
-
 }
 </script>
 

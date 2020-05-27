@@ -14,7 +14,7 @@ export class WidgetBuilder {
     if (!this.type || !this.position) {
       throw new Error("部件构造器的构造函数参数有误");
     }
-    
+
     const configBuilder = this.widgetConfigBuilders[this.type];
     if (!configBuilder) {
       return {};
@@ -24,19 +24,19 @@ export class WidgetBuilder {
   }
 
   public buildBorder(enable: boolean): widgetConfig.Border {
-    return enable ?
-      {
-        enable: true,
-        props: {
-          width: 1,
-          style: "solid",
-          color: "#000"
+    return enable
+      ? {
+          enable: true,
+          props: {
+            width: 1,
+            style: "solid",
+            color: "#000"
+          }
         }
-      } : 
-      {
-        enable: false,
-        props: null
-      };
+      : {
+          enable: false,
+          props: null
+        };
   }
 
   private widgetConfigBuilders: { [type: string]: Function } = {

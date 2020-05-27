@@ -13,7 +13,8 @@
       <el-option
         v-for="fontSize in fontSizeOptions"
         :key="fontSize"
-        :value="fontSize">
+        :value="fontSize"
+      >
       </el-option>
     </el-select>
 
@@ -84,9 +85,7 @@
     </el-radio-group>
 
     <!-- 边框 -->
-    <border-style
-      :data="widget.config.border"
-    ></border-style>
+    <border-style :data="widget.config.border"></border-style>
   </div>
 </template>
 
@@ -106,7 +105,44 @@ export default class TextToolBar extends Vue {
   @Inject()
   state!: Page.State;
 
-  fontSizeOptions = [8, 9, 10, 10.5, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192];
+  fontSizeOptions = [
+    8,
+    9,
+    10,
+    10.5,
+    11,
+    12,
+    14,
+    16,
+    18,
+    20,
+    24,
+    28,
+    32,
+    36,
+    40,
+    44,
+    48,
+    54,
+    60,
+    66,
+    72,
+    80,
+    88,
+    96,
+    104,
+    112,
+    120,
+    128,
+    136,
+    144,
+    152,
+    160,
+    168,
+    176,
+    184,
+    192
+  ];
 
   get widget(): StoryWidget<widgetConfig.TextArea> {
     return this.state.currentWidget as StoryWidget<widgetConfig.TextArea>;
@@ -124,7 +160,6 @@ export default class TextToolBar extends Vue {
 
 <style lang="scss">
 .text-tool-bar {
-
   .font-color-picker,
   .switch-btn-group,
   .el-radio-group {

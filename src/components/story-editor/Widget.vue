@@ -4,7 +4,7 @@ import Page from "@/types/Page";
 import { CreateElement } from "vue";
 import text from "./widgets/Text.vue";
 import img from "./widgets/Image.vue";
-import { StoryWidget } from '../../types/StoryWidget';
+import { StoryWidget } from "../../types/StoryWidget";
 
 @Component({})
 export default class Widget extends Vue {
@@ -36,7 +36,7 @@ export default class Widget extends Vue {
   position: relative;
   display: flex;
   align-items: center;
-  
+
   .label-text {
     margin-right: 6px;
   }

@@ -1,10 +1,13 @@
 <template>
   <div class="story-aside">
     <div class="thumbnail-list" v-if="state.data">
-      <draggable :animation="200">
+      <draggable
+        v-model="pages"
+        :animation="200"
+      >
         <div
           class="thumbnail-wrapper"
-          v-for="(page, index) in state.data.pages"
+          v-for="(page, index) in pages"
           :key="page.id"
           @contextmenu.prevent="openMenu($event, page.id, index)"
         >
@@ -23,10 +26,7 @@
       </div>
     </div>
 
-    <context-menu
-      :visible.sync="menuVisible"
-      :position="position"
-    >
+    <context-menu :visible.sync="menuVisible" :position="position">
       <li @click="copyPage">复制本页</li>
       <li @click="deletePage" divided>删除本页</li>
     </context-menu>
@@ -66,6 +66,36 @@ export default class StoryAside extends Vue {
     top: 0,
     left: 0
   };
+
+  get pages() {
+    return this.state.data?.pages || [];
+  }
+
+  set pages(draggedPages: Array<StoryPage>) {
+    if (this.state.data) {
+      // 当前页
+      const currentPage = this.pages[this.state.currentIndex as number];
+      let currentIndex = this.state.currentIndex;
+
+      // 重新排序
+      const sortedPages = draggedPages.map((page: StoryPage, index: number) => {
+        if (page.id === currentPage.id) currentIndex = index;
+        page.sortNum = index;
+        return page;
+      });
+
+      // 后端请求参数
+      const params = sortedPages.map((page: StoryPage) => {
+        const { id, sortNum } = page;
+        return { id, sortNum };
+      });
+
+      this.state.data.pages = sortedPages;
+
+      // 设置当前页
+      this.state.currentIndex = currentIndex;
+    }
+  }
 
   setCurrentPage(index: number) {
     this.state.currentIndex = index;
