@@ -1,10 +1,7 @@
 <template>
   <div class="story-aside">
     <div class="thumbnail-list" v-if="state.data">
-      <draggable
-        v-model="pages"
-        :animation="200"
-      >
+      <draggable v-model="pages" :animation="200">
         <div
           class="thumbnail-wrapper"
           v-for="(page, index) in pages"

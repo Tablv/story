@@ -20,11 +20,13 @@ export default class ToolBar extends Vue {
   };
 
   savePage() {
-    alert(123)
+    alert(123);
   }
 
   render(h: CreateElement) {
-    const toolbar = this.state.currentWidget ? this.toolbarRegistry[this.state.currentWidget.type] : null;
+    const toolbar = this.state.currentWidget
+      ? this.toolbarRegistry[this.state.currentWidget.type]
+      : null;
 
     const element = (
       <el-row
@@ -36,13 +38,15 @@ export default class ToolBar extends Vue {
         <div class="tool-bar">
           <toolbar />
         </div>
-        
+
         <div class="btn-group">
           <el-button
             type="primary"
-            disabled={ !this.state.isSaveRequired }
-            onClick={ this.savePage }
-          >保存</el-button>
+            disabled={!this.state.isSaveRequired}
+            onClick={this.savePage}
+          >
+            保存
+          </el-button>
         </div>
       </el-row>
     );
