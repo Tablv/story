@@ -88,12 +88,20 @@ export default class Storyboard extends Vue {
     api.story
       .find(id)
       .then(res => {
-        const story = res.result;
+        const story: StoryContainer = res.result;
         if (story === null) throw new Error("ERROR");
-        if (story.config === null)
-          story.config = StoryBuilder.buildContainerConfig();
 
-        this.state.data = res.result;
+        if (story.config === null) {
+          story.config = StoryBuilder.buildContainerConfig();
+        }
+
+        story.pages.forEach((page: StoryPage) => {
+          if (!page.widgets) {
+            page.widgets = [];
+          }
+        });
+
+        this.state.data = story;
 
         if (this.state.data?.pages.length !== 0) {
           this.state.currentPage = this.state.data?.pages[0] as StoryPage;

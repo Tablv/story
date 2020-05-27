@@ -5,6 +5,7 @@ import { CreateElement } from "vue";
 import text from "./toolbars/Text.vue";
 import img from "./toolbars/Image.vue";
 import api from "@/api/editor";
+import ObjectUtil from 'glaway-bi-util/ObjectUtil';
 
 @Component({
   components: {}
@@ -23,8 +24,11 @@ export default class ToolBar extends Vue {
   savePage() {
     if (!this.state.currentPage) return;
 
+    let pageDTO = ObjectUtil.copy(this.state.currentPage);
+    pageDTO.widgets = JSON.stringify(pageDTO.widgets) as any;
+
     api.storyPage
-      .save(this.state.currentPage)
+      .save(pageDTO)
       .then(() => {
         (this as any).$message.success("保存成功");
         this.state.isSaveRequired = false;

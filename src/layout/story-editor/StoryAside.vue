@@ -100,6 +100,7 @@ export default class StoryAside extends Vue {
   }
 
   addPage() {
+    debugger
     if (!this.state.data) return;
 
     const pageLength = this.state.data?.pages.length,
