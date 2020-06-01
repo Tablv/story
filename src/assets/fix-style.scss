@@ -1,8 +1,12 @@
 /**
  * Element UI Fix
  */
-.el-drawer__header{
-    span{
-        outline: none;
-    }
+.el-drawer__header {
+  span {
+    outline: none;
+  }
+}
+
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
 }

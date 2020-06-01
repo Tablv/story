@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-item text-widget" :style="getBorderStyle()">
+  <div class="widget-item text-widget" :style="borderStyle">
     <textarea
       v-if="editable"
       class="text-box edit-box"

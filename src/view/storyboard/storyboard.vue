@@ -4,9 +4,11 @@
       <story-header></story-header>
     </el-header>
     <el-container class="container">
-      <el-aside class="aside" width="240px">
-        <story-aside></story-aside>
-      </el-aside>
+      <el-scrollbar>
+        <el-aside class="aside" width="240px">
+          <story-aside></story-aside>
+        </el-aside>
+      </el-scrollbar>
       <el-main class="main">
         <story-main></story-main>
       </el-main>
@@ -25,8 +27,8 @@ import StoryHeader from "@/layout/story-editor/StoryHeader.vue";
 import StoryAside from "@/layout/story-editor/StoryAside.vue";
 import StoryMain from "@/layout/story-editor/StoryMain.vue";
 import { StoryPage, StoryContainer } from "@/types/Story";
-import api from "@/api/editor";
-import StoryBuilder from "../../config/StoryBuilder";
+import { pageState, pageGetter, pageAction } from "@/store/PageStore";
+import StoryBuilder from "@/config/StoryBuilder";
 
 @Component({
   components: {
@@ -37,27 +39,13 @@ import StoryBuilder from "../../config/StoryBuilder";
 })
 export default class Storyboard extends Vue {
   @Provide()
-  state: Page.State = {
-    /**
-     * 当前页下标
-     */
-    currentPage: null,
+  state: Page.State = pageState;
 
-    /**
-     * 当前选中组件
-     */
-    currentWidget: null,
+  @Provide()
+  getter: Page.Getter = pageGetter;
 
-    /**
-     * 故事板数据
-     */
-    data: null,
-
-    /**
-     * 是否需要保存
-     */
-    isSaveRequired: false
-  };
+  @Provide()
+  action: Page.Action = pageAction;
 
   /**
    * 创建时执行方法
@@ -84,59 +72,40 @@ export default class Storyboard extends Vue {
    * 加载数据
    * 并对加载失败的结果进行处理
    */
-  loadData(id: string): void {
-    api.story
-      .find(id)
-      .then(res => {
-        const story: StoryContainer = res.result;
-        if (story === null) throw new Error("ERROR");
+  loadData(groupId: string): void {
+    pageState.groupId = groupId;
 
-        if (story.config === null) {
-          story.config = StoryBuilder.buildContainerConfig();
+    pageAction
+      .loadUser()
+      .then(async () => {
+        // 加载故事板
+        const container = await pageAction.loadStory(groupId);
+        // 加载未保存页
+        const unsavedPage = await this.action.loadUnsavedPage(container.id);
+
+        if (!container) return Promise.reject();
+
+        // 恢复暂存数据
+        if (unsavedPage) {
+          container.pages.forEach((page: StoryPage, index: number) => {
+            if (unsavedPage.id === page.id) {
+              this.$set(container.pages, index, unsavedPage);
+            }
+          });
         }
 
-        story.pages.forEach((page: StoryPage) => {
-          if (!page.widgets) {
-            page.widgets = [];
-          }
-        });
+        // 赋值
+        this.state.data = container;
 
-        this.state.data = story;
-
-        if (this.state.data?.pages.length !== 0) {
+        // 设置首页
+        if (this.state.data?.pages?.length !== 0) {
           this.state.currentPage = this.state.data?.pages[0] as StoryPage;
         }
       })
-      .catch(err => {
-        console.error(err);
+      .catch((err: Error) => {
         this.brokenStory();
+        console.error(err);
       });
-    // const storyboardId = UUID.generate();
-
-    // this.state.data = {
-    //   id: storyboardId,
-    //   name: "测试故事板",
-    //   teamId: "",
-    //   config: {},
-    //   pages: [
-    //     {
-    //       id: "111",
-    //       sortNum: 0,
-    //       storyboardId,
-    //       lockUser: null,
-    //       thumbnail: "//127.0.0.1:3364/demo.png",
-    //       widgets: []
-    //     },
-    //     {
-    //       id: "222",
-    //       sortNum: 1,
-    //       storyboardId,
-    //       lockUser: null,
-    //       thumbnail: "//127.0.0.1:3364/demo.png",
-    //       widgets: []
-    //     }
-    //   ]
-    // };
   }
 
   /**

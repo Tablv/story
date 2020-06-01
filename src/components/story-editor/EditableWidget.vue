@@ -1,8 +1,8 @@
 <template>
   <vdr
     class="editable-widget"
-    :draggable="!widgetEditable.value"
-    :resizable="!widgetEditable.value"
+    :draggable="isDraggable"
+    :resizable="isDraggable"
     :w="widget.config.size.width"
     :h="widget.config.size.height"
     :x="widget.config.position.x"
@@ -32,6 +32,7 @@ import {
 import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 
+import debounce from "@/util/debounce";
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
@@ -49,6 +50,9 @@ export default class EditableWidget extends Vue {
   @Inject()
   state!: Page.State;
 
+  @Inject()
+  getter!: Page.Getter;
+
   @Prop()
   @Provide()
   widgetData!: StoryWidget<any>;
@@ -63,19 +67,23 @@ export default class EditableWidget extends Vue {
     value: false
   };
 
+  get isDraggable() {
+    this.getter.pageLockedByMe;
+    const isCurrentUser =
+      this.state.currentUser !== null &&
+      this.state.currentUser.id === this.state.currentPage?.lockUser;
+    return isCurrentUser && !this.widgetEditable.value;
+  }
+
   enableEditable() {
     this.widgetEditable.value = true;
 
-    window.addEventListener("click", this.clickOnEditing);
+    window.addEventListener("click", debounce(300, this.clickOnEditing));
   }
 
   clickOnEditing(evt: MouseEvent) {
-    const toolbarClicked = (evt as any).path?.some((node: HTMLElement) => {
-      return (
-        node.classList &&
-        [...node.classList].some(className => className === "text-tool-bar")
-      );
-    });
+    const $toolbar = document.querySelector(".tool-bar") as HTMLDivElement;
+    const toolbarClicked = $toolbar.contains(evt.target as Node);
 
     if (toolbarClicked) return;
 
@@ -105,8 +113,6 @@ export default class EditableWidget extends Vue {
   onDragStop(x: number, y: number) {
     this.widget.config.position.x = x;
     this.widget.config.position.y = y;
-
-    this.state.isSaveRequired = true;
   }
 
   /**
@@ -115,8 +121,6 @@ export default class EditableWidget extends Vue {
   onResizeStop(x: number, y: number, width: number, height: number) {
     this.widget.config.size.width = width;
     this.widget.config.size.height = height;
-
-    this.state.isSaveRequired = true;
   }
 }
 </script>

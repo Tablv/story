@@ -16,6 +16,13 @@
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
+
+        <section class="lock-tip-mask" v-if="lockedUserName">
+          <span class="lock-tip">
+            <i class="fa fa-user"></i>
+            <span>{{ lockedUserName }} 正在编辑...</span>
+          </span>
+        </section>
       </main>
     </div>
   </div>
@@ -45,6 +52,10 @@ export default class PageThumbnail extends Vue {
 
   get pageNum() {
     return this.data.sortNum + 1;
+  }
+
+  get lockedUserName() {
+    return this.data.lockUserName;
   }
 
   onLoadFinish(e: Event) {
@@ -83,12 +94,29 @@ $radius: 4px;
       background-color: #fff;
       box-shadow: 0 1px 4px 2px rgba(0, 0, 0, 0.1);
       cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
 
       border-radius: $radius;
-      border: 2px solid transparent;
+      overflow: hidden;
+
+      .lock-tip-mask {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+
+        .lock-tip {
+          width: 100%;
+          background-color: rgba(0, 0, 0, 0.2);
+          color: #fff;
+          padding: 0 2px;
+
+          i {
+            margin-right: 4px;
+          }
+        }
+      }
     }
 
     .thumbnail-img {

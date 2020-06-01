@@ -16,7 +16,7 @@ export default class BorderConfigurable extends Vue {
     return this.widgetData.config.border;
   }
 
-  getBorderStyle() {
+  get borderStyle() {
     const borderProps = this.borderConfig.props;
 
     if (this.borderConfig.enable && borderProps) {

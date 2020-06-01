@@ -60,6 +60,11 @@ export interface StoryPage {
   lockUser: string | null;
 
   /**
+   * 锁定用户名
+   */
+  lockUserName: string | null;
+
+  /**
    * 缩略图 URL
    */
   thumbnail: string | null;

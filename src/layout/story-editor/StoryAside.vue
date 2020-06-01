@@ -1,9 +1,9 @@
 <template>
   <div class="story-aside">
     <div class="thumbnail-list" v-if="state.data">
-      <draggable v-model="pages" :animation="200">
+      <draggable class="draggable" v-model="pages" :animation="200">
         <div
-          class="thumbnail-wrapper"
+          class="thumbnail-item"
           v-for="page in pages"
           :key="page.id"
           @contextmenu.prevent="openMenu($event, page)"
@@ -40,7 +40,6 @@ import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
 import { StoryPage } from "@/types/Story";
-import api from "../../api/editor";
 
 @Component({
   components: {
@@ -52,6 +51,9 @@ import api from "../../api/editor";
 export default class StoryAside extends Vue {
   @Inject()
   state!: Page.State;
+
+  @Inject()
+  action!: Page.Action;
 
   /**
    * 右键菜单
@@ -100,22 +102,11 @@ export default class StoryAside extends Vue {
   }
 
   addPage() {
-    debugger
     if (!this.state.data) return;
 
-    const pageLength = this.state.data?.pages.length,
-      sortNum = pageLength === undefined ? 0 : pageLength;
-
-    const newPage = StoryBuilder.buildPage(this.state.data.id, sortNum);
-    api.storyPage
-      .create(newPage)
-      .then(() => {
-        this.state.data?.pages.splice(sortNum, 0, newPage);
-        (this as any).$message.success("创建故事页");
-      })
-      .catch(() => {
-        (this as any).$message.error("创建故事页失败");
-      });
+    this.action.addPage(this.state.data.id).catch(() => {
+      (this as any).$message.error("创建故事页失败");
+    });
   }
 
   openMenu(evt: MouseEvent, page: StoryPage) {
@@ -171,13 +162,13 @@ $thumbnailGap: 24px;
   user-select: none;
 
   .thumbnail-list {
-    .thumbnail-wrapper {
+    .thumbnail-item {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-flow: column nowrap;
 
-      & + .thumbnail-wrapper {
+      & + .thumbnail-item {
         margin-top: $thumbnailGap;
       }
     }
@@ -188,6 +179,10 @@ $thumbnailGap: 24px;
   }
 
   .thumbnail-btn-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     .add-btn {
       width: $addBtnSize;
       height: $addBtnSize;

@@ -5,6 +5,7 @@
     @dragover.prevent
     @drop="dropWidgetHandle"
     @click="clearSelect"
+    ref="storyCanvas"
   >
     <div class="editable-widgets">
       <editable-widget
@@ -31,11 +32,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Inject } from "vue-property-decorator";
+import { Vue, Component, Provide, Inject, Watch } from "vue-property-decorator";
 
 // Vue-Draggable-Resizable
 import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
+import html2canvas from "html2canvas";
 
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
@@ -45,6 +47,9 @@ import { StoryPage } from "@/types/Story";
 
 import ContextMenu from "@/components/ContextMenu.vue";
 import EditableWidget from "./EditableWidget.vue";
+import debounce from "@/util/debounce";
+
+let syncThumbnail!: Function;
 
 @Component({
   components: {
@@ -56,6 +61,12 @@ export default class StoryCanvas extends Vue {
   @Inject()
   state!: Page.State;
 
+  @Inject()
+  getter!: Page.Getter;
+
+  @Inject()
+  action!: Page.Action;
+
   widgetMenu = {
     visible: false,
     position: {
@@ -63,6 +74,17 @@ export default class StoryCanvas extends Vue {
       left: 0
     }
   };
+
+  created() {
+    syncThumbnail = debounce(1000, () => {
+      html2canvas(this.$refs["storyCanvas"] as HTMLElement, {
+        width: 960,
+        height: 540
+      }).then((canvas: HTMLCanvasElement) => {
+        this.currentPage.thumbnail = canvas.toDataURL("image/png");
+      });
+    })
+  }
 
   openContextMenu(event: MouseEvent, currentWidget: StoryWidget<any>) {
     this.state.currentWidget = currentWidget;
@@ -80,7 +102,7 @@ export default class StoryCanvas extends Vue {
   }
 
   get widgets() {
-    return this.currentPage.widgets;
+    return this.currentPage?.widgets;
   }
 
   get currentWidget() {
@@ -89,6 +111,26 @@ export default class StoryCanvas extends Vue {
 
   set currentWidget(widget: StoryWidget<any> | null) {
     this.state.currentWidget = widget;
+  }
+
+  @Watch("widgets", {
+    deep: true,
+    immediate: true
+  })
+  onWidgetsChange(newValue: any, oldValue: any) {
+    const noCurrent = this.state.currentPage === null;
+    const notLockedByMe = !this.getter.pageLockedByMe;
+    const noBeforeVal = oldValue === undefined;
+
+    if (noCurrent || notLockedByMe || noBeforeVal) {
+      return;
+    }
+
+    // 暂存配置
+    this.action.stashUnsavedPage();
+
+    // 存储缩略图
+    syncThumbnail && syncThumbnail();
   }
 
   /**
@@ -124,7 +166,9 @@ export default class StoryCanvas extends Vue {
 .story-canvas {
   display: block;
   position: relative;
-  height: 560px;
+  width: 960px;
+  height: 540px;
+  margin: auto;
   background-color: #fff;
   user-select: none;
 

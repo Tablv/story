@@ -21,12 +21,13 @@ export default class StoryBuilder {
    * @param storyboardId 故事板ID
    * @param sortNum 排序下标
    */
-  static buildPage(storyId: string, sortNum: number): StoryPage {
+  static buildPage(storyId: string, sortNum?: number): StoryPage {
     return {
       id: UUID.generate(),
       storyId,
-      sortNum,
+      sortNum: sortNum as number,
       lockUser: null,
+      lockUserName: null,
       thumbnail: null,
       widgets: []
     };

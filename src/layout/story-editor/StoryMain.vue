@@ -6,9 +6,12 @@
         <tool-bar></tool-bar>
       </el-header>
       <!-- 画布 -->
-      <el-main class="canvas-wrapper">
-        <story-canvas></story-canvas>
-      </el-main>
+
+      <el-scrollbar>
+        <el-main class="canvas-wrapper">
+          <story-canvas></story-canvas>
+        </el-main>
+      </el-scrollbar>
     </el-container>
 
     <!-- 侧边工具栏 -->

@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-item img-widget" :style="getBorderStyle()">
+  <div class="widget-item img-widget" :style="borderStyle">
     <el-image v-if="imgUrl" :src="imgUrl" fit="contain"></el-image>
 
     <div class="placeholder-tip" v-else>

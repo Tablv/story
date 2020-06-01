@@ -2,6 +2,9 @@ import AxiosUtil from "glaway-bi-util/AxiosUtil";
 import { StoryPage } from "@/types/Story";
 
 const api = {
+  user: {
+    find: () => AxiosUtil.post("/storyPage/getUserHelper", null)
+  },
   story: {
     /**
      * 查询故事板
@@ -14,10 +17,23 @@ const api = {
      * 创建故事页
      */
     create: (page: StoryPage) => AxiosUtil.post("/storyPage/add", page),
+
     /**
      * 保存故事页
      */
-    save: (page: StoryPage) => AxiosUtil.post("/storyPage/update", page)
+    save: (page: StoryPage) =>
+      AxiosUtil.post("/storyPage/updateStoryPage", page, true),
+
+    /**
+     * 获取页面锁
+     */
+    getLock: (id: string) => AxiosUtil.post("/storyPage/getLock", { id }),
+
+    /**
+     * 释放页面锁
+     */
+    releaseLock: (id: string) =>
+      AxiosUtil.post("/storyPage/releaseLock", { id })
   }
 };
 
