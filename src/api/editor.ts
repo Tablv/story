@@ -19,10 +19,21 @@ const api = {
     create: (page: StoryPage) => AxiosUtil.post("/storyPage/add", page),
 
     /**
+     * 创建故事页
+     */
+    remove: (id: string) => AxiosUtil.post("/storyPage/remove", { id }),
+
+    /**
      * 保存故事页
      */
     save: (page: StoryPage) =>
       AxiosUtil.post("/storyPage/updateStoryPage", page, true),
+
+    /**
+     * 保存故事页
+     */
+    copy: (page: StoryPage) =>
+      AxiosUtil.post("/storyPage/copyStoryPage", page, true),
 
     /**
      * 获取页面锁

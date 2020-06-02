@@ -40,6 +40,7 @@ import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
 import { StoryPage } from "@/types/Story";
+import api from "@/api/editor";
 
 @Component({
   components: {
@@ -64,6 +65,11 @@ export default class StoryAside extends Vue {
     top: 0,
     left: 0
   };
+
+  /**
+   * 当前操作ID
+   */
+  currentOperationPage!: StoryPage;
 
   get pages() {
     return this.state.data?.pages || [];
@@ -110,7 +116,7 @@ export default class StoryAside extends Vue {
   }
 
   openMenu(evt: MouseEvent, page: StoryPage) {
-    this.state.currentPage = page;
+    this.currentOperationPage = page;
 
     this.position = {
       top: evt.clientY,
@@ -123,26 +129,48 @@ export default class StoryAside extends Vue {
     if (this.state.data?.pages) {
       const lastIndex = this.state.data.pages.length - 1;
 
-      let newPage = ObjectUtil.copy(this.state.currentPage as StoryPage);
+      let newPage = ObjectUtil.copy(this.currentOperationPage as StoryPage);
       newPage.id = UUID.generate();
       newPage.sortNum = lastIndex + 1;
 
-      this.state.data.pages.splice(lastIndex + 1, 0, newPage);
+      api.storyPage.copy(newPage)
+        .then(async (res) => {
+          (this as any).$message.success("已复制页面");
+          const sortNum = newPage.sortNum;
+          const newSortNum = res.result;
+          if (newSortNum !== sortNum) {
+            this.state.data = await this.action.loadStory(this.state.groupId);
+          }
+
+          this.state.data?.pages.splice(lastIndex + 1, 0, newPage)
+        })
+        .catch(() => {
+          (this as any).$message.error("复制页面出错");
+        })
     }
   }
 
   deletePage() {
-    if (this.state.data?.pages) {
-      const index = this.state.data.pages.indexOf(
-        this.state.currentPage as StoryPage
-      );
-      this.state.data.pages.splice(index, 1);
+    if (!this.currentOperationPage.id) return;
 
-      // 重新排序
-      this.state.data.pages.forEach((page, index) => {
-        page.sortNum = index;
-      });
+    if (this.currentOperationPage?.lockUser && this.currentOperationPage.lockUser !== this.state.currentUser?.id) {
+      (this as any).$message.error(`删除页面出错，请等待用户 ${this.currentOperationPage.lockUserName} 编辑完成`);
+      return;
     }
+
+    api.storyPage.remove(this.currentOperationPage.id)
+      .then(async () => {
+        (this as any).$message.success("已删除页面");
+
+        this.state.data = await this.action.loadStory(this.state.groupId);
+
+        if (!this.state.data?.pages.some(page => page.id === this.state.currentPage?.id)) {
+          this.state.currentPage = null;
+        }
+      })
+      .catch(() => {
+        (this as any).$message.error("删除页面出错");
+      })
   }
 }
 </script>
