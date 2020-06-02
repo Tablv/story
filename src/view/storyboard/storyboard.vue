@@ -4,11 +4,9 @@
       <story-header></story-header>
     </el-header>
     <el-container class="container">
-      <el-scrollbar>
-        <el-aside class="aside" width="240px">
-          <story-aside></story-aside>
-        </el-aside>
-      </el-scrollbar>
+      <el-aside class="aside" width="240px">
+        <story-aside></story-aside>
+      </el-aside>
       <el-main class="main">
         <story-main></story-main>
       </el-main>
@@ -130,7 +128,7 @@ export default class Storyboard extends Vue {
   height: 100%;
 
   .header {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.08);
     position: relative;
   }
 

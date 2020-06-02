@@ -1,7 +1,7 @@
 <template>
   <div class="story-aside">
     <div class="thumbnail-list" v-if="state.data">
-      <draggable class="draggable" v-model="pages" :animation="200">
+      <!-- <draggable class="draggable" v-model="pages" :animation="200"> -->
         <div
           class="thumbnail-item"
           v-for="page in pages"
@@ -10,7 +10,7 @@
         >
           <page-thumbnail :data="page" @select-story="setCurrentPage" />
         </div>
-      </draggable>
+      <!-- </draggable> -->
     </div>
 
     <div class="thumbnail-container add-page-box">

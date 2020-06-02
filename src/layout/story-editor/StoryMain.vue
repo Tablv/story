@@ -2,16 +2,14 @@
   <el-container class="story-main">
     <el-container class="container">
       <!-- 顶部文本工具栏 -->
-      <el-header height="50px">
+      <el-header height="70px">   
         <tool-bar></tool-bar>
       </el-header>
-      <!-- 画布 -->
 
-      <el-scrollbar>
-        <el-main class="canvas-wrapper">
-          <story-canvas></story-canvas>
-        </el-main>
-      </el-scrollbar>
+      <!-- 画布 -->
+      <el-main class="canvas-wrapper">
+        <story-canvas></story-canvas>
+      </el-main>
     </el-container>
 
     <!-- 侧边工具栏 -->

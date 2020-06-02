@@ -141,6 +141,11 @@ export default class ToolBar extends Vue {
 <style lang="scss">
 .tool-bar-wrapper {
   height: 100%;
+  overflow: hidden;
+
+  .tool-bar {
+    min-width: 700px;
+  }
 
   .tool-bar-inner {
     width: 100%;
