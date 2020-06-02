@@ -110,9 +110,17 @@ export default class StoryAside extends Vue {
   addPage() {
     if (!this.state.data) return;
 
-    this.action.addPage(this.state.data.id).catch(() => {
-      (this as any).$message.error("创建故事页失败");
-    });
+    this.action
+      .addPage(this.state.data.id)
+      .then(() => {
+        // 首次创建页面，置为第一页
+        if (this.state.data?.pages.length === 1) {
+          this.state.currentPage = this.state.data.pages[0];
+        }
+      })
+      .catch(() => {
+        (this as any).$message.error("创建故事页失败");
+      });
   }
 
   openMenu(evt: MouseEvent, page: StoryPage) {
@@ -133,8 +141,9 @@ export default class StoryAside extends Vue {
       newPage.id = UUID.generate();
       newPage.sortNum = lastIndex + 1;
 
-      api.storyPage.copy(newPage)
-        .then(async (res) => {
+      api.storyPage
+        .copy(newPage)
+        .then(async res => {
           (this as any).$message.success("已复制页面");
           const sortNum = newPage.sortNum;
           const newSortNum = res.result;
@@ -142,35 +151,45 @@ export default class StoryAside extends Vue {
             this.state.data = await this.action.loadStory(this.state.groupId);
           }
 
-          this.state.data?.pages.splice(lastIndex + 1, 0, newPage)
+          this.state.data?.pages.splice(lastIndex + 1, 0, newPage);
         })
         .catch(() => {
           (this as any).$message.error("复制页面出错");
-        })
+        });
     }
   }
 
   deletePage() {
     if (!this.currentOperationPage.id) return;
 
-    if (this.currentOperationPage?.lockUser && this.currentOperationPage.lockUser !== this.state.currentUser?.id) {
-      (this as any).$message.error(`删除页面出错，请等待用户 ${this.currentOperationPage.lockUserName} 编辑完成`);
+    if (
+      this.currentOperationPage?.lockUser &&
+      this.currentOperationPage.lockUser !== this.state.currentUser?.id
+    ) {
+      (this as any).$message.error(
+        `删除页面出错，请等待用户 ${this.currentOperationPage.lockUserName} 编辑完成`
+      );
       return;
     }
 
-    api.storyPage.remove(this.currentOperationPage.id)
+    api.storyPage
+      .remove(this.currentOperationPage.id)
       .then(async () => {
         (this as any).$message.success("已删除页面");
 
         this.state.data = await this.action.loadStory(this.state.groupId);
 
-        if (!this.state.data?.pages.some(page => page.id === this.state.currentPage?.id)) {
+        if (
+          !this.state.data?.pages.some(
+            page => page.id === this.state.currentPage?.id
+          )
+        ) {
           this.state.currentPage = null;
         }
       })
       .catch(() => {
         (this as any).$message.error("删除页面出错");
-      })
+      });
   }
 }
 </script>
@@ -220,6 +239,10 @@ $thumbnailGap: 24px;
       color: map-get($themeColor, normal);
       border: 2px solid map-get($themeColor, normal);
       transition: color 0.2s, border 0.2s;
+
+      &:focus {
+        outline: none;
+      }
     }
 
     &:hover .add-btn {

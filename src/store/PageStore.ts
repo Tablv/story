@@ -168,7 +168,7 @@ class PageAction implements Page.Action {
         }
         return Promise.resolve();
       })
-      .catch((err) => {
+      .catch(err => {
         return Promise.reject(err);
       });
   }

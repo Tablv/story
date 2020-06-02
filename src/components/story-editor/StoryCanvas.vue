@@ -83,7 +83,7 @@ export default class StoryCanvas extends Vue {
       }).then((canvas: HTMLCanvasElement) => {
         this.currentPage.thumbnail = canvas.toDataURL("image/png");
       });
-    })
+    });
   }
 
   openContextMenu(event: MouseEvent, currentWidget: StoryWidget<any>) {
@@ -147,12 +147,14 @@ export default class StoryCanvas extends Vue {
   dropWidgetHandle(event: DragEvent) {
     const noLock = !this.getter.pageLocked,
       notLockByMe = !this.getter.pageLockedByMe;
-    
+
     if (noLock) {
       (this as any).$message.warning("请先进入编辑模式");
       return;
     } else if (notLockByMe) {
-      (this as any).$message.warning(`当前页面正在编辑中，请等待用户 ${this.currentPage.lockUserName} 编辑完成`);
+      (this as any).$message.warning(
+        `当前页面正在编辑中，请等待用户 ${this.currentPage.lockUserName} 编辑完成`
+      );
       return;
     }
 

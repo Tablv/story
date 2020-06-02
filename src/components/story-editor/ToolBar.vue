@@ -6,7 +6,7 @@ import text from "./toolbars/Text.vue";
 import img from "./toolbars/Image.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { StoryPage } from "@/types/Story";
-import { ResultJSON } from 'glaway-bi-util/AxiosUtil';
+import { ResultJSON } from "glaway-bi-util/AxiosUtil";
 
 @Component({
   components: {}
@@ -71,7 +71,9 @@ export default class ToolBar extends Vue {
             this.state.currentPage.lockUser = res.result.lockUser;
             this.state.currentPage.lockUserName = res.result.lockUserName;
           }
-          (this as any).$message.error(`获取编辑权限失败，${res.result.lockUserName} 正在编辑当前页`);
+          (this as any).$message.error(
+            `获取编辑权限失败，${res.result.lockUserName} 正在编辑当前页`
+          );
         } else {
           (this as any).$message.warning("请先保存其他已编辑页面");
         }

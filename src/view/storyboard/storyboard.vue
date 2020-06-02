@@ -1,6 +1,6 @@
 <template>
   <el-container class="storyboard-editor">
-    <el-header>
+    <el-header class="header">
       <story-header></story-header>
     </el-header>
     <el-container class="container">
@@ -128,6 +128,11 @@ export default class Storyboard extends Vue {
 <style lang="scss" scoped>
 .storyboard-editor {
   height: 100%;
+
+  .header {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    position: relative;
+  }
 
   .container {
     background-color: #f1f3f6;
