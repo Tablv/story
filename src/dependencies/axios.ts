@@ -21,8 +21,11 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(
   config => {
-    const result = config.data as ResultJSON;
-    if (!result.success) return Promise.reject("接口返回错误");
+    const res = config.data as ResultJSON;
+    if (!res.success) {
+      const errorTip = "接口返回 success: false";
+      return Promise.reject(res);
+    }
 
     return config;
   },

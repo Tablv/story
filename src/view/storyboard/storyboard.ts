@@ -15,6 +15,7 @@ import "@/dependencies/vue-clipboard";
 import "@/dependencies/glaway-bi";
 
 import AxiosUtil from "glaway-bi-util/AxiosUtil";
+import "@/dependencies/axios";
 
 // 设置API上下文
 AxiosUtil.setBasePath("/admin");

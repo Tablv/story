@@ -96,9 +96,13 @@ $radius: 4px;
       cursor: pointer;
 
       border-radius: $radius;
+      position: relative;
       overflow: hidden;
 
       .lock-tip-mask {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);

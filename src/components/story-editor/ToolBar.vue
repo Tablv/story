@@ -5,6 +5,8 @@ import { CreateElement } from "vue";
 import text from "./toolbars/Text.vue";
 import img from "./toolbars/Image.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import { StoryPage } from "@/types/Story";
+import { ResultJSON } from 'glaway-bi-util/AxiosUtil';
 
 @Component({
   components: {}
@@ -41,12 +43,12 @@ export default class ToolBar extends Vue {
   /**
    * 是否需要保存
    */
-  get isSaveRequired() {
-    return (
-      this.state.unsavedPage !== null &&
-      this.state.unsavedPage.id === this.state.currentPage?.id
-    );
-  }
+  // get isSaveRequired() {
+  //   return (
+  //     this.state.unsavedPage !== null &&
+  //     this.state.unsavedPage.id === this.state.currentPage?.id
+  //   );
+  // }
 
   editPage() {
     if (!this.state.currentPage) return;
@@ -58,8 +60,21 @@ export default class ToolBar extends Vue {
           this.state.currentPage.lockUser = this.state.currentUser.id;
         }
       })
-      .catch(() => {
-        (this as any).$message.error("获取编辑权限失败");
+      .catch((res: Error | ResultJSON | undefined) => {
+        if (res instanceof Error || !res) {
+          (this as any).$message.error(`获取编辑权限失败`);
+          return;
+        }
+
+        if (res.result) {
+          if (this.state.currentPage) {
+            this.state.currentPage.lockUser = res.result.lockUser;
+            this.state.currentPage.lockUserName = res.result.lockUserName;
+          }
+          (this as any).$message.error(`获取编辑权限失败，${res.result.lockUserName} 正在编辑当前页`);
+        } else {
+          (this as any).$message.warning("请先保存其他已编辑页面");
+        }
       });
   }
 
@@ -107,17 +122,9 @@ export default class ToolBar extends Vue {
             <el-button
               class="save-button"
               type="primary"
-              disabled={!this.isSaveRequired}
               onClick={this.savePage}
             >
-              {this.isSaveRequired ? (
-                <span>保存</span>
-              ) : (
-                <span>
-                  <i class="el-icon-check"></i>
-                  <span>已保存</span>
-                </span>
-              )}
+              <span>保存</span>
             </el-button>
           ) : null}
         </div>

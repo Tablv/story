@@ -76,8 +76,9 @@ export default class EditableWidget extends Vue {
   }
 
   enableEditable() {
-    this.widgetEditable.value = true;
+    if (!this.getter.pageLockedByMe) return;
 
+    this.widgetEditable.value = true;
     window.addEventListener("click", debounce(300, this.clickOnEditing));
   }
 

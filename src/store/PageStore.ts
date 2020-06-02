@@ -161,15 +161,15 @@ class PageAction implements Page.Action {
 
     return api.storyPage
       .getLock(this.state.currentPage.id)
-      .then(res => {
+      .then(() => {
         if (this.state.currentUser && this.state.currentPage) {
           this.state.currentPage.lockUser = this.state.currentUser.id;
           this.state.currentPage.lockUserName = this.state.currentUser.username;
         }
-        return res.success ? Promise.resolve() : Promise.reject();
+        return Promise.resolve();
       })
-      .catch(() => {
-        this.loadStory(this.state.groupId);
+      .catch((err) => {
+        return Promise.reject(err);
       });
   }
 
