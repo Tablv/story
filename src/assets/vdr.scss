@@ -3,9 +3,6 @@
  */
 $bgColor: #fff;
 $handleColor: #09f;
-$borderColor: #00a2ff;
-$shadowColor: #58bee9;
-$shadow: 0 0 6px $shadowColor;
 
 @mixin topAndLeft($top, $left) {
   margin-top: $top;
@@ -17,18 +14,8 @@ $shadow: 0 0 6px $shadowColor;
   cursor: grab;
   border: 1px solid transparent;
 
-  // 悬停效果
-  &:hover {
-    box-shadow: $shadow;
-  }
-
   &:active {
     cursor: grabbing;
-  }
-
-  // 当前激活的元素
-  &.active {
-    border: 1px solid $borderColor;
   }
 
   .handle {

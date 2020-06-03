@@ -2,14 +2,14 @@
   <div class="story-aside">
     <div class="thumbnail-list" v-if="state.data">
       <!-- <draggable class="draggable" v-model="pages" :animation="200"> -->
-        <div
-          class="thumbnail-item"
-          v-for="page in pages"
-          :key="page.id"
-          @contextmenu.prevent="openMenu($event, page)"
-        >
-          <page-thumbnail :data="page" @select-story="setCurrentPage" />
-        </div>
+      <div
+        class="thumbnail-item"
+        v-for="page in pages"
+        :key="page.id"
+        @contextmenu.prevent="openMenu($event, page)"
+      >
+        <page-thumbnail :data="page" @select-story="setCurrentPage" />
+      </div>
       <!-- </draggable> -->
     </div>
 

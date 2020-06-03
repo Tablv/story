@@ -10,10 +10,13 @@
     </span>
 
     <span class="right">
+      <el-button type="text" icon="fa fa-tv" title="放映"></el-button>
+
       <el-button
         type="text"
         icon="fa fa-expand-arrows-alt"
-        title="放映"
+        :title="isFullScreen ? '退出全屏' : '进入全屏'"
+        @click="toggleFullScreen"
       ></el-button>
 
       <el-dropdown trigger="click" class="more-dropdown">
@@ -25,8 +28,8 @@
         ></el-button>
 
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>重命名</el-dropdown-item>
-          <el-dropdown-item divided>删除</el-dropdown-item>
+          <el-dropdown-item>导出</el-dropdown-item>
+          <el-dropdown-item divided>分享</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </span>
@@ -41,6 +44,31 @@ import Page from "@/types/Page";
 export default class StoryHeader extends Vue {
   @Inject()
   state!: Page.State;
+
+  isFullScreen = false;
+
+  get fullScreenValid() {
+    return !!(
+      document.fullscreenEnabled ||
+      (window as any).fullScreen ||
+      (document as any).webkitIsFullScreen ||
+      (document as any).msFullscreenEnabled
+    );
+  }
+
+  toggleFullScreen() {
+    const element = document.documentElement;
+
+    if (this.isFullScreen) {
+      document.exitFullscreen().then(() => {
+        this.isFullScreen = false;
+      });
+    } else {
+      element.requestFullscreen().then(() => {
+        this.isFullScreen = true;
+      });
+    }
+  }
 }
 </script>
 

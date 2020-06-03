@@ -2,7 +2,7 @@
   <el-container class="story-main">
     <el-container class="container">
       <!-- 顶部文本工具栏 -->
-      <el-header height="70px">   
+      <el-header height="70px">
         <tool-bar></tool-bar>
       </el-header>
 

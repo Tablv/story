@@ -86,7 +86,7 @@ class PageAction implements Page.Action {
   loadStory(groupId: string) {
     return api.story.find(groupId).then(res => {
       const story: StoryContainer = res.result;
-      if (story === null) return Promise.reject("Story is null");
+      if (story === null) return Promise.reject(null);
 
       // 解析故事板配置项
       if (!story.config) {

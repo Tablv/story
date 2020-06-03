@@ -16,6 +16,9 @@ export default class ToolBar extends Vue {
   state!: Page.State;
 
   @Inject()
+  getter!: Page.Getter;
+
+  @Inject()
   action!: Page.Action;
 
   toolbarRegistry: any = {
@@ -93,47 +96,57 @@ export default class ToolBar extends Vue {
       });
   }
 
-  render(h: CreateElement) {
-    const toolbar = this.state.currentWidget
-      ? this.toolbarRegistry[this.state.currentWidget.type]
-      : null;
+  /**
+   * 工具栏
+   */
+  toolbar(h: CreateElement) {
+    let toolbarInner = null;
 
-    const element = (
+    if (this.getter.pageLockedByMe && this.state.currentWidget) {
+      toolbarInner = this.toolbarRegistry[this.state.currentWidget.type];
+    }
+
+    return (
+      <div class="tool-bar">
+        <toolbarInner />
+      </div>
+    );
+  }
+
+  btnGroup(h: CreateElement) {
+    const buttons = [];
+
+    this.isEditVisible &&
+      buttons.push(
+        <el-button class="edit-button" type="primary" onClick={this.editPage}>
+          <span>编辑</span>
+        </el-button>
+      );
+
+    this.isSaveVisible &&
+      buttons.push(
+        <el-button class="save-button" type="primary" onClick={this.savePage}>
+          <span>保存</span>
+        </el-button>
+      );
+
+    return <div class="btn-group">{buttons.map(button => button)}</div>;
+  }
+
+  render(h: CreateElement) {
+    if (this.state.currentPage === null) return null;
+
+    return (
       <el-row
         class="tool-bar-wrapper"
         type="flex"
         justify="space-between"
         align="middle"
       >
-        <div class="tool-bar">
-          <toolbar />
-        </div>
-
-        <div class="btn-group">
-          {this.isEditVisible ? (
-            <el-button
-              class="edit-button"
-              type="primary"
-              onClick={this.editPage}
-            >
-              <span>编辑</span>
-            </el-button>
-          ) : null}
-
-          {this.isSaveVisible ? (
-            <el-button
-              class="save-button"
-              type="primary"
-              onClick={this.savePage}
-            >
-              <span>保存</span>
-            </el-button>
-          ) : null}
-        </div>
+        {this.toolbar(h)}
+        {this.btnGroup(h)}
       </el-row>
     );
-
-    return this.state.currentPage !== null ? element : null;
   }
 }
 </script>

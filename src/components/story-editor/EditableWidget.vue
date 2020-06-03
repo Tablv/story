@@ -9,10 +9,14 @@
     :y="widget.config.position.y"
     :z-index="widget.config.position.z"
     :parent="true"
-    :class="{ active: isActiveWidget() }"
+    :class="{ 'bordered': noBorder }"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"
+
+    :snap="true"
+    :snapTolerance="10"
+    @refLineParams="syncRefLines"
   >
     <widget @dblclick.native="enableEditable"></widget>
   </vdr>
@@ -39,6 +43,44 @@ import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 import Widget from "./Widget.vue";
+
+/**
+ * 参考线数据
+ */
+export interface RefLineParams {
+  /**
+   * 水平参考线
+   */
+  hLine: Array<RefLineParam>;
+
+  /**
+   * 垂直参考线
+   */
+  vLine: Array<RefLineParam>;
+}
+
+export interface RefLineParam {
+  /**
+   * 是否显示
+   */
+  display: boolean;
+
+  /**
+   * 左侧位移
+   */
+  origin: string;
+
+  /**
+   * 顶部位移
+   */
+  position: string;
+
+  /**
+   * 宽度
+   */
+  lineLength: string;
+}
+
 
 @Component({
   components: {
@@ -67,14 +109,20 @@ export default class EditableWidget extends Vue {
     value: false
   };
 
+  /**
+   * 是否可拖拽
+   */
   get isDraggable() {
-    this.getter.pageLockedByMe;
-    const isCurrentUser =
-      this.state.currentUser !== null &&
-      this.state.currentUser.id === this.state.currentPage?.lockUser;
-    return isCurrentUser && !this.widgetEditable.value;
+    return this.getter.pageLockedByMe && !this.widgetEditable.value;
   }
 
+  get noBorder() {
+    return !this.widgetData.config.border.enable;
+  }
+
+  /**
+   * 启用编辑
+   */
   enableEditable() {
     if (!this.getter.pageLockedByMe) return;
 
@@ -82,6 +130,9 @@ export default class EditableWidget extends Vue {
     window.addEventListener("click", debounce(300, this.clickOnEditing));
   }
 
+  /**
+   * 编辑中的点击回调
+   */
   clickOnEditing(evt: MouseEvent) {
     const $toolbar = document.querySelector(".tool-bar") as HTMLDivElement;
     const toolbarClicked = $toolbar.contains(evt.target as Node);
@@ -123,7 +174,12 @@ export default class EditableWidget extends Vue {
     this.widget.config.size.width = width;
     this.widget.config.size.height = height;
   }
+
+  syncRefLines(param: RefLineParams) {
+    this.$emit("syncRefLines", param);
+  }
 }
+
 </script>
 
 <style lang="scss">
@@ -131,7 +187,20 @@ export default class EditableWidget extends Vue {
 </style>
 
 <style lang="scss" scoped>
+$borderColor: #00a2ff;
+
 .editable-widget {
+
+  &.bordered,
+  &.active {
+    border: 1px solid $borderColor;
+  }
+
+  // 当前激活的元素
+  &.active {
+    box-shadow: 0 0 6px #58bee9;
+  }
+
   .widget-item {
     width: 100%;
     height: 100%;

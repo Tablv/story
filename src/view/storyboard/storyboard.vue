@@ -58,7 +58,7 @@ export default class Storyboard extends Vue {
     }
 
     if (ObjectUtil.isEmptyString(id)) {
-      this.brokenStory();
+      this.storyBroken();
       return;
     }
 
@@ -78,10 +78,11 @@ export default class Storyboard extends Vue {
       .then(async () => {
         // 加载故事板
         const container = await pageAction.loadStory(groupId);
-        // 加载未保存页
-        const unsavedPage = await this.action.loadUnsavedPage(container.id);
 
         if (!container) return Promise.reject();
+        
+        // 加载未保存页
+        const unsavedPage = await this.action.loadUnsavedPage(container.id);
 
         // 恢复暂存数据
         if (unsavedPage) {
@@ -100,9 +101,8 @@ export default class Storyboard extends Vue {
           this.state.currentPage = this.state.data?.pages[0] as StoryPage;
         }
       })
-      .catch((err: Error) => {
-        this.brokenStory();
-        console.error(err);
+      .catch(() => {
+        this.storyNotExist();
       });
   }
 
@@ -110,13 +110,28 @@ export default class Storyboard extends Vue {
    * 故事板参数有误
    *  - 禁止操作
    */
-  brokenStory() {
+  storyBroken() {
     (this as any).$loading({
       text: "故事板参数错误",
       spinner: "el-icon-error"
     });
     (this as any).$message.error({
       message: "故事板参数错误，系统无法正常加载数据",
+      duration: 0
+    });
+  }
+  
+  /**
+   * 故事板不存在
+   *  - 禁止操作
+   */
+  storyNotExist() {
+    (this as any).$loading({
+      text: "故事板不存在",
+      spinner: "el-icon-error"
+    });
+    (this as any).$message.error({
+      message: "故事板不存在，系统无法正常加载数据",
       duration: 0
     });
   }
@@ -128,7 +143,7 @@ export default class Storyboard extends Vue {
   height: 100%;
 
   .header {
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
     position: relative;
   }
 

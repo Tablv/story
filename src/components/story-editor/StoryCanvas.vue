@@ -12,11 +12,32 @@
         v-for="widget in widgets"
         :key="widget.id"
         :widget-data.sync="widget"
+        @syncRefLines="syncRefLines"
         @activated="setActivedWidget"
         @click.native.stop
         @contextmenu.native.prevent="openContextMenu($event, widget)"
       ></editable-widget>
     </div>
+
+    <!--辅助线-->
+    <div class="ref-lines">
+      <div class="ref-v-lines">
+        <span class="ref-line v-line"
+          v-for="(line, index) in refLines.vLine"
+          :key="index"
+          :style="{ left: line.position, top: line.origin, height: line.lineLength}"
+        ></span>
+      </div>
+
+      <div class="ref-v-lines">
+        <span class="ref-line h-line"
+          v-for="(line, index) in refLines.hLine"
+          :key="index"
+          :style="{ top: line.position, left: line.origin, width: line.lineLength}"
+        ></span>
+      </div>
+    </div>
+    <!--辅助线END-->
 
     <context-menu
       :visible.sync="widgetMenu.visible"
@@ -46,8 +67,9 @@ import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
 import ContextMenu from "@/components/ContextMenu.vue";
-import EditableWidget from "./EditableWidget.vue";
+import EditableWidget, { RefLineParams, RefLineParam } from "./EditableWidget.vue";
 import debounce from "@/util/debounce";
+import UUID from 'glaway-bi-util/UUID';
 
 let syncThumbnail!: Function;
 
@@ -67,6 +89,9 @@ export default class StoryCanvas extends Vue {
   @Inject()
   action!: Page.Action;
 
+  /**
+   * 部件右键菜单
+   */
   widgetMenu = {
     visible: false,
     position: {
@@ -75,7 +100,20 @@ export default class StoryCanvas extends Vue {
     }
   };
 
+  /**
+   * 画布参考线
+   */
+  refLines: RefLineParams = {
+    hLine: [],
+    vLine: []
+  };
+
+  syncRefLines(params: RefLineParams) {
+    this.refLines = params;
+  }
+
   created() {
+    // 创建同步缩略图方法
     syncThumbnail = debounce(1000, () => {
       html2canvas(this.$refs["storyCanvas"] as HTMLElement, {
         width: 960,
