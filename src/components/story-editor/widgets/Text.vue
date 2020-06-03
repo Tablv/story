@@ -9,7 +9,7 @@
     ></textarea>
 
     <div v-else class="text-box preview-box">
-      <span v-show="!textValue" class="placeholder-tip">
+      <span v-show="showPlaceholder" class="placeholder-tip">
         <span>双击输入文本</span>
       </span>
       <span
@@ -37,6 +37,9 @@ export default class TextToolBar extends Vue {
   state!: Page.State;
 
   @Inject()
+  getter!: Page.Getter;
+
+  @Inject()
   widgetData!: StoryWidget<widgetConfig.TextArea>;
 
   @Inject()
@@ -47,6 +50,10 @@ export default class TextToolBar extends Vue {
    */
   get editable() {
     return this.widgetEditable.value;
+  }
+
+  get showPlaceholder() {
+    return this.getter.pageLockedByMe && this.textValue === "";
   }
 
   /**

@@ -118,14 +118,14 @@ export default class ToolBar extends Vue {
 
     this.isEditVisible &&
       buttons.push(
-        <el-button class="edit-button" type="primary" onClick={this.editPage}>
+        <el-button class="edit-button" type="primary" icon="el-icon-edit" onClick={this.editPage}>
           <span>编辑</span>
         </el-button>
       );
 
     this.isSaveVisible &&
       buttons.push(
-        <el-button class="save-button" type="primary" onClick={this.savePage}>
+        <el-button class="save-button" type="success" icon="el-icon-check" onClick={this.savePage}>
           <span>保存</span>
         </el-button>
       );
