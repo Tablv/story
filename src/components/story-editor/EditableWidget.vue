@@ -7,7 +7,7 @@
     :h="widget.config.size.height"
     :x="widget.config.position.x"
     :y="widget.config.position.y"
-    :z-index="widget.config.position.z"
+    :z="widget.config.position.z"
     :parent="true"
     :class="{ 'bordered': noBorder }"
     @activated="onActivated"

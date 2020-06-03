@@ -43,11 +43,11 @@
       :visible.sync="widgetMenu.visible"
       :position="widgetMenu.position"
     >
-      <li>上移一层</li>
-      <li>下移一层</li>
-      <li>置于顶层</li>
-      <li>置于底层</li>
-      <li divided>删除</li>
+      <li @click="setLevelUp">上移一层</li>
+      <li @click="setLevelDown">下移一层</li>
+      <li @click="setLevelTop">置于顶层</li>
+      <li @click="setLevelBottom">置于底层</li>
+      <li @click="deleteWidget" divided>删除</li>
     </context-menu>
   </div>
 </template>
@@ -63,7 +63,7 @@ import html2canvas from "html2canvas";
 import Page from "@/types/Page";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
-import { StoryWidget } from "@/types/StoryWidget";
+import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
 import ContextMenu from "@/components/ContextMenu.vue";
@@ -88,6 +88,22 @@ export default class StoryCanvas extends Vue {
 
   @Inject()
   action!: Page.Action;
+
+  get currentPage(): StoryPage {
+    return this.state.currentPage as StoryPage;
+  }
+
+  get widgets() {
+    return this.currentPage?.widgets;
+  }
+
+  get currentWidget() {
+    return this.state.currentWidget;
+  }
+
+  set currentWidget(widget: StoryWidget<any> | null) {
+    this.state.currentWidget = widget;
+  }
 
   /**
    * 部件右键菜单
@@ -124,7 +140,13 @@ export default class StoryCanvas extends Vue {
     });
   }
 
+  /**
+   * 右键菜单部分
+   */
+  // 打开菜单
   openContextMenu(event: MouseEvent, currentWidget: StoryWidget<any>) {
+    if (!this.getter.pageLockedByMe) return;
+
     this.state.currentWidget = currentWidget;
 
     this.widgetMenu.position = {
@@ -135,21 +157,83 @@ export default class StoryCanvas extends Vue {
     this.widgetMenu.visible = true;
   }
 
-  get currentPage(): StoryPage {
-    return this.state.currentPage as StoryPage;
+  // 上移一层
+  setLevelUp() {
+    this._moveLevel(1);
   }
 
-  get widgets() {
-    return this.currentPage?.widgets;
+  // 下移一层
+  setLevelDown() {
+    this._moveLevel(-1);
   }
 
-  get currentWidget() {
-    return this.state.currentWidget;
+  // 置于顶层
+  setLevelTop() {
+    const maxIndex = this.currentPage.widgets.length - 1;
+    const offsetToTop = maxIndex - this.currentWidget?.config.position.z;
+    this._moveLevel(offsetToTop);
   }
 
-  set currentWidget(widget: StoryWidget<any> | null) {
-    this.state.currentWidget = widget;
+  // 置于底层
+  setLevelBottom() {
+    const offsetToZero = -((this.currentWidget as StoryWidget<widgetConfig.Base>).config.position.z);
+    this._moveLevel(offsetToZero);
   }
+
+  // 删除部件
+  deleteWidget() {
+    if (!this.currentWidget) return;
+
+    // 记录下标
+    const wIndex = (this.currentWidget as StoryWidget<widgetConfig.Base>).config.position.z;
+
+    // 当前对象置为空
+    this.currentWidget = null;
+
+    // 删除
+    this.currentPage.widgets.splice(this.currentPage.widgets.indexOf(this.currentWidget as any), 1);
+    
+    // 重新排序
+    this.currentPage.widgets.forEach((widget: StoryWidget<widgetConfig.Base>) => {
+      if (widget.config.position.z > wIndex) {
+        widget.config.position.z--;
+      }
+    });
+  }
+
+  // 移动层级
+  _moveLevel(offset: number) {
+    if (!this.currentWidget) return;
+
+    const currentWidget = this.currentWidget as StoryWidget<widgetConfig.Base>;
+
+    // 校验层级
+    const currentIndex = currentWidget.config.position.z;
+    const maxIndex = this.currentPage.widgets.length - 1;
+    if (offset < 0 && currentIndex === 0) return;
+    if (offset > 0 && currentIndex === maxIndex) return;
+    
+    // 排序
+    this.currentPage.widgets.forEach((widget: StoryWidget<widgetConfig.Base>) => {
+      const wIndex = widget.config.position.z;
+      // 减
+      if (offset < 0) {
+        if (wIndex < currentIndex && wIndex >= currentIndex + offset) {
+          widget.config.position.z++;
+        }
+      }
+
+      // 加
+      if (offset > 0) {
+        if (wIndex > currentIndex && wIndex <= currentIndex + offset) {
+          widget.config.position.z--;
+        }
+      }
+    });
+
+    currentWidget.config.position.z += offset;
+  }
+
 
   @Watch("widgets", {
     deep: true,
