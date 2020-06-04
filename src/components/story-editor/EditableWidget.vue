@@ -9,11 +9,10 @@
     :y="widget.config.position.y"
     :z="widget.config.position.z"
     :parent="true"
-    :class="{ 'bordered': noBorder }"
+    :class="{ bordered: noBorder }"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"
-
     :snap="true"
     :snapTolerance="10"
     @refLineParams="syncRefLines"
@@ -80,7 +79,6 @@ export interface RefLineParam {
    */
   lineLength: string;
 }
-
 
 @Component({
   components: {
@@ -179,7 +177,6 @@ export default class EditableWidget extends Vue {
     this.$emit("syncRefLines", param);
   }
 }
-
 </script>
 
 <style lang="scss">
@@ -190,7 +187,6 @@ export default class EditableWidget extends Vue {
 $borderColor: #00a2ff;
 
 .editable-widget {
-
   &.bordered,
   &.active {
     border: 1px solid $borderColor;

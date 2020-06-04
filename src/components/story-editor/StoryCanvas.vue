@@ -22,18 +22,28 @@
     <!--辅助线-->
     <div class="ref-lines">
       <div class="ref-v-lines">
-        <span class="ref-line v-line"
+        <span
+          class="ref-line v-line"
           v-for="(line, index) in refLines.vLine"
           :key="index"
-          :style="{ left: line.position, top: line.origin, height: line.lineLength}"
+          :style="{
+            left: line.position,
+            top: line.origin,
+            height: line.lineLength
+          }"
         ></span>
       </div>
 
       <div class="ref-v-lines">
-        <span class="ref-line h-line"
+        <span
+          class="ref-line h-line"
           v-for="(line, index) in refLines.hLine"
           :key="index"
-          :style="{ top: line.position, left: line.origin, width: line.lineLength}"
+          :style="{
+            top: line.position,
+            left: line.origin,
+            width: line.lineLength
+          }"
         ></span>
       </div>
     </div>
@@ -67,9 +77,12 @@ import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
 import ContextMenu from "@/components/ContextMenu.vue";
-import EditableWidget, { RefLineParams, RefLineParam } from "./EditableWidget.vue";
+import EditableWidget, {
+  RefLineParams,
+  RefLineParam
+} from "./EditableWidget.vue";
 import debounce from "@/util/debounce";
-import UUID from 'glaway-bi-util/UUID';
+import UUID from "glaway-bi-util/UUID";
 
 let syncThumbnail!: Function;
 
@@ -176,7 +189,8 @@ export default class StoryCanvas extends Vue {
 
   // 置于底层
   setLevelBottom() {
-    const offsetToZero = -((this.currentWidget as StoryWidget<widgetConfig.Base>).config.position.z);
+    const offsetToZero = -(this.currentWidget as StoryWidget<widgetConfig.Base>)
+      .config.position.z;
     this._moveLevel(offsetToZero);
   }
 
@@ -185,20 +199,26 @@ export default class StoryCanvas extends Vue {
     if (!this.currentWidget) return;
 
     // 记录下标
-    const wIndex = (this.currentWidget as StoryWidget<widgetConfig.Base>).config.position.z;
+    const wIndex = (this.currentWidget as StoryWidget<widgetConfig.Base>).config
+      .position.z;
 
     // 当前对象置为空
     this.currentWidget = null;
 
     // 删除
-    this.currentPage.widgets.splice(this.currentPage.widgets.indexOf(this.currentWidget as any), 1);
-    
+    this.currentPage.widgets.splice(
+      this.currentPage.widgets.indexOf(this.currentWidget as any),
+      1
+    );
+
     // 重新排序
-    this.currentPage.widgets.forEach((widget: StoryWidget<widgetConfig.Base>) => {
-      if (widget.config.position.z > wIndex) {
-        widget.config.position.z--;
+    this.currentPage.widgets.forEach(
+      (widget: StoryWidget<widgetConfig.Base>) => {
+        if (widget.config.position.z > wIndex) {
+          widget.config.position.z--;
+        }
       }
-    });
+    );
   }
 
   // 移动层级
@@ -212,28 +232,29 @@ export default class StoryCanvas extends Vue {
     const maxIndex = this.currentPage.widgets.length - 1;
     if (offset < 0 && currentIndex === 0) return;
     if (offset > 0 && currentIndex === maxIndex) return;
-    
-    // 排序
-    this.currentPage.widgets.forEach((widget: StoryWidget<widgetConfig.Base>) => {
-      const wIndex = widget.config.position.z;
-      // 减
-      if (offset < 0) {
-        if (wIndex < currentIndex && wIndex >= currentIndex + offset) {
-          widget.config.position.z++;
-        }
-      }
 
-      // 加
-      if (offset > 0) {
-        if (wIndex > currentIndex && wIndex <= currentIndex + offset) {
-          widget.config.position.z--;
+    // 排序
+    this.currentPage.widgets.forEach(
+      (widget: StoryWidget<widgetConfig.Base>) => {
+        const wIndex = widget.config.position.z;
+        // 减
+        if (offset < 0) {
+          if (wIndex < currentIndex && wIndex >= currentIndex + offset) {
+            widget.config.position.z++;
+          }
+        }
+
+        // 加
+        if (offset > 0) {
+          if (wIndex > currentIndex && wIndex <= currentIndex + offset) {
+            widget.config.position.z--;
+          }
         }
       }
-    });
+    );
 
     currentWidget.config.position.z += offset;
   }
-
 
   @Watch("widgets", {
     deep: true,

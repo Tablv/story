@@ -80,7 +80,7 @@ export default class Storyboard extends Vue {
         const container = await pageAction.loadStory(groupId);
 
         if (!container) return Promise.reject();
-        
+
         // 加载未保存页
         const unsavedPage = await this.action.loadUnsavedPage(container.id);
 
@@ -120,7 +120,7 @@ export default class Storyboard extends Vue {
       duration: 0
     });
   }
-  
+
   /**
    * 故事板不存在
    *  - 禁止操作

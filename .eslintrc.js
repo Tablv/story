@@ -25,7 +25,7 @@ module.exports = {
     "no-lonely-if": 2, // 不允许多层if
     "no-param-reassign": 0, // 不允许给函数参数重新赋值
     "no-mixed-operators": 2, // 不允许混合使用运算符
-    "no-underscore-dangle": 2, // 不允许下划线作为变量名之一
+    "no-underscore-dangle": 0, // 不允许下划线作为变量名之一
 
     /**
      * 建议规则
