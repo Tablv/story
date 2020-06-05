@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Vue, Prop, Component, Inject, Emit } from "vue-property-decorator";
 import { StoryPage } from "@/types/Story";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 
 @Component({})
 export default class PageThumbnail extends Vue {

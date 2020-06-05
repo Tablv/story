@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { CreateElement } from "vue";
 import text from "./toolbars/Text.vue";
 import img from "./toolbars/Image.vue";

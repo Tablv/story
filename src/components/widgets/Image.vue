@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderConfigurable from "./mixins/BorderConfigurable";
@@ -19,15 +19,15 @@ import BorderConfigurable from "./mixins/BorderConfigurable";
 @Component({
   mixins: [BorderConfigurable]
 })
-export default class ImageToolBar extends Vue {
+export default class ImageWidget extends Vue {
   @Inject()
   state!: Page.State;
 
-  @Inject()
-  widgetData!: StoryWidget<widgetConfig.Image>;
+  @Prop()
+  data!: StoryWidget<widgetConfig.Image>;
 
   get imgUrl(): widgetConfig.Image["url"] {
-    return this.widgetData.config.url;
+    return this.data.config.url;
   }
 }
 </script>

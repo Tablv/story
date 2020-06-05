@@ -1,10 +1,9 @@
 <template>
   <div class="tool-bar-inner img-tool-bar">
-    <el-popover placement="bottom-start" width="400" trigger="click">
+    <!-- <el-popover placement="bottom-start" width="400" trigger="click">
       <el-button slot="reference" icon="fa fa-image"></el-button>
 
-      <h2>123</h2>
-    </el-popover>
+    </el-popover> -->
 
     <!-- 边框 -->
     <border-style :data="widget.config.border"></border-style>
@@ -13,7 +12,7 @@
 
 <script lang="ts">
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderStyle from "./common/BorderStyle.vue";

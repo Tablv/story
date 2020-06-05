@@ -14,7 +14,7 @@
 
       <el-button
         type="text"
-        :icon="isFullScreen ? 'fa fa-compress-arrows-alt' : 'fa fa-expand-arrows-alt'"
+        icon="fa fa-expand-arrows-alt"
         :title="isFullScreen ? '退出全屏' : '进入全屏'"
         @click="toggleFullScreen"
       ></el-button>
@@ -48,25 +48,17 @@ export default class StoryHeader extends Vue {
   isFullScreen = false;
 
   toggleFullScreen() {
+    const element = document.documentElement;
+
     if (this.isFullScreen) {
-      this.exitFullScreen().catch(() => {
-        this.intoFullScreen();
+      document.exitFullscreen().then(() => {
+        this.isFullScreen = false;
       });
     } else {
-      this.intoFullScreen();
+      element.requestFullscreen().then(() => {
+        this.isFullScreen = true;
+      });
     }
-  }
-
-  exitFullScreen() {
-    return document.exitFullscreen().then(() => {
-      this.isFullScreen = false;
-    });
-  }
-
-  intoFullScreen() {
-    return document.documentElement.requestFullscreen().then(() => {
-      this.isFullScreen = true;
-    });
   }
 
   showPreviewScreen() {

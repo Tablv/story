@@ -1,4 +1,4 @@
-import { Vue, Component, Inject } from "vue-property-decorator";
+import { Vue, Component, Inject, Prop } from "vue-property-decorator";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 
 /**
@@ -6,14 +6,14 @@ import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
  */
 @Component
 export default class BorderConfigurable extends Vue {
-  @Inject()
-  widgetData!: StoryWidget<widgetConfig.TextArea>;
+  @Prop()
+  data!: StoryWidget<widgetConfig.Base>;
 
   /**
    * 边框配置
    */
   get borderConfig(): widgetConfig.Border {
-    return this.widgetData.config.border;
+    return this.data.config.border;
   }
 
   get borderStyle() {

@@ -16,13 +16,6 @@
     <el-aside class="widgets-aside" width="auto">
       <widgets-bar></widgets-bar>
     </el-aside>
-
-    <!-- 预览 -->
-    <story-screen
-      :visible.sync="screenVisible"
-      :index.sync="screenIndex"
-      :container="pageContainer"
-    />
   </el-container>
 </template>
 
@@ -31,49 +24,20 @@ import { Vue, Component, Inject } from "vue-property-decorator";
 import ToolBar from "@/components/story-editor/ToolBar.vue";
 import WidgetsBar from "@/components/story-editor/WidgetsBar.vue";
 import StoryCanvas from "@/components/story-editor/StoryCanvas.vue";
-import StoryScreen from "@/components/story-show/StoryScreen.vue";
 import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
-import { StoryPage } from '@/types/Story';
 
 @Component({
   components: {
     ToolBar,
     WidgetsBar,
-    StoryCanvas,
-    StoryScreen
+    StoryCanvas
   }
 })
 export default class StoryMain extends Vue {
   @Inject()
   state!: Page.State;
-
-  /**
-   * 预览
-   */
-  get screenVisible() {
-    return this.state.showPreviewScreen;
-  }
-
-  set screenVisible(visible: boolean) {
-    this.state.showPreviewScreen = visible;
-  }
-
-  get screenIndex() {
-    const index = this.state.currentPage?.sortNum;
-    return index || 0;
-  }
-
-  set screenIndex(index: number) {
-    const currentPage = this.state.data?.pages[index];
-    
-    if (currentPage) this.state.currentPage = currentPage;
-  }
-
-  get pageContainer() {
-    return this.state.data;
-  }
 }
 </script>
 

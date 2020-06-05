@@ -70,7 +70,7 @@ import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 import html2canvas from "html2canvas";
 
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";

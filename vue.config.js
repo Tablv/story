@@ -23,20 +23,20 @@ module.exports = {
   },
   pages: {
     editor: {
-      entry: "src/view/storyboard/storyboard.ts",
+      entry: "src/view/editor/main.ts",
       template: common.templatePath,
-      title: "故事板"
-    }
+      title: "故事板编辑器"
+    },
     // preview: {
     //   entry: "src/view/preview/preview.ts",
     //   template: common.templatePath,
     //   title: "预览图表"
     // },
-    // share: {
-    //   entry: "src/view/share/share.ts",
-    //   template: common.templatePath,
-    //   title: "图表分享"
-    // },
+    share: {
+      entry: "src/view/share/main.ts",
+      template: common.templatePath,
+      title: "故事板分享"
+    },
     // validate: {
     //   entry: "src/view/share/validate.ts",
     //   template: common.templatePath,

@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderStyle from "./common/BorderStyle.vue";

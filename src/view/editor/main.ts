@@ -1,5 +1,5 @@
 import { newVue } from "@/dependencies/vue-instance";
-import Storyboard from "./storyboard.vue";
+import Module from "./index.vue";
 
 // CSS
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -21,4 +21,4 @@ import "@/dependencies/axios";
 AxiosUtil.setBasePath("/admin");
 
 // Vue 实例
-newVue(Storyboard, "#app");
+newVue(Module, "#app");

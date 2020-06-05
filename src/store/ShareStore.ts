@@ -1,4 +1,4 @@
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import api from "@/api/editor";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { StoryContainer, StoryPage } from "@/types/Story";
@@ -27,7 +27,9 @@ const pageState: Page.State = {
 
   unsavedPage: null,
 
-  currentUser: null
+  currentUser: null,
+
+  showPreviewScreen: false
 };
 
 const pageGetter: Page.Getter = {

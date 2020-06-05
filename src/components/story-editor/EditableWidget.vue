@@ -17,7 +17,7 @@
     :snapTolerance="10"
     @refLineParams="syncRefLines"
   >
-    <widget @dblclick.native="enableEditable"></widget>
+    <widget @dblclick.native="enableEditable" :data="widgetData"></widget>
   </vdr>
 </template>
 
@@ -36,12 +36,12 @@ import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 
 import debounce from "@/util/debounce";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
-import Widget from "./Widget.vue";
+import Widget, { WidgetPageConfig } from '@/components/Widget.vue';
 
 /**
  * 参考线数据
@@ -94,7 +94,6 @@ export default class EditableWidget extends Vue {
   getter!: Page.Getter;
 
   @Prop()
-  @Provide()
   widgetData!: StoryWidget<any>;
 
   @Emit("activated")
@@ -103,15 +102,15 @@ export default class EditableWidget extends Vue {
   }
 
   @Provide()
-  widgetEditable = {
-    value: false
+  widgetConfig: WidgetPageConfig = {
+    editable: false
   };
 
   /**
    * 是否可拖拽
    */
   get isDraggable() {
-    return this.getter.pageLockedByMe && !this.widgetEditable.value;
+    return this.getter.pageLockedByMe && !this.widgetConfig.editable;
   }
 
   get noBorder() {
@@ -124,7 +123,7 @@ export default class EditableWidget extends Vue {
   enableEditable() {
     if (!this.getter.pageLockedByMe) return;
 
-    this.widgetEditable.value = true;
+    this.widgetConfig.editable = true;
     window.addEventListener("click", debounce(300, this.clickOnEditing));
   }
 
@@ -137,7 +136,7 @@ export default class EditableWidget extends Vue {
 
     if (toolbarClicked) return;
 
-    this.widgetEditable.value = false;
+    this.widgetConfig.editable = false;
     window.removeEventListener("click", this.clickOnEditing);
   }
 

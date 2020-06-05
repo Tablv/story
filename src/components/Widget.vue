@@ -1,18 +1,25 @@
 <script lang="ts">
 import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { CreateElement } from "vue";
 import text from "./widgets/Text.vue";
 import img from "./widgets/Image.vue";
 import { StoryWidget } from "@/types/StoryWidget";
 
+/**
+ * 组件页面配置项（Provide/Inject 注入）
+ */
+export interface WidgetPageConfig {
+  /**
+   * 是否可编辑
+   */
+  editable: boolean;
+}
+
 @Component({})
 export default class Widget extends Vue {
-  @Inject()
-  widgetData!: StoryWidget<any>;
-
-  @Inject()
-  state!: Page.State;
+  @Prop()
+  data!: StoryWidget<any>;
 
   widgetRegistry: any = {
     text,
@@ -22,8 +29,12 @@ export default class Widget extends Vue {
   };
 
   render(h: CreateElement) {
-    const component = this.widgetRegistry[this.widgetData.type];
-    if (component) return h(component);
+    const component = this.widgetRegistry[this.data.type];
+    if (component) return h(component, {
+      props: {
+        data: this.data
+      }
+    });
   }
 }
 </script>

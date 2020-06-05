@@ -19,13 +19,13 @@ import { Component, Vue, Watch, Provide } from "vue-property-decorator";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
 import PathUtil from "glaway-bi-util/PathUtil";
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 
 import StoryHeader from "@/layout/story-editor/StoryHeader.vue";
 import StoryAside from "@/layout/story-editor/StoryAside.vue";
 import StoryMain from "@/layout/story-editor/StoryMain.vue";
 import { StoryPage, StoryContainer } from "@/types/Story";
-import { pageState, pageGetter, pageAction } from "@/store/PageStore";
+import { pageState, pageGetter, pageAction } from "@/store/EditorStore";
 import StoryBuilder from "@/config/StoryBuilder";
 
 @Component({
@@ -35,7 +35,7 @@ import StoryBuilder from "@/config/StoryBuilder";
     StoryMain
   }
 })
-export default class Storyboard extends Vue {
+export default class StoryEditor extends Vue {
   @Provide()
   state: Page.State = pageState;
 

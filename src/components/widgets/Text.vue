@@ -24,32 +24,33 @@
 <script lang="ts">
 import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 
-import Page from "@/types/Page";
+import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderConfigurable from "./mixins/BorderConfigurable";
+import { WidgetPageConfig } from '../Widget.vue';
 
 @Component({
   mixins: [BorderConfigurable]
 })
-export default class TextToolBar extends Vue {
+export default class TextWidget extends Vue {
   @Inject()
   state!: Page.State;
 
   @Inject()
   getter!: Page.Getter;
 
-  @Inject()
-  widgetData!: StoryWidget<widgetConfig.TextArea>;
+  @Prop()
+  data!: StoryWidget<widgetConfig.TextArea>;
 
   @Inject()
-  widgetEditable!: { value: boolean };
+  widgetConfig!: WidgetPageConfig;
 
   /**
    * 可编辑状态
    */
   get editable() {
-    return this.widgetEditable.value;
+    return this.widgetConfig.editable;
   }
 
   get showPlaceholder() {
@@ -60,11 +61,11 @@ export default class TextToolBar extends Vue {
    * 文本值
    */
   get textValue(): widgetConfig.TextArea["value"] {
-    return this.widgetData.config.value;
+    return this.data.config.value;
   }
 
   set textValue(value: string) {
-    this.widgetData.config.value = value;
+    this.data.config.value = value;
   }
 
   get formatedText() {
@@ -75,21 +76,21 @@ export default class TextToolBar extends Vue {
    * 字体配置
    */
   get textFont(): widgetConfig.TextArea["font"] {
-    return this.widgetData.config.font;
+    return this.data.config.font;
   }
 
   /**
    * 对齐配置
    */
   get textAlignment(): widgetConfig.TextArea["alignment"] {
-    return this.widgetData.config.alignment;
+    return this.data.config.alignment;
   }
 
   /**
    * 边框配置
    */
   get borderConfig(): widgetConfig.Border {
-    return this.widgetData.config.border;
+    return this.data.config.border;
   }
 
   getTextStyle() {

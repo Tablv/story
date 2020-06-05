@@ -25,8 +25,7 @@ module.exports = {
     "no-lonely-if": 2, // 不允许多层if
     "no-param-reassign": 0, // 不允许给函数参数重新赋值
     "no-mixed-operators": 2, // 不允许混合使用运算符
-    "no-underscore-dangle": 0, // 不允许下划线作为变量名之一
-
+    
     /**
      * 建议规则
      */
@@ -35,12 +34,14 @@ module.exports = {
     "object-shorthand": ["error", "always", { avoidQuotes: false }], // 对象简写
     "no-unused-expressions": 0, // 允许您在表达式中使用三元运算符
     "no-multi-spaces": ["error", { ignoreEOLComments: true }], // 禁止多空格
-
+    "no-underscore-dangle": 0, // 不允许下划线作为变量名之一
+    
     /**
      * 普通规则
      */
     semi: 0, // 不检查使用或不使用句尾分号
     "no-restricted-syntax": 0,
+    "no-fallthrough": 0, // Expected a 'break' statement before 'case'
     "guard-for-in": 0, // for-in 不检查 hasOwnProperty
     "prefer-const": 0, // 偏好const常量
     "no-else-return": 0,
