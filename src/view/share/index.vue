@@ -52,17 +52,14 @@ export default class StoryShare extends Vue {
   created(): void {
     // 加载数据
     // const { id, debuggerMode } = PathUtil.getPathParams();
-
     // if (debuggerMode === "true") {
     //   // 不加载数据
     //   return;
     // }
-
     // if (ObjectUtil.isEmptyString(id)) {
     //   this.storyBroken();
     //   return;
     // }
-
     // // 加载数据
     // this.loadData(id);
   }

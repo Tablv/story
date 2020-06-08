@@ -5,7 +5,7 @@
       class="text-box edit-box"
       v-model="textValue"
       :readonly="!editable"
-      :style="getTextStyle()"
+      :style="textStyle"
     ></textarea>
 
     <div v-else class="text-box preview-box">
@@ -14,7 +14,7 @@
       </span>
       <span
         class="preview-text"
-        :style="[getTextStyle(), getPreviewAlignment()]"
+        :style="[textStyle, previewAlignment]"
         v-html="formatedText"
       ></span>
     </div>
@@ -28,18 +28,12 @@ import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderConfigurable from "./mixins/BorderConfigurable";
-import { WidgetPageConfig } from '../Widget.vue';
+import { WidgetPageConfig } from "../Widget.vue";
 
 @Component({
   mixins: [BorderConfigurable]
 })
 export default class TextWidget extends Vue {
-  @Inject()
-  state!: Page.State;
-
-  @Inject()
-  getter!: Page.Getter;
-
   @Prop()
   data!: StoryWidget<widgetConfig.TextArea>;
 
@@ -54,7 +48,7 @@ export default class TextWidget extends Vue {
   }
 
   get showPlaceholder() {
-    return this.getter.pageLockedByMe && this.textValue === "";
+    return this.editable && this.textValue === "";
   }
 
   /**
@@ -93,10 +87,14 @@ export default class TextWidget extends Vue {
     return this.data.config.border;
   }
 
-  getTextStyle() {
+  get scaledFontSize() {
+    return this.textFont.size * this.widgetConfig.scale;
+  }
+
+  get textStyle() {
     return {
       color: this.textFont.color,
-      "font-size": this.textFont.size + "px",
+      "font-size": this.scaledFontSize + "px",
       "font-weight": this.textFont.bold ? "bold" : "normal",
       "font-style": this.textFont.italic ? "italic" : "normal",
       "text-decoration": this.textFont.underline ? "underline" : "none",
@@ -117,7 +115,7 @@ export default class TextWidget extends Vue {
     }
   };
 
-  getPreviewAlignment() {
+  get previewAlignment() {
     return {
       "justify-content": this.alignmentMapping.horizontal[
         this.textAlignment.horizontal

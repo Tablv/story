@@ -35,7 +35,7 @@ import StoryScreen from "@/components/story-show/StoryScreen.vue";
 import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
-import { StoryPage } from '@/types/Story';
+import { StoryPage } from "@/types/Story";
 
 @Component({
   components: {
@@ -67,7 +67,7 @@ export default class StoryMain extends Vue {
 
   set screenIndex(index: number) {
     const currentPage = this.state.data?.pages[index];
-    
+
     if (currentPage) this.state.currentPage = currentPage;
   }
 

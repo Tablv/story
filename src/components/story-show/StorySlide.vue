@@ -1,18 +1,9 @@
 <template>
   <section class="story-slide">
     <div v-if="widgets" class="widgets">
-      <div
-        v-for="widget in widgets"
-        :key="widget.id"
-      >
-        <span
-          class="widget"
-          :style="getPosition(widget)"
-        >
-          <widget
-            :data="widget"
-            @click.native.stop
-          ></widget>
+      <div v-for="widget in widgets" :key="widget.id">
+        <span class="widget" :style="getPosition(widget)">
+          <widget :data="widget" @click.native.stop></widget>
         </span>
       </div>
     </div>
@@ -39,25 +30,22 @@ let syncThumbnail!: Function;
 export default class StorySlide extends Vue {
   @Prop()
   page!: StoryPage;
-  
+
   @Provide()
   widgetConfig: WidgetPageConfig = {
-    editable: false
-  }
+    editable: false,
+    scale: 1
+  };
 
   get widgets() {
-    console.log(this.page?.widgets[0]);
-    
     return this.page?.widgets;
   }
 
   getPosition(widget: StoryWidget<widgetConfig.Base>) {
-    console.log(123);
-    
     return {
-      'left': widget.config.position.x,
-      'top': widget.config.position.y
-    }
+      left: widget.config.position.x,
+      top: widget.config.position.y
+    };
   }
 }
 </script>

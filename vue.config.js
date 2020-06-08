@@ -36,7 +36,7 @@ module.exports = {
       entry: "src/view/share/main.ts",
       template: common.templatePath,
       title: "故事板分享"
-    },
+    }
     // validate: {
     //   entry: "src/view/share/validate.ts",
     //   template: common.templatePath,

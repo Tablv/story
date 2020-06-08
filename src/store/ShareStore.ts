@@ -7,7 +7,7 @@ import StoryBuilder from "@/config/StoryBuilder";
 /**
  * 页面状态数据
  */
-const pageState: Page.State = {
+const pageState: any = {
   groupId: "",
 
   /**

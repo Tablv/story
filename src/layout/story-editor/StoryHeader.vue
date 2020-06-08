@@ -10,11 +10,18 @@
     </span>
 
     <span class="right">
-      <el-button type="text" icon="fa fa-tv" title="放映" @click="showPreviewScreen"></el-button>
+      <el-button
+        type="text"
+        icon="fa fa-tv"
+        title="放映"
+        @click="showPreviewScreen"
+      ></el-button>
 
       <el-button
         type="text"
-        :icon="isFullScreen ? 'fa fa-compress-arrows-alt' : 'fa fa-expand-arrows-alt'"
+        :icon="
+          isFullScreen ? 'fa fa-compress-arrows-alt' : 'fa fa-expand-arrows-alt'
+        "
         :title="isFullScreen ? '退出全屏' : '进入全屏'"
         @click="toggleFullScreen"
       ></el-button>

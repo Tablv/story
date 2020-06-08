@@ -66,6 +66,32 @@ export default class StoryEditor extends Vue {
     this.loadData(id);
   }
 
+  mounted() {
+    this.syncScreenScale();
+    window.addEventListener("resize", this.syncScreenScale);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.syncScreenScale);
+  }
+
+  syncScreenScale() {
+    const canvas = document.querySelector(".canvas-wrapper");
+
+    if (!canvas) return;
+
+    const canvasWidth = canvas.clientWidth - 20;
+    const canvasHeight = canvas.clientHeight - 20;
+
+    const widthScale = canvasWidth / 960;
+    const heightScale = canvasHeight / 540;
+
+    let screenScale = widthScale > heightScale ? heightScale : widthScale;
+    screenScale = parseFloat(screenScale.toFixed(6));
+
+    this.state.screenScale = screenScale;
+  }
+
   /**
    * 加载数据
    * 并对加载失败的结果进行处理

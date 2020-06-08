@@ -67,6 +67,11 @@ declare namespace Page {
      * 是否显示预览屏幕
      */
     showPreviewScreen: boolean;
+
+    /**
+     * 屏幕缩放比例
+     */
+    screenScale: number;
   };
 
   /**

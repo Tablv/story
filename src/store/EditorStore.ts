@@ -30,6 +30,8 @@ const pageState: Page.State = {
   currentUser: null,
 
   showPreviewScreen: false,
+
+  screenScale: 1
 };
 
 const pageGetter: Page.Getter = {

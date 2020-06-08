@@ -6,8 +6,9 @@
     @drop="dropWidgetHandle"
     @click="clearSelect"
     ref="storyCanvas"
+    :style="canvasSize"
   >
-    <div class="editable-widgets">
+    <div class="widgets-container">
       <editable-widget
         v-for="widget in widgets"
         :key="widget.id"
@@ -68,7 +69,7 @@ import { Vue, Component, Provide, Inject, Watch } from "vue-property-decorator";
 // Vue-Draggable-Resizable
 import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
-import html2canvas from "html2canvas";
+import dom2image from "dom-to-image";
 
 import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
@@ -118,6 +119,14 @@ export default class StoryCanvas extends Vue {
     this.state.currentWidget = widget;
   }
 
+  get canvasSize() {
+    const scale = this.state.screenScale;
+    return {
+      width: `${960 * scale}px`,
+      height: `${540 * scale}px`
+    };
+  }
+
   /**
    * 部件右键菜单
    */
@@ -143,13 +152,16 @@ export default class StoryCanvas extends Vue {
 
   created() {
     // 创建同步缩略图方法
-    syncThumbnail = debounce(1000, () => {
-      html2canvas(this.$refs["storyCanvas"] as HTMLElement, {
-        width: 960,
-        height: 540
-      }).then((canvas: HTMLCanvasElement) => {
-        this.currentPage.thumbnail = canvas.toDataURL("image/png");
-      });
+    syncThumbnail = debounce(2000, () => {
+      const node = document.querySelector(".widgets-container") as HTMLElement;
+      dom2image
+        .toPng(node, {
+          bgcolor: "#fff",
+          quality: 0.8
+        })
+        .then(result => {
+          this.currentPage.thumbnail = result;
+        });
     });
   }
 
@@ -322,13 +334,12 @@ export default class StoryCanvas extends Vue {
 .story-canvas {
   display: block;
   position: relative;
-  width: 960px;
-  height: 540px;
   margin: auto;
   background-color: #fff;
   user-select: none;
+  overflow: hidden;
 
-  .editable-widgets {
+  .widgets-container {
     width: 100%;
     height: 100%;
   }

@@ -14,6 +14,11 @@ export interface WidgetPageConfig {
    * 是否可编辑
    */
   editable: boolean;
+
+  /**
+   * 组件缩放比例
+   */
+  scale: number;
 }
 
 @Component({})
@@ -30,11 +35,12 @@ export default class Widget extends Vue {
 
   render(h: CreateElement) {
     const component = this.widgetRegistry[this.data.type];
-    if (component) return h(component, {
-      props: {
-        data: this.data
-      }
-    });
+    if (component)
+      return h(component, {
+        props: {
+          data: this.data
+        }
+      });
   }
 }
 </script>

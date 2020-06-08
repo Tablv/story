@@ -10,7 +10,12 @@
     </span>
 
     <span class="right">
-      <el-button type="text" icon="fa fa-tv" title="放映" @click="showPreviewScreen"></el-button>
+      <el-button
+        type="text"
+        icon="fa fa-tv"
+        title="放映"
+        @click="showPreviewScreen"
+      ></el-button>
 
       <el-button
         type="text"

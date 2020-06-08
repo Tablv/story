@@ -1,12 +1,16 @@
 <template>
+  <!-- :w="widget.config.size.width"
+    :h="widget.config.size.height"
+    :x="widget.config.position.x"
+    :y="widget.config.position.y" -->
   <vdr
     class="editable-widget"
     :draggable="isDraggable"
     :resizable="isDraggable"
-    :w="widget.config.size.width"
-    :h="widget.config.size.height"
-    :x="widget.config.position.x"
-    :y="widget.config.position.y"
+    :w="scaledConfig.size.width"
+    :h="scaledConfig.size.height"
+    :x="scaledConfig.position.x"
+    :y="scaledConfig.position.y"
     :z="widget.config.position.z"
     :parent="true"
     :class="{ bordered: noBorder }"
@@ -28,7 +32,8 @@ import {
   Provide,
   Inject,
   Prop,
-  Emit
+  Emit,
+  Watch
 } from "vue-property-decorator";
 
 // Vue-Draggable-Resizable
@@ -39,9 +44,9 @@ import debounce from "@/util/debounce";
 import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
-import { StoryWidget } from "@/types/StoryWidget";
+import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
-import Widget, { WidgetPageConfig } from '@/components/Widget.vue';
+import Widget, { WidgetPageConfig } from "@/components/Widget.vue";
 
 /**
  * 参考线数据
@@ -103,8 +108,22 @@ export default class EditableWidget extends Vue {
 
   @Provide()
   widgetConfig: WidgetPageConfig = {
-    editable: false
+    editable: false,
+    scale: 1
   };
+
+  get screenScale() {
+    return this.state.screenScale;
+  }
+
+  created() {
+    this.syncScale();
+  }
+
+  @Watch("screenScale")
+  syncScale() {
+    this.widgetConfig.scale = this.screenScale;
+  }
 
   /**
    * 是否可拖拽
@@ -115,6 +134,23 @@ export default class EditableWidget extends Vue {
 
   get noBorder() {
     return !this.widgetData.config.border.enable;
+  }
+
+  get scaledConfig() {
+    const scale = this.state.screenScale;
+    const originalSize = this.widget.config.size;
+    const originalPos = this.widget.config.position;
+
+    return {
+      position: {
+        x: scale * originalPos.x,
+        y: scale * originalPos.y
+      },
+      size: {
+        width: scale * originalSize.width,
+        height: scale * originalSize.height
+      }
+    };
   }
 
   /**
@@ -140,11 +176,11 @@ export default class EditableWidget extends Vue {
     window.removeEventListener("click", this.clickOnEditing);
   }
 
-  get widget() {
+  get widget(): StoryWidget<widgetConfig.Base> {
     return this.widgetData;
   }
 
-  set widget(widget: StoryWidget<any>) {
+  set widget(widget: StoryWidget<widgetConfig.Base>) {
     this.$emit("update:data", widget);
   }
 
@@ -160,16 +196,20 @@ export default class EditableWidget extends Vue {
    * 拖拽结束 回调
    */
   onDragStop(x: number, y: number) {
-    this.widget.config.position.x = x;
-    this.widget.config.position.y = y;
+    const scale = this.state.screenScale;
+
+    this.widget.config.position.x = x / scale;
+    this.widget.config.position.y = y / scale;
   }
 
   /**
    * 调整大小结束 回调
    */
   onResizeStop(x: number, y: number, width: number, height: number) {
-    this.widget.config.size.width = width;
-    this.widget.config.size.height = height;
+    const scale = this.state.screenScale;
+
+    this.widget.config.size.width = width / scale;
+    this.widget.config.size.height = height / scale;
   }
 
   syncRefLines(param: RefLineParams) {

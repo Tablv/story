@@ -1,9 +1,6 @@
 <template>
   <section v-if="visible" class="story-screen">
-    <story-slide
-      v-if="hasPage"
-      :page="currentPage"
-    />
+    <story-slide v-if="hasPage" :page="currentPage" />
 
     <nav>
       <el-button>Previous</el-button>
@@ -13,7 +10,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Watch, Prop, Emit } from "vue-property-decorator";
+import {
+  Vue,
+  Component,
+  Provide,
+  Watch,
+  Prop,
+  Emit
+} from "vue-property-decorator";
 
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
@@ -116,8 +120,6 @@ export default class StoryScreen extends Vue {
   }
 
   keyEventHandle(e: KeyboardEvent) {
-    console.log(e);
-    
     switch (e.keyCode) {
       // Escape
       case 27:
