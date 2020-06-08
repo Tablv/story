@@ -1,10 +1,10 @@
 <template>
   <div class="widget-item text-widget" :style="borderStyle">
     <textarea
-      v-if="editable"
+      v-if="widgetEditable"
       class="text-box edit-box"
       v-model="textValue"
-      :readonly="!editable"
+      :readonly="!widgetEditable"
       :style="textStyle"
     ></textarea>
 
@@ -43,12 +43,12 @@ export default class TextWidget extends Vue {
   /**
    * 可编辑状态
    */
-  get editable() {
-    return this.widgetConfig.editable;
+  get widgetEditable() {
+    return this.widgetConfig.widgetEditMode;
   }
 
   get showPlaceholder() {
-    return this.editable && this.textValue === "";
+    return this.widgetConfig.pageEditMode && this.textValue === "";
   }
 
   /**

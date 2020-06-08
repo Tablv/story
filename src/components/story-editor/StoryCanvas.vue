@@ -319,8 +319,8 @@ export default class StoryCanvas extends Vue {
     if (widgetType && this.currentPage && $canvasDOM) {
       const domRect = $canvasDOM.getBoundingClientRect();
       const newWidget = StoryBuilder.buildWidget(widgetType as WidgetType, {
-        x: event.clientX - domRect.left,
-        y: event.clientY - domRect.top,
+        x: (event.clientX - domRect.left) / this.state.screenScale,
+        y: (event.clientY - domRect.top) / this.state.screenScale,
         z: this.widgets.length
       });
 

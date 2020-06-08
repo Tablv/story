@@ -11,9 +11,14 @@ import { StoryWidget } from "@/types/StoryWidget";
  */
 export interface WidgetPageConfig {
   /**
+   * 页面编辑模式
+   */
+  pageEditMode: boolean;
+
+  /**
    * 是否可编辑
    */
-  editable: boolean;
+  widgetEditMode: boolean;
 
   /**
    * 组件缩放比例

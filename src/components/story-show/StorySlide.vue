@@ -33,7 +33,8 @@ export default class StorySlide extends Vue {
 
   @Provide()
   widgetConfig: WidgetPageConfig = {
-    editable: false,
+    pageEditMode: false,
+    widgetEditMode: false,
     scale: 1
   };
 

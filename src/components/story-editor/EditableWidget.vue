@@ -21,7 +21,7 @@
     :snapTolerance="10"
     @refLineParams="syncRefLines"
   >
-    <widget @dblclick.native="enableEditable" :data="widgetData"></widget>
+    <widget @dblclick.native="enableWidgetEditable" :data="widgetData"></widget>
   </vdr>
 </template>
 
@@ -108,16 +108,22 @@ export default class EditableWidget extends Vue {
 
   @Provide()
   widgetConfig: WidgetPageConfig = {
-    editable: false,
-    scale: 1
+    pageEditMode: this.pageLockedByMe,
+    widgetEditMode: false,
+    scale: this.screenScale
   };
+
+  get pageLockedByMe() {
+    return this.getter.pageLockedByMe;
+  }
+
+  @Watch("pageLockedByMe")
+  onPageLockUpdate() {
+    this.widgetConfig.pageEditMode = this.getter.pageLockedByMe;
+  }
 
   get screenScale() {
     return this.state.screenScale;
-  }
-
-  created() {
-    this.syncScale();
   }
 
   @Watch("screenScale")
@@ -129,7 +135,7 @@ export default class EditableWidget extends Vue {
    * 是否可拖拽
    */
   get isDraggable() {
-    return this.getter.pageLockedByMe && !this.widgetConfig.editable;
+    return this.widgetConfig.pageEditMode && !this.widgetConfig.widgetEditMode;
   }
 
   get noBorder() {
@@ -156,10 +162,10 @@ export default class EditableWidget extends Vue {
   /**
    * 启用编辑
    */
-  enableEditable() {
+  enableWidgetEditable() {
     if (!this.getter.pageLockedByMe) return;
 
-    this.widgetConfig.editable = true;
+    this.widgetConfig.widgetEditMode = true;
     window.addEventListener("click", debounce(300, this.clickOnEditing));
   }
 
@@ -172,7 +178,7 @@ export default class EditableWidget extends Vue {
 
     if (toolbarClicked) return;
 
-    this.widgetConfig.editable = false;
+    this.widgetConfig.widgetEditMode = false;
     window.removeEventListener("click", this.clickOnEditing);
   }
 
