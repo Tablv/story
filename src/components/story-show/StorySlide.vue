@@ -11,7 +11,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Watch, Prop } from "vue-property-decorator";
+import {
+  Vue,
+  Component,
+  Provide,
+  Watch,
+  Prop,
+  Inject
+} from "vue-property-decorator";
 
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
@@ -29,17 +36,29 @@ let syncThumbnail!: Function;
 })
 export default class StorySlide extends Vue {
   @Prop()
+  scale!: number;
+
+  @Prop()
   page!: StoryPage;
 
   @Provide()
   widgetConfig: WidgetPageConfig = {
     pageEditMode: false,
     widgetEditMode: false,
-    scale: 1
+    scale: this.screenScale
   };
 
   get widgets() {
     return this.page?.widgets;
+  }
+
+  get screenScale() {
+    return this.scale;
+  }
+
+  @Watch("screenScale")
+  syncScale() {
+    this.widgetConfig.scale = this.screenScale;
   }
 
   getPosition(widget: StoryWidget<widgetConfig.Base>) {

@@ -1,6 +1,6 @@
 <template>
   <section v-if="visible" class="story-screen">
-    <story-slide v-if="hasPage" :page="currentPage" />
+    <story-slide v-if="hasPage" :page="currentPage" :scale="scale" />
 
     <nav>
       <el-button>Previous</el-button>
@@ -45,6 +45,9 @@ export default class StoryScreen extends Vue {
    */
   @Prop({ default: 0 })
   index!: number;
+
+  @Prop()
+  scale!: number;
 
   @Emit("exit")
   exit() {

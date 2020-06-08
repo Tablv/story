@@ -75,7 +75,7 @@ import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
 import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
-import { StoryPage } from "@/types/Story";
+import { StoryPage, ContainerConfig } from "@/types/Story";
 
 import ContextMenu from "@/components/ContextMenu.vue";
 import EditableWidget, {
@@ -83,6 +83,7 @@ import EditableWidget, {
   RefLineParam
 } from "./EditableWidget.vue";
 import debounce from "@/util/debounce";
+import { scaledStyle } from "@/util/scale-util";
 import UUID from "glaway-bi-util/UUID";
 
 let syncThumbnail!: Function;
@@ -120,11 +121,9 @@ export default class StoryCanvas extends Vue {
   }
 
   get canvasSize() {
+    const config = this.state.data?.config as ContainerConfig;
     const scale = this.state.screenScale;
-    return {
-      width: `${960 * scale}px`,
-      height: `${540 * scale}px`
-    };
+    return scaledStyle.getCanvasSize(config, scale);
   }
 
   /**

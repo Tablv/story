@@ -33,7 +33,22 @@ export interface StoryContainer {
 /**
  * 容器配置项
  */
-export interface ContainerConfig {}
+export interface ContainerConfig {
+  /**
+   * 屏幕标准尺寸（缩放比例为 1 时的分辨率）
+   */
+  standardSize: {
+    /**
+     * 宽度
+     */
+    width: number;
+
+    /**
+     * 高度
+     */
+    height: number;
+  };
+}
 
 /**
  * 故事页

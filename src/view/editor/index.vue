@@ -24,9 +24,11 @@ import Page from "@/types/EditorPage";
 import StoryHeader from "@/layout/story-editor/StoryHeader.vue";
 import StoryAside from "@/layout/story-editor/StoryAside.vue";
 import StoryMain from "@/layout/story-editor/StoryMain.vue";
-import { StoryPage, StoryContainer } from "@/types/Story";
+import { StoryPage, StoryContainer, ContainerConfig } from "@/types/Story";
 import { pageState, pageGetter, pageAction } from "@/store/EditorStore";
 import StoryBuilder from "@/config/StoryBuilder";
+
+import { getScale } from "@/util/scale-util";
 
 @Component({
   components: {
@@ -67,7 +69,6 @@ export default class StoryEditor extends Vue {
   }
 
   mounted() {
-    this.syncScreenScale();
     window.addEventListener("resize", this.syncScreenScale);
   }
 
@@ -76,20 +77,11 @@ export default class StoryEditor extends Vue {
   }
 
   syncScreenScale() {
-    const canvas = document.querySelector(".canvas-wrapper");
+    const canvas = document.querySelector(".canvas-wrapper") as HTMLElement;
+    const config = this.state.data?.config as ContainerConfig;
+    if (!canvas || !config) return;
 
-    if (!canvas) return;
-
-    const canvasWidth = canvas.clientWidth - 20;
-    const canvasHeight = canvas.clientHeight - 20;
-
-    const widthScale = canvasWidth / 960;
-    const heightScale = canvasHeight / 540;
-
-    let screenScale = widthScale > heightScale ? heightScale : widthScale;
-    screenScale = parseFloat(screenScale.toFixed(6));
-
-    this.state.screenScale = screenScale;
+    this.state.screenScale = getScale(canvas, config);
   }
 
   /**
@@ -126,6 +118,8 @@ export default class StoryEditor extends Vue {
         if (this.state.data?.pages?.length !== 0) {
           this.state.currentPage = this.state.data?.pages[0] as StoryPage;
         }
+        
+        this.syncScreenScale();
       })
       .catch(() => {
         this.storyNotExist();

@@ -13,7 +13,7 @@
     :y="scaledConfig.position.y"
     :z="widget.config.position.z"
     :parent="true"
-    :class="{ bordered: noBorder }"
+    :class="{ bordered: shouldBordered }"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"
@@ -47,6 +47,7 @@ import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 import Widget, { WidgetPageConfig } from "@/components/Widget.vue";
+import { scaledStyle, restoredStyle } from "@/util/scale-util";
 
 /**
  * 参考线数据
@@ -135,28 +136,23 @@ export default class EditableWidget extends Vue {
    * 是否可拖拽
    */
   get isDraggable() {
-    return this.widgetConfig.pageEditMode && !this.widgetConfig.widgetEditMode;
+    const editMode = this.widgetConfig.pageEditMode;
+    const widgetNotEditing = !this.widgetConfig.widgetEditMode;
+    return editMode && widgetNotEditing;
   }
 
-  get noBorder() {
-    return !this.widgetData.config.border.enable;
+  get shouldBordered() {
+    const noBorder = !this.widgetData.config.border.enable;
+    const editMode = this.widgetConfig.pageEditMode;
+
+    return noBorder && editMode;
   }
 
   get scaledConfig() {
-    const scale = this.state.screenScale;
-    const originalSize = this.widget.config.size;
-    const originalPos = this.widget.config.position;
-
-    return {
-      position: {
-        x: scale * originalPos.x,
-        y: scale * originalPos.y
-      },
-      size: {
-        width: scale * originalSize.width,
-        height: scale * originalSize.height
-      }
-    };
+    return scaledStyle.getWidgetSize(
+      this.widget.config,
+      this.state.screenScale
+    );
   }
 
   /**
@@ -203,7 +199,6 @@ export default class EditableWidget extends Vue {
    */
   onDragStop(x: number, y: number) {
     const scale = this.state.screenScale;
-
     this.widget.config.position.x = x / scale;
     this.widget.config.position.y = y / scale;
   }
@@ -213,7 +208,6 @@ export default class EditableWidget extends Vue {
    */
   onResizeStop(x: number, y: number, width: number, height: number) {
     const scale = this.state.screenScale;
-
     this.widget.config.size.width = width / scale;
     this.widget.config.size.height = height / scale;
   }

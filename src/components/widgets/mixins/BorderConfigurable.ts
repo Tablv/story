@@ -1,4 +1,4 @@
-import { Vue, Component, Inject, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 
 /**

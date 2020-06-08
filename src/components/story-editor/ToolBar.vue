@@ -7,6 +7,7 @@ import img from "./toolbars/Image.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { StoryPage } from "@/types/Story";
 import { ResultJSON } from "glaway-bi-util/AxiosUtil";
+import dom2image from "dom-to-image";
 
 @Component({
   components: {}
@@ -86,6 +87,8 @@ export default class ToolBar extends Vue {
   savePage() {
     if (!this.state.currentPage) return;
 
+    this.captureSnapshot();
+
     this.action
       .savePage(this.state.currentPage)
       .then(() => {
@@ -93,6 +96,24 @@ export default class ToolBar extends Vue {
       })
       .catch(() => {
         (this as any).$message.error("保存失败");
+      });
+  }
+
+  /**
+   * 清除选中，截取页面缩略图
+   */
+  captureSnapshot() {
+    this.state.currentWidget = null;
+
+    const node = document.querySelector(".widgets-container") as HTMLElement;
+    dom2image
+      .toPng(node, {
+        bgcolor: "#fff",
+        quality: 0.8
+      })
+      .then(result => {
+        if (!this.state.currentPage) return;
+        this.state.currentPage.thumbnail = result;
       });
   }
 

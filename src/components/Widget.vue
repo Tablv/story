@@ -26,7 +26,7 @@ export interface WidgetPageConfig {
   scale: number;
 }
 
-@Component({})
+@Component
 export default class Widget extends Vue {
   @Prop()
   data!: StoryWidget<any>;

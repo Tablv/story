@@ -1,6 +1,6 @@
 import { WidgetBuilder } from "@/config/WidgetBuilder";
 import UUID from "glaway-bi-util/UUID";
-import { StoryPage } from "@/types/Story";
+import { StoryPage, ContainerConfig } from "@/types/Story";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 
@@ -11,8 +11,13 @@ export default class StoryBuilder {
   /**
    * 构建容器配置
    */
-  static buildContainerConfig() {
-    return {};
+  static buildContainerConfig(): ContainerConfig {
+    return {
+      standardSize: {
+        width: 960,
+        height: 540
+      }
+    };
   }
 
   /**
