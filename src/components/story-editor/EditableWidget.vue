@@ -13,7 +13,7 @@
     :y="scaledConfig.position.y"
     :z="widget.config.position.z"
     :parent="true"
-    :class="{ bordered: shouldBordered }"
+    :class="{ 'is-current': isCurrentWidget, bordered: shouldBordered }"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"
@@ -47,7 +47,7 @@ import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 import Widget, { WidgetPageConfig } from "@/components/Widget.vue";
-import { scaledStyle, restoredStyle } from "@/util/scale-util";
+import { scaledStyle } from "@/util/scale-util";
 
 /**
  * 参考线数据
@@ -118,9 +118,18 @@ export default class EditableWidget extends Vue {
     return this.getter.pageLockedByMe;
   }
 
+  get snapshotMoment() {
+    return this.state.snapshotMoment;
+  }
+
+  get isCurrentWidget() {
+    return this.widgetData.id === this.currentWidget?.id;
+  }
+
   @Watch("pageLockedByMe")
+  @Watch("snapshotMoment")
   onPageLockUpdate() {
-    this.widgetConfig.pageEditMode = this.getter.pageLockedByMe;
+    this.widgetConfig.pageEditMode = this.getter.pageLockedByMe && !this.snapshotMoment;
   }
 
   get screenScale() {
@@ -227,12 +236,12 @@ $borderColor: #00a2ff;
 
 .editable-widget {
   &.bordered,
-  &.active {
+  &.is-current {
     border: 1px solid $borderColor;
   }
 
   // 当前激活的元素
-  &.active {
+  &.is-current {
     box-shadow: 0 0 6px #58bee9;
   }
 

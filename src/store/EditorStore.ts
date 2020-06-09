@@ -31,7 +31,9 @@ const pageState: Page.State = {
 
   showPreviewScreen: false,
 
-  screenScale: 1
+  screenScale: 1,
+
+  snapshotMoment: false
 };
 
 const pageGetter: Page.Getter = {

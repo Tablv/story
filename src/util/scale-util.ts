@@ -24,9 +24,6 @@ export function getScale(
   // 取后6位
   screenScale = parseFloat(screenScale.toFixed(6));
 
-  console.log(screenScale);
-  
-
   return screenScale;
 }
 

@@ -72,6 +72,11 @@ declare namespace Page {
      * 屏幕缩放比例
      */
     screenScale: number;
+
+    /**
+     * 快照瞬间（隐藏编辑模式产生的边框等）
+     */
+    snapshotMoment: boolean;
   };
 
   /**

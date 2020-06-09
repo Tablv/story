@@ -86,34 +86,39 @@ export default class ToolBar extends Vue {
 
   savePage() {
     if (!this.state.currentPage) return;
+    const page = this.state.currentPage;
 
-    this.captureSnapshot();
+    this.state.snapshotMoment = true;
 
-    this.action
-      .savePage(this.state.currentPage)
-      .then(() => {
-        (this as any).$message.success("保存成功");
-      })
-      .catch(() => {
-        (this as any).$message.error("保存失败");
+    this.$nextTick(() => {
+      this.captureSnapshot(page).finally(() => {
+        this.state.snapshotMoment = false;
+        this.action
+          .savePage(page)
+          .then(() => {
+            (this as any).$message.success("保存成功");
+          })
+          .catch(() => {
+            (this as any).$message.error("保存失败");
+          });
       });
+    })
   }
 
   /**
    * 清除选中，截取页面缩略图
    */
-  captureSnapshot() {
+  captureSnapshot(page: StoryPage): Promise<void> {
     this.state.currentWidget = null;
 
     const node = document.querySelector(".widgets-container") as HTMLElement;
-    dom2image
+    return dom2image
       .toPng(node, {
         bgcolor: "#fff",
         quality: 0.8
       })
       .then(result => {
-        if (!this.state.currentPage) return;
-        this.state.currentPage.thumbnail = result;
+        page.thumbnail = result;
       });
   }
 

@@ -118,7 +118,7 @@ export default class StoryEditor extends Vue {
         if (this.state.data?.pages?.length !== 0) {
           this.state.currentPage = this.state.data?.pages[0] as StoryPage;
         }
-        
+
         this.syncScreenScale();
       })
       .catch(() => {

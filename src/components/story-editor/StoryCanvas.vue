@@ -117,6 +117,7 @@ export default class StoryCanvas extends Vue {
   }
 
   set currentWidget(widget: StoryWidget<any> | null) {
+    if (!this.getter.pageLockedByMe) return;
     this.state.currentWidget = widget;
   }
 
@@ -171,7 +172,7 @@ export default class StoryCanvas extends Vue {
   openContextMenu(event: MouseEvent, currentWidget: StoryWidget<any>) {
     if (!this.getter.pageLockedByMe) return;
 
-    this.state.currentWidget = currentWidget;
+    this.currentWidget = currentWidget;
 
     this.widgetMenu.position = {
       top: event.clientY,
