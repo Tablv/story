@@ -28,7 +28,7 @@ import { StoryPage, StoryContainer, ContainerConfig } from "@/types/Story";
 import { pageState, pageGetter, pageAction } from "@/store/EditorStore";
 import StoryBuilder from "@/config/StoryBuilder";
 
-import { getScale } from "@/util/scale-util";
+import { getCanvasScale, getSlideScale } from "@/util/scale-util";
 
 @Component({
   components: {
@@ -76,12 +76,37 @@ export default class StoryEditor extends Vue {
     window.removeEventListener("resize", this.syncScreenScale);
   }
 
-  syncScreenScale() {
-    const canvas = document.querySelector(".canvas-wrapper") as HTMLElement;
-    const config = this.state.data?.config as ContainerConfig;
-    if (!canvas || !config) return;
+  get previewMode() {
+    return this.state.previewMode;
+  }
 
-    this.state.screenScale = getScale(canvas, config);
+  @Watch("previewMode")
+  onPreviewModeUpdate() {
+    this.syncScreenScale();
+  }
+
+  /**
+   * 同步屏幕缩放比例
+   */
+  syncScreenScale() {
+    const config = this.state.data?.config as ContainerConfig;
+    if (!config) return;
+
+    /**
+     * 画布 DOM：
+     *  - 预览时，获取幻灯片全屏缩放比例
+     *  - 编辑时，获取编辑器画布缩放比例
+     */
+    if (this.previewMode) {
+      // 幻灯片全屏缩放比例
+      this.state.screenScale = getSlideScale(config);
+    } else {
+      // 编辑器画布缩放比例
+      const canvas = (document.querySelector(".canvas-wrapper") as HTMLElement);
+      this.state.screenScale = getCanvasScale(canvas, config);
+    }
+
+    console.log(this.state.screenScale);
   }
 
   /**

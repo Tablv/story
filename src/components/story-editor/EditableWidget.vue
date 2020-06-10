@@ -4,7 +4,8 @@
     :x="widget.config.position.x"
     :y="widget.config.position.y" -->
   <vdr
-    class="editable-widget"
+    class="widget-box"
+    :class="widgetClassName"
     :draggable="isDraggable"
     :resizable="isDraggable"
     :w="scaledConfig.size.width"
@@ -13,7 +14,6 @@
     :y="scaledConfig.position.y"
     :z="widget.config.position.z"
     :parent="true"
-    :class="{ 'is-current': isCurrentWidget, bordered: shouldBordered }"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"
@@ -114,6 +114,14 @@ export default class EditableWidget extends Vue {
     scale: this.screenScale
   };
 
+  get widgetClassName() {
+    return {
+      bordered: this.shouldBordered,
+      'is-current': this.isCurrentWidget,
+      'editable-widget': this.isDraggable
+    };
+  }
+
   get pageLockedByMe() {
     return this.getter.pageLockedByMe;
   }
@@ -129,7 +137,8 @@ export default class EditableWidget extends Vue {
   @Watch("pageLockedByMe")
   @Watch("snapshotMoment")
   onPageLockUpdate() {
-    this.widgetConfig.pageEditMode = this.getter.pageLockedByMe && !this.snapshotMoment;
+    this.widgetConfig.pageEditMode =
+      this.getter.pageLockedByMe && !this.snapshotMoment;
   }
 
   get screenScale() {
@@ -138,6 +147,9 @@ export default class EditableWidget extends Vue {
 
   @Watch("screenScale")
   syncScale() {
+    // 预览模式不同步缩放比例
+    if (this.state.previewMode) return;
+
     this.widgetConfig.scale = this.screenScale;
   }
 
@@ -153,7 +165,6 @@ export default class EditableWidget extends Vue {
   get shouldBordered() {
     const noBorder = !this.widgetData.config.border.enable;
     const editMode = this.widgetConfig.pageEditMode;
-
     return noBorder && editMode;
   }
 
@@ -234,7 +245,23 @@ export default class EditableWidget extends Vue {
 <style lang="scss" scoped>
 $borderColor: #00a2ff;
 
+.widget-box {
+  .widget-item {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+    box-sizing: border-box;
+  }
+}
+
 .editable-widget {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
   &.bordered,
   &.is-current {
     border: 1px solid $borderColor;
@@ -243,14 +270,6 @@ $borderColor: #00a2ff;
   // 当前激活的元素
   &.is-current {
     box-shadow: 0 0 6px #58bee9;
-  }
-
-  .widget-item {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    user-select: none;
-    box-sizing: border-box;
   }
 }
 </style>

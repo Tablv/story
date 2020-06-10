@@ -11,12 +11,7 @@ $handleColor: #09f;
 
 .vdr {
   background-color: $bgColor;
-  cursor: grab;
   border: 1px solid transparent;
-
-  &:active {
-    cursor: grabbing;
-  }
 
   .handle {
     width: 10px;

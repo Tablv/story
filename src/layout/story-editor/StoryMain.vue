@@ -19,9 +19,11 @@
 
     <!-- 预览 -->
     <story-screen
+      v-if="screenVisible"
       :visible.sync="screenVisible"
       :index.sync="screenIndex"
       :container="pageContainer"
+      :scale="screenScale"
     />
   </el-container>
 </template>
@@ -53,11 +55,11 @@ export default class StoryMain extends Vue {
    * 预览
    */
   get screenVisible() {
-    return this.state.showPreviewScreen;
+    return this.state.previewMode;
   }
 
   set screenVisible(visible: boolean) {
-    this.state.showPreviewScreen = visible;
+    this.state.previewMode = visible;
   }
 
   get screenIndex() {
@@ -73,6 +75,10 @@ export default class StoryMain extends Vue {
 
   get pageContainer() {
     return this.state.data;
+  }
+
+  get screenScale() {
+    return this.state.screenScale;
   }
 }
 </script>

@@ -29,7 +29,7 @@ const pageState: any = {
 
   currentUser: null,
 
-  showPreviewScreen: false
+  previewMode: false
 };
 
 const pageGetter: Page.Getter = {

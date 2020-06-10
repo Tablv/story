@@ -1,11 +1,13 @@
 <template>
   <section v-if="visible" class="story-screen">
-    <story-slide v-if="hasPage" :page="currentPage" :scale="scale" />
+    <div class="story-slide-wrapper" :style="slideSize">
+      <story-slide v-if="hasPage" :page="currentPage" :scale="scale" />
 
-    <nav>
-      <el-button>Previous</el-button>
-      <el-button>Next</el-button>
-    </nav>
+      <nav>
+        <el-button>Previous</el-button>
+        <el-button>Next</el-button>
+      </nav>
+    </div>
   </section>
 </template>
 
@@ -25,6 +27,7 @@ import { widgetConfig } from "@/types/StoryWidget";
 import { StoryPage, StoryContainer } from "@/types/Story";
 
 import StorySlide from "@/components/story-show/StorySlide.vue";
+import { getCanvasScale, scaledStyle } from "@/util/scale-util";
 
 let syncThumbnail!: Function;
 
@@ -101,6 +104,13 @@ export default class StoryScreen extends Vue {
     this.pageIndex++;
   }
 
+  /**
+   * 屏幕放映比例
+   */
+  get slideSize() {
+    return scaledStyle.getCanvasSize(this.container.config, this.scale);
+  }
+
   @Watch("visible", {
     immediate: true
   })
@@ -159,18 +169,22 @@ export default class StoryScreen extends Vue {
   z-index: 999;
   background-color: #000;
   user-select: none;
-
-  .story-slide {
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  .story-slide-wrapper {
+    margin: auto;
+    width: 80%;
     height: 100%;
-  }
 
-  nav {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
+    nav {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+    }
   }
 }
 </style>

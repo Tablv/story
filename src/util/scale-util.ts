@@ -8,7 +8,7 @@ import { ContainerConfig } from "@/types/Story";
  * @param config 画布配置
  * @param paddingSize 画布 Padding
  */
-export function getScale(
+export function getCanvasScale(
   canvas: HTMLElement,
   config: ContainerConfig,
   paddingSize: number = 30
@@ -25,6 +25,32 @@ export function getScale(
   screenScale = parseFloat(screenScale.toFixed(6));
 
   return screenScale;
+}
+
+/**
+ * 计算幻灯片缩放尺寸
+ * 
+ * @param config 画布配置
+ */
+export function getSlideScale(config: ContainerConfig) {
+  const { width, height } = config.standardSize;
+  const { clientWidth, clientHeight } = document.documentElement;
+
+  const standardRatio = width / height;
+  const clientRatio = clientWidth / clientHeight;
+
+  /**
+   * 判断宽高比
+   *  - 标准比例 > 客户端比例：客户端宽度/标准宽度
+   *  - 标准比例 < 客户端比例：客户端高度/标准高度
+   */
+  let slideScale = standardRatio > clientRatio
+    ? clientWidth / width
+    : clientHeight / height;
+  // 取后6位
+  slideScale = parseFloat(slideScale.toFixed(6));
+
+  return slideScale;
 }
 
 /**

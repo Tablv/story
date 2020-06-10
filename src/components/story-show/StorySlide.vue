@@ -1,8 +1,8 @@
 <template>
   <section class="story-slide">
-    <div v-if="widgets" class="widgets">
+    <div v-if="widgets" class="slide-widgets">
       <div v-for="widget in widgets" :key="widget.id">
-        <span class="widget" :style="getPosition(widget)">
+        <span class="slide-widget" :style="getWidgetStyle(widget)">
           <widget :data="widget" @click.native.stop></widget>
         </span>
       </div>
@@ -26,6 +26,7 @@ import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { StoryPage } from "@/types/Story";
 
 import Widget, { WidgetPageConfig } from "@/components/Widget.vue";
+import { scaledStyle } from "@/util/scale-util";
 
 let syncThumbnail!: Function;
 
@@ -61,10 +62,14 @@ export default class StorySlide extends Vue {
     this.widgetConfig.scale = this.screenScale;
   }
 
-  getPosition(widget: StoryWidget<widgetConfig.Base>) {
+  getWidgetStyle(widget: StoryWidget<widgetConfig.Base>) {
+    const { position, size } = scaledStyle.getWidgetSize(widget.config, this.widgetConfig.scale);
+    
     return {
-      left: widget.config.position.x,
-      top: widget.config.position.y
+      left: `${position.x}px`,
+      top: `${position.y}px`,
+      width: `${size.width}px`,
+      height: `${size.height}px`
     };
   }
 }
@@ -79,13 +84,13 @@ export default class StorySlide extends Vue {
   margin: auto;
   background-color: #fff;
   user-select: none;
-  position: relative;
+  overflow: hidden;
 
-  .widgets {
+  .slide-widgets {
     width: 100%;
     height: 100%;
 
-    .widget {
+    .slide-widget {
       position: absolute;
     }
   }

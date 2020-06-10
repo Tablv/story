@@ -102,7 +102,7 @@ export default class ToolBar extends Vue {
             (this as any).$message.error("保存失败");
           });
       });
-    })
+    });
   }
 
   /**

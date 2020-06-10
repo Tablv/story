@@ -29,7 +29,7 @@ const pageState: Page.State = {
 
   currentUser: null,
 
-  showPreviewScreen: false,
+  previewMode: false,
 
   screenScale: 1,
 

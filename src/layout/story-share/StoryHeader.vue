@@ -67,7 +67,7 @@ export default class StoryHeader extends Vue {
   }
 
   showPreviewScreen() {
-    this.state.showPreviewScreen = true;
+    this.state.previewMode = true;
   }
 }
 </script>
