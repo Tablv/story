@@ -1,14 +1,14 @@
 <template>
   <section class="story-slide">
     <div v-if="widgets" class="slide-widgets">
-        <span
-          v-for="widget in widgets"
-          :key="widget.id"
-          class="slide-widget"
-          :style="getWidgetStyle(widget)"
-        >
-          <widget :data="widget"></widget>
-        </span>
+      <span
+        v-for="widget in widgets"
+        :key="widget.id"
+        class="slide-widget"
+        :style="getWidgetStyle(widget)"
+      >
+        <widget :data="widget"></widget>
+      </span>
     </div>
   </section>
 </template>
@@ -66,8 +66,11 @@ export default class StorySlide extends Vue {
   }
 
   getWidgetStyle(widget: StoryWidget<widgetConfig.Base>) {
-    const { position, size } = scaledStyle.getWidgetSize(widget.config, this.widgetConfig.scale);
-    
+    const { position, size } = scaledStyle.getWidgetSize(
+      widget.config,
+      this.widgetConfig.scale
+    );
+
     return {
       left: `${position.x}px`,
       top: `${position.y}px`,

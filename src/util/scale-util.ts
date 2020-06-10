@@ -29,7 +29,7 @@ export function getCanvasScale(
 
 /**
  * 计算幻灯片缩放尺寸
- * 
+ *
  * @param config 画布配置
  */
 export function getSlideScale(config: ContainerConfig) {
@@ -44,9 +44,8 @@ export function getSlideScale(config: ContainerConfig) {
    *  - 标准比例 > 客户端比例：客户端宽度/标准宽度
    *  - 标准比例 < 客户端比例：客户端高度/标准高度
    */
-  let slideScale = standardRatio > clientRatio
-    ? clientWidth / width
-    : clientHeight / height;
+  let slideScale =
+    standardRatio > clientRatio ? clientWidth / width : clientHeight / height;
   // 取后6位
   slideScale = parseFloat(slideScale.toFixed(6));
 

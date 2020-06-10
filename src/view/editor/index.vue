@@ -102,7 +102,7 @@ export default class StoryEditor extends Vue {
       this.state.screenScale = getSlideScale(config);
     } else {
       // 编辑器画布缩放比例
-      const canvas = (document.querySelector(".canvas-wrapper") as HTMLElement);
+      const canvas = document.querySelector(".canvas-wrapper") as HTMLElement;
       this.state.screenScale = getCanvasScale(canvas, config);
     }
   }

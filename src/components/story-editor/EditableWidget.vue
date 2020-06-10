@@ -117,8 +117,8 @@ export default class EditableWidget extends Vue {
   get widgetClassName() {
     return {
       bordered: this.shouldBordered,
-      'is-current': this.isCurrentWidget,
-      'editable-widget': this.widgetConfig.pageEditMode
+      "is-current": this.isCurrentWidget,
+      "editable-widget": this.widgetConfig.pageEditMode
     };
   }
 

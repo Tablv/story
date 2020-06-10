@@ -1,11 +1,28 @@
 <template>
   <section v-if="visible" class="story-screen">
     <div class="story-slide-wrapper" :style="slideSize">
-      <story-slide :page="currentPage" :scale="scale" @next-page="toNextPage" @click.native="toNextPage" />
+      <story-slide
+        :page="currentPage"
+        :scale="scale"
+        @next-page="toNextPage"
+        @click.native="toNextPage"
+      />
 
       <nav class="slide-controls">
-        <el-button type="info" :disabled="noPrevPage" @click="toPrevPage" circle icon="el-icon-arrow-left"></el-button>
-        <el-button type="info" :disabled="noNextPage" @click="toNextPage" circle icon="el-icon-arrow-right"></el-button>
+        <el-button
+          type="info"
+          :disabled="noPrevPage"
+          @click="toPrevPage"
+          circle
+          icon="el-icon-arrow-left"
+        ></el-button>
+        <el-button
+          type="info"
+          :disabled="noNextPage"
+          @click="toNextPage"
+          circle
+          icon="el-icon-arrow-right"
+        ></el-button>
       </nav>
     </div>
   </section>
@@ -183,7 +200,7 @@ export default class StoryScreen extends Vue {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .story-slide-wrapper {
     margin: auto;
     width: 80%;

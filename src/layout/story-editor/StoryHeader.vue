@@ -77,13 +77,13 @@ export default class StoryHeader extends Vue {
   }
 
   get showSlideAvailable() {
-    return this.state.data?.pages?.length as number > 0;
+    return (this.state.data?.pages?.length as number) > 0;
   }
 
   showPreviewScreen() {
     if (this.showSlideAvailable) {
       this.state.previewMode = true;
-      
+
       (this as any).$message.info({
         message: "按 Esc 退出放映",
         customClass: "slide-tips",
@@ -101,7 +101,7 @@ export default class StoryHeader extends Vue {
   padding: 14px 26px 14px 13px;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   width: 330px;
 
   .el-message__icon {
