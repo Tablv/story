@@ -1,11 +1,11 @@
 <template>
   <section v-if="visible" class="story-screen">
     <div class="story-slide-wrapper" :style="slideSize">
-      <story-slide v-if="hasPage" :page="currentPage" :scale="scale" />
+      <story-slide :page="currentPage" :scale="scale" @next-page="toNextPage" @click.native="toNextPage" />
 
-      <nav>
-        <el-button>Previous</el-button>
-        <el-button>Next</el-button>
+      <nav class="slide-controls">
+        <el-button type="info" :disabled="noPrevPage" @click="toPrevPage" circle icon="el-icon-arrow-left"></el-button>
+        <el-button type="info" :disabled="noNextPage" @click="toNextPage" circle icon="el-icon-arrow-right"></el-button>
       </nav>
     </div>
   </section>
@@ -80,26 +80,37 @@ export default class StoryScreen extends Vue {
     return this.container?.pages;
   }
 
-  get hasPage() {
-    return this.pages && this.pages.length > 0;
-  }
-
+  // 最大页数
   get maxPageIndex() {
     return this.pages.length - 1;
   }
 
+  // 当前页
   get currentPage() {
     return this.pages[this.pageIndex];
   }
 
+  get noPrevPage() {
+    return this.pageIndex === 0;
+  }
+
+  get noNextPage() {
+    return this.pageIndex === this.maxPageIndex;
+  }
+
   toPrevPage() {
-    if (this.pageIndex === 0) return;
+    if (this.noPrevPage) {
+      return;
+    }
 
     this.pageIndex--;
   }
 
   toNextPage() {
-    if (this.pageIndex === this.maxPageIndex) return;
+    if (this.noNextPage) {
+      this.exit();
+      return;
+    }
 
     this.pageIndex++;
   }
@@ -178,12 +189,24 @@ export default class StoryScreen extends Vue {
     width: 80%;
     height: 100%;
 
-    nav {
+    .slide-controls {
       position: absolute;
       left: 0;
       bottom: 0;
       width: 100%;
       height: 40px;
+      padding: 0 2vw;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .el-button {
+        opacity: 0.6;
+
+        &.is-disabled {
+          opacity: 0.3;
+        }
+      }
     }
   }
 }

@@ -105,8 +105,6 @@ export default class StoryEditor extends Vue {
       const canvas = (document.querySelector(".canvas-wrapper") as HTMLElement);
       this.state.screenScale = getCanvasScale(canvas, config);
     }
-
-    console.log(this.state.screenScale);
   }
 
   /**

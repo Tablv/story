@@ -1,11 +1,14 @@
 <template>
   <section class="story-slide">
     <div v-if="widgets" class="slide-widgets">
-      <div v-for="widget in widgets" :key="widget.id">
-        <span class="slide-widget" :style="getWidgetStyle(widget)">
-          <widget :data="widget" @click.native.stop></widget>
+        <span
+          v-for="widget in widgets"
+          :key="widget.id"
+          class="slide-widget"
+          :style="getWidgetStyle(widget)"
+        >
+          <widget :data="widget"></widget>
         </span>
-      </div>
     </div>
   </section>
 </template>

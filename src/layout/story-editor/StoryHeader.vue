@@ -76,11 +76,45 @@ export default class StoryHeader extends Vue {
     });
   }
 
+  get showSlideAvailable() {
+    return this.state.data?.pages?.length as number > 0;
+  }
+
   showPreviewScreen() {
-    this.state.previewMode = true;
+    if (this.showSlideAvailable) {
+      this.state.previewMode = true;
+      
+      (this as any).$message.info({
+        message: "按 Esc 退出放映",
+        customClass: "slide-tips",
+        duration: 900
+      });
+    } else {
+      (this as any).$message.warning("当前无故事页");
+    }
   }
 }
 </script>
+
+<style lang="scss">
+.el-message.slide-tips {
+  padding: 14px 26px 14px 13px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  width: 330px;
+
+  .el-message__icon {
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+  }
+
+  .el-message__content {
+    color: #606266;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .story-header {
