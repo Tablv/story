@@ -3,6 +3,7 @@ import api from "@/api/editor";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { StoryContainer, StoryPage } from "@/types/Story";
 import StoryBuilder from "@/config/StoryBuilder";
+import html2canvas from "html2canvas";
 
 /**
  * 页面状态数据
@@ -274,6 +275,15 @@ class PageAction implements Page.Action {
         reject();
       }
     }) as Promise<StoryPage>;
+  }
+
+  captureSnapshot(dom: HTMLElement) {
+    return html2canvas(dom, {
+      allowTaint: false,
+      useCORS: true
+    }).then(canvas => {
+      return Promise.resolve(canvas.toDataURL());
+    }) as Promise<string>;
   }
 }
 

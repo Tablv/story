@@ -7,7 +7,6 @@ import img from "./toolbars/Image.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import { StoryPage } from "@/types/Story";
 import { ResultJSON } from "glaway-bi-util/AxiosUtil";
-import dom2image from "dom-to-image";
 
 @Component({
   components: {}
@@ -112,14 +111,9 @@ export default class ToolBar extends Vue {
     this.state.currentWidget = null;
 
     const node = document.querySelector(".widgets-container") as HTMLElement;
-    return dom2image
-      .toPng(node, {
-        bgcolor: "#fff",
-        quality: 0.8
-      })
-      .then(result => {
-        page.thumbnail = result;
-      });
+    return this.action.captureSnapshot(node).then(result => {
+      page.thumbnail = result;
+    });
   }
 
   /**

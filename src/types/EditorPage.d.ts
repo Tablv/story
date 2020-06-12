@@ -153,6 +153,11 @@ declare namespace Page {
      * 获取未保存页面数据
      */
     loadUnsavedPage(containerId: string): Promise<StoryPage>;
+
+    /**
+     * 截图
+     */
+    captureSnapshot(dom: HTMLElement): Promise<string>;
   };
 }
 

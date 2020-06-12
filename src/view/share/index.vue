@@ -26,7 +26,7 @@ import StoryHeader from "@/layout/story-share/StoryHeader.vue";
 import StoryAside from "@/layout/story-share/StoryAside.vue";
 import StoryMain from "@/layout/story-share/StoryMain.vue";
 import { StoryPage, StoryContainer } from "@/types/Story";
-import { pageState, pageGetter, pageAction } from "@/store/ShareStore";
+// import { pageState, pageGetter, pageAction } from "@/store/ShareStore";
 import StoryBuilder from "@/config/StoryBuilder";
 
 @Component({
@@ -37,14 +37,14 @@ import StoryBuilder from "@/config/StoryBuilder";
   }
 })
 export default class StoryShare extends Vue {
-  @Provide()
-  state: Page.State = pageState;
+  // @Provide()
+  // state: Page.State = pageState;
 
-  @Provide()
-  getter: Page.Getter = pageGetter;
+  // @Provide()
+  // getter: Page.Getter = pageGetter;
 
-  @Provide()
-  action: Page.Action = pageAction;
+  // @Provide()
+  // action: Page.Action = pageAction;
 
   /**
    * 创建时执行方法
@@ -69,39 +69,33 @@ export default class StoryShare extends Vue {
    * 并对加载失败的结果进行处理
    */
   loadData(groupId: string): void {
-    pageState.groupId = groupId;
-
-    pageAction
-      .loadUser()
-      .then(async () => {
-        // 加载故事板
-        const container = await pageAction.loadStory(groupId);
-
-        if (!container) return Promise.reject();
-
-        // 加载未保存页
-        const unsavedPage = await this.action.loadUnsavedPage(container.id);
-
-        // 恢复暂存数据
-        if (unsavedPage) {
-          container.pages.forEach((page: StoryPage, index: number) => {
-            if (unsavedPage.id === page.id) {
-              this.$set(container.pages, index, unsavedPage);
-            }
-          });
-        }
-
-        // 赋值
-        this.state.data = container;
-
-        // 设置首页
-        if (this.state.data?.pages?.length !== 0) {
-          this.state.currentPage = this.state.data?.pages[0] as StoryPage;
-        }
-      })
-      .catch(() => {
-        this.storyNotExist();
-      });
+    // pageState.groupId = groupId;
+    // pageAction
+    //   .loadUser()
+    //   .then(async () => {
+    //     // 加载故事板
+    //     const container = await pageAction.loadStory(groupId);
+    //     if (!container) return Promise.reject();
+    //     // 加载未保存页
+    //     const unsavedPage = await this.action.loadUnsavedPage(container.id);
+    //     // 恢复暂存数据
+    //     if (unsavedPage) {
+    //       container.pages.forEach((page: StoryPage, index: number) => {
+    //         if (unsavedPage.id === page.id) {
+    //           this.$set(container.pages, index, unsavedPage);
+    //         }
+    //       });
+    //     }
+    //     // 赋值
+    //     this.state.data = container;
+    //     // 设置首页
+    //     if (this.state.data?.pages?.length !== 0) {
+    //       this.state.currentPage = this.state.data?.pages[0] as StoryPage;
+    //     }
+    //   })
+    //   .catch(() => {
+    //     this.storyNotExist();
+    //   });
   }
 
   /**

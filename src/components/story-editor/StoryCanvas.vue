@@ -69,7 +69,6 @@ import { Vue, Component, Provide, Inject, Watch } from "vue-property-decorator";
 // Vue-Draggable-Resizable
 import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
-import dom2image from "dom-to-image";
 
 import Page from "@/types/EditorPage";
 import { WidgetType } from "@/config/WidgetType";
@@ -154,14 +153,9 @@ export default class StoryCanvas extends Vue {
     // 创建同步缩略图方法
     syncThumbnail = debounce(2000, () => {
       const node = document.querySelector(".widgets-container") as HTMLElement;
-      dom2image
-        .toPng(node, {
-          bgcolor: "#fff",
-          quality: 0.8
-        })
-        .then(result => {
-          this.currentPage.thumbnail = result;
-        });
+      this.action.captureSnapshot(node).then(result => {
+        this.currentPage.thumbnail = result;
+      });
     });
   }
 

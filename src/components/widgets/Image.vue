@@ -36,6 +36,11 @@ export default class ImageWidget extends Vue {
 .img-widget {
   width: 100%;
 
+  .el-image {
+    width: 100%;
+    height: 100%;
+  }
+
   .placeholder-tip {
     display: flex;
     justify-content: center;
