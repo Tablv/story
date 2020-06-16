@@ -166,9 +166,23 @@ export default class DashboardWidget extends Vue {
 
     .el-alert {
       width: 70%;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: saturate(180%) blur(20px);
+      padding: 16px 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+
+      .el-alert__content {
+        padding-left: 14px;
+
+        .el-alert__title {
+          font-size: 16px;
+        }
+
+        .el-alert__description {
+          font-size: 14px;
+          margin-top: 8px;
+        }
+      }
     }
   }
 }
