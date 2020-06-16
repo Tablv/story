@@ -46,7 +46,7 @@ export default class StoryBuilder {
    */
   static buildWidget(
     type: WidgetType,
-    position: widgetConfig.Position
+    position?: widgetConfig.Position
   ): StoryWidget<any> {
     return {
       id: UUID.generate(),

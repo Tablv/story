@@ -4,6 +4,7 @@ import Page from "@/types/EditorPage";
 import { CreateElement } from "vue";
 import text from "./widgets/Text.vue";
 import img from "./widgets/Image.vue";
+import dashboard from "./widgets/Dashboard.vue";
 import { StoryWidget } from "@/types/StoryWidget";
 
 /**
@@ -35,13 +36,14 @@ export default class Widget extends Vue {
     text,
     img,
     shape: null,
-    dashboard: null
+    dashboard
   };
 
   render(h: CreateElement) {
     const component = this.widgetRegistry[this.data.type];
     if (component)
       return h(component, {
+        class: ["widget-item"],
         props: {
           data: this.data
         }
@@ -51,16 +53,8 @@ export default class Widget extends Vue {
 </script>
 
 <style lang="scss">
-.tool-bar-inner {
+.widget-item {
   width: 100%;
   height: 100%;
-  user-select: none;
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  .label-text {
-    margin-right: 6px;
-  }
 }
 </style>

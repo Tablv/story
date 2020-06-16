@@ -1,10 +1,5 @@
 <template>
-  <div class="img-tool-bar">
-    <!-- <el-popover placement="bottom-start" width="400" trigger="click">
-      <el-button slot="reference" icon="fa fa-image"></el-button>
-
-    </el-popover> -->
-
+  <div class="dash-tool-bar">
     <!-- 边框 -->
     <border-style :data="widget.config.border"></border-style>
   </div>
@@ -22,26 +17,18 @@ import BorderStyle from "./common/BorderStyle.vue";
     BorderStyle
   }
 })
-export default class ImageToolBar extends Vue {
+export default class DashToolBar extends Vue {
   @Inject()
   state!: Page.State;
 
-  get widget(): StoryWidget<widgetConfig.Image> {
-    return this.state.currentWidget as StoryWidget<widgetConfig.Image>;
-  }
-
-  get imgUrl(): widgetConfig.Image["url"] {
-    return this.widget.config.url;
-  }
-
-  set imgUrl(url: widgetConfig.Image["url"]) {
-    this.widget.config.url = url;
+  get widget(): StoryWidget<widgetConfig.DashboardConf> {
+    return this.state.currentWidget as StoryWidget<widgetConfig.DashboardConf>;
   }
 }
 </script>
 
 <style lang="scss">
-.img-tool-bar {
+.dash-tool-bar {
   > * + * {
     margin-left: 10px;
   }

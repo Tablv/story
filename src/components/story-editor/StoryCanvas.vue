@@ -71,8 +71,6 @@ import vdr from "vue-draggable-resizable-gorkys";
 import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 
 import Page from "@/types/EditorPage";
-import { WidgetType } from "@/config/WidgetType";
-import StoryBuilder from "@/config/StoryBuilder";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
 import { StoryPage, ContainerConfig } from "@/types/Story";
 
@@ -83,7 +81,7 @@ import EditableWidget, {
 } from "./EditableWidget.vue";
 import debounce from "@/util/debounce";
 import { scaledStyle } from "@/util/scale-util";
-import UUID from "glaway-bi-util/UUID";
+import { dragUtil } from "@/util/drag-util";
 
 let syncThumbnail!: Function;
 
@@ -208,14 +206,14 @@ export default class StoryCanvas extends Vue {
     const wIndex = (this.currentWidget as StoryWidget<widgetConfig.Base>).config
       .position.z;
 
-    // 当前对象置为空
-    this.currentWidget = null;
-
     // 删除
     this.currentPage.widgets.splice(
       this.currentPage.widgets.indexOf(this.currentWidget as any),
       1
     );
+
+    // 当前对象置为空
+    this.currentWidget = null;
 
     // 重新排序
     this.currentPage.widgets.forEach(
@@ -307,17 +305,29 @@ export default class StoryCanvas extends Vue {
       return;
     }
 
-    const widgetType = event.dataTransfer?.getData("widgetType"),
-      $canvasDOM = document.querySelector(".story-canvas");
+    const $canvasDOM = document.querySelector(".story-canvas");
 
-    if (widgetType && this.currentPage && $canvasDOM) {
+    if (this.currentPage && $canvasDOM) {
+      // 通过事件，构造组件
+      let newWidget = dragUtil.getWidget(event);
+      if (newWidget === null) {
+        console.error("组件拖拽出错");
+        return false;
+      }
+
+      // 获取组件位置
       const domRect = $canvasDOM.getBoundingClientRect();
-      const newWidget = StoryBuilder.buildWidget(widgetType as WidgetType, {
+      const widgetPosition = {
         x: (event.clientX - domRect.left) / this.state.screenScale,
         y: (event.clientY - domRect.top) / this.state.screenScale,
         z: this.widgets.length
-      });
+      };
 
+      (newWidget as StoryWidget<
+        widgetConfig.Base
+      >).config.position = widgetPosition;
+
+      // 添加到组件数组
       this.widgets.push(newWidget);
     }
   }
@@ -331,7 +341,7 @@ export default class StoryCanvas extends Vue {
   margin: auto;
   background-color: #fff;
   user-select: none;
-  overflow: hidden;
+  overflow: visible;
 
   .widgets-container {
     width: 100%;

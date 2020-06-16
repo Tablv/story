@@ -1,8 +1,61 @@
 /**
  * Element UI Fix
  */
-.el-drawer__header {
-  span {
-    outline: none;
+// 抽屉 隐藏outline、抽屉body 显示滚动条
+.el-drawer {
+  outline: none;
+  
+  .el-drawer__header {
+    margin-bottom: 20px;
+    
+    .el-drawer__close-btn,
+    span {
+      outline: none;
+    }
   }
+
+  .el-drawer__body {
+    overflow: auto;
+  }
+}
+
+// 树 样式覆盖
+.el-tree {
+  padding: 0 20px;
+
+  .el-tree-node + .el-tree-node,
+  .el-tree-node__children > .el-tree-node {
+    margin-top: 6px;
+  }
+
+  [class$="tree-icon"] {
+    padding-right: 8px;
+    width: 16px;
+    text-align: center;
+  }
+
+  .folder-tree-icon {
+    color: #ffe17b;
+  }
+
+  .file-tree-icon {
+    color: #409eff;
+  }
+}
+
+// 页头首级隐藏返回
+.el-page-header.first-level {
+  .el-page-header__left {
+    display: none;
+  }
+}
+
+
+/**
+ * User Agent Default Style Fix
+ */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

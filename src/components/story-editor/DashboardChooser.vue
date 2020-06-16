@@ -3,35 +3,45 @@
     class="dash-chooser"
     direction="rtl"
     :visible.sync="chooserVisible"
-    :with-header="false"
   >
-    <el-container>
-      <el-header height="auto">
-        <el-page-header :class="{ 'first-level': isFirstLevel }" @back="goBack">
-          <span slot="content">选择仪表盘</span>
-        </el-page-header>
-      </el-header>
+    <span slot="title">
+      <el-page-header :class="{ 'first-level': isFirstLevel }" @back="goBack">
+        <span slot="content">选择仪表盘</span>
+      </el-page-header>
+    </span>
 
-      <el-main v-loading="loading">
-        <el-tree
-          v-if="isFirstLevel"
-          :data="groups"
-          node-key="id"
-          lazy
-          :props="{ label: 'name', isLeaf: data => data.type === 1 }"
-          :load="loadGroup"
-          :render-content="treeNodeRender"
-          @node-click="selectDash"
+    <section v-if="chooserVisible" class="dash-chooser-content">
+      <el-tree
+        v-loading="loading"
+        v-if="isFirstLevel"
+        :data="groups"
+        node-key="id"
+        lazy
+        :props="{ label: 'name', isLeaf: data => data.type === 1 }"
+        :load="loadGroup"
+        :render-content="treeNodeRender"
+        @node-click="selectContainer"
+      >
+      </el-tree>
+
+      <div v-else class="dash-snapshot-list">
+        <el-card
+          v-for="snapshot in snapshots"
+          :key="snapshot.id"
+          shadow="hover"
+          class="dash-snapshot-item"
+          draggable="true"
+          @dragstart.native="dragDash($event, snapshot.dashboardId)"
         >
-        </el-tree>
-
-        <el-row v-else>
-          <span v-for="snapshot in snapshots" :key="snapshot.id">
-            {{ snapshot }}
-          </span>
-        </el-row>
-      </el-main>
-    </el-container>
+          <header class="snapshot-title" height="auto">
+            {{ snapshot.title }}
+          </header>
+          <main>
+            <el-image class="snapshot-img" :src="snapshot.fullPath"></el-image>
+          </main>
+        </el-card>
+      </div>
+    </section>
   </el-drawer>
 </template>
 
@@ -41,6 +51,7 @@ import { CreateElement } from "vue";
 import { TreeNode } from "element-ui/types/tree";
 
 import api from "@/api/common";
+import { dragUtil } from "@/util/drag-util";
 
 @Component
 export default class DashboardChooser extends Vue {
@@ -70,12 +81,13 @@ export default class DashboardChooser extends Vue {
   }
 
   loadGroup(node: TreeNode<string, ContainerGroup>, resolve: Function) {
-    api.dashboard.findGroups(node.data.id).then(res => {
+    const parentId = node.data.id ? node.data.id : "0";
+    api.dashboard.findGroups(parentId).then(res => {
       resolve(res.result);
     });
   }
 
-  selectDash(data: ContainerGroup) {
+  selectContainer(data: ContainerGroup) {
     if (data.type === 0) return;
 
     const groupId = data.id;
@@ -111,12 +123,17 @@ export default class DashboardChooser extends Vue {
     if (group.type === 0) {
       return <i class="fa fa-folder folder-tree-icon"></i>;
     } else {
-      return <i class="fa fa-tachometer-alt dash-tree-icon"></i>;
+      return <i class="fa fa-tachometer-alt file-tree-icon"></i>;
     }
   }
 
   goBack() {
     this.isFirstLevel = true;
+  }
+
+  dragDash(event: DragEvent, dashId: string) {
+    dragUtil.putDashboard(event, dashId);
+    setTimeout(() => (this.chooserVisible = false), 300);
   }
 }
 
@@ -138,7 +155,9 @@ interface DashboardSnapshot {
 
   title: string;
 
-  snapshot: string;
+  dashboardId: string;
+
+  fullPath: string;
 }
 </script>
 
@@ -146,35 +165,35 @@ interface DashboardSnapshot {
 .dash-chooser {
   user-select: none;
 
-  .el-container {
-    height: 100%;
-  }
+  .dash-snapshot-list {
+    padding: 10px 20px;
 
-  .el-drawer:focus {
-    outline: none;
-  }
+    .dash-snapshot-item {
+      cursor: grab;
 
-  .el-page-header {
-    padding: 14px 4px;
-
-    &.first-level {
-      .el-page-header__left {
-        display: none;
+      &:active {
+        cursor: grabbing;
       }
-    }
-  }
 
-  .el-tree {
-    [class$="tree-icon"] {
-      padding-right: 8px;
-    }
+      & + .dash-snapshot-item {
+        margin-top: 14px;
+      }
 
-    .folder-tree-icon {
-      color: #ffe17b;
-    }
+      .snapshot-title {
+        margin-bottom: 14px;
+        font-size: 16px;
+        text-align: center;
+        font-weight: bold;
+      }
 
-    .dash-tree-icon {
-      color: #409eff;
+      .snapshot-img {
+        width: 100%;
+        border-radius: 4px;
+
+        .el-image__error {
+          min-height: 120px;
+        }
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="tool-bar-inner text-tool-bar">
+  <div class="text-tool-bar">
     <!-- 字号 -->
     <label class="label-text">字号</label>
     <el-select

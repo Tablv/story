@@ -1,4 +1,6 @@
+import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
 import AxiosUtil from "glaway-bi-util/AxiosUtil";
+import ParamsConverter from "glaway-bi-component/src/util/ParamsConverter";
 
 const api = {
   dashboard: {
@@ -10,7 +12,12 @@ const api = {
     findSnapshotByGroupId: (groupId: string) =>
       AxiosUtil.get("/dashboard/findSnapshotByGroupId", { groupId }),
 
-    findById: (id: string) => AxiosUtil.get("/dashboard/findById", { id })
+    findById: (id: string) => AxiosUtil.get("/dashboard/findById", { id }),
+
+    analysis: (dashboard: Dashboard) => {
+      const dto = ParamsConverter.getAnalysisDTO(dashboard);
+      return AxiosUtil.post("/api/adhoc/build", dto, true);
+    }
   },
 
   matelib: {

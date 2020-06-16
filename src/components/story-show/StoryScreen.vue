@@ -178,11 +178,14 @@ export default class StoryScreen extends Vue {
       case 39:
       // ArrowDown
       case 40:
+      // Space
+      case 32:
         this.toNextPage();
         break;
     }
 
     e.stopPropagation();
+    e.preventDefault();
   }
 }
 </script>

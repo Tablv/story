@@ -3,6 +3,7 @@
     :h="widget.config.size.height"
     :x="widget.config.position.x"
     :y="widget.config.position.y" -->
+    <!-- :parent="true" -->
   <vdr
     class="widget-box"
     :class="widgetClassName"
@@ -13,7 +14,6 @@
     :x="scaledConfig.position.x"
     :y="scaledConfig.position.y"
     :z="widget.config.position.z"
-    :parent="true"
     @activated="onActivated"
     @dragstop="onDragStop"
     @resizestop="onResizeStop"

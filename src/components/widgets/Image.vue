@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-item img-widget" :style="borderStyle">
+  <div class="img-widget" :style="borderStyle">
     <el-image v-if="imgUrl" :src="imgUrl" fit="contain"></el-image>
 
     <div class="placeholder-tip" v-else>
@@ -15,16 +15,17 @@ import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderConfigurable from "./mixins/BorderConfigurable";
+import { WidgetPageConfig } from "../Widget.vue";
 
 @Component({
   mixins: [BorderConfigurable]
 })
 export default class ImageWidget extends Vue {
-  @Inject()
-  state!: Page.State;
-
   @Prop()
   data!: StoryWidget<widgetConfig.Image>;
+
+  @Inject()
+  widgetConfig!: WidgetPageConfig;
 
   get imgUrl(): widgetConfig.Image["url"] {
     return this.data.config.url;
@@ -34,8 +35,6 @@ export default class ImageWidget extends Vue {
 
 <style lang="scss">
 .img-widget {
-  width: 100%;
-
   .el-image {
     width: 100%;
     height: 100%;

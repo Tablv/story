@@ -20,7 +20,7 @@ export function getCanvasScale(
   const heightScale = canvasHeight / config.standardSize.height;
 
   // 屏幕缩放 取最小值
-  let screenScale = widthScale > heightScale ? heightScale : widthScale;
+  let screenScale = Math.min(widthScale, heightScale);
   // 取后6位
   screenScale = parseFloat(screenScale.toFixed(6));
 

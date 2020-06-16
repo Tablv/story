@@ -11,7 +11,7 @@ export class WidgetBuilder {
   ) {}
 
   public buildConfig() {
-    if (!this.type || !this.position) {
+    if (!this.type) {
       throw new Error("部件构造器的构造函数参数有误");
     }
 
@@ -79,7 +79,7 @@ export class WidgetBuilder {
         border: this.buildBorder(false),
         size: {
           width: 600,
-          height: 600
+          height: 400
         },
         dashboardId: "",
         data: null

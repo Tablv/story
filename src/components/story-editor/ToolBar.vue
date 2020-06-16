@@ -1,12 +1,14 @@
 <script lang="tsx">
 import { Vue, Component, Provide, Inject } from "vue-property-decorator";
-import Page from "@/types/EditorPage";
 import { CreateElement } from "vue";
+import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import { ResultJSON } from "glaway-bi-util/AxiosUtil";
+import Page from "@/types/EditorPage";
+import { StoryPage } from "@/types/Story";
+
 import text from "./toolbars/Text.vue";
 import img from "./toolbars/Image.vue";
-import ObjectUtil from "glaway-bi-util/ObjectUtil";
-import { StoryPage } from "@/types/Story";
-import { ResultJSON } from "glaway-bi-util/AxiosUtil";
+import dashboard from "./toolbars/Image.vue";
 
 @Component({
   components: {}
@@ -25,7 +27,7 @@ export default class ToolBar extends Vue {
     text,
     img,
     shape: null,
-    dashboard: null
+    dashboard
   };
 
   /**
@@ -128,7 +130,7 @@ export default class ToolBar extends Vue {
 
     return (
       <div class="tool-bar">
-        <toolbarInner />
+        <toolbarInner class="tool-bar-inner" />
       </div>
     );
   }

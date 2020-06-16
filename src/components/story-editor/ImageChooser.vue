@@ -3,9 +3,10 @@
     class="image-chooser"
     direction="rtl"
     :visible.sync="chooserVisible"
-    title="选择图片"
   >
+    <span slot="title" class="el-page-header__content">选择图片</span>
     <el-tree
+      v-if="chooserVisible"
       :data="groups"
       node-key="id"
       lazy
@@ -24,10 +25,30 @@ import { CreateElement } from "vue";
 import { TreeNode } from "element-ui/types/tree";
 
 import api from "@/api/common";
+import { promiseTimeout } from "@/util/promise-util";
 import StoryBuilder from "@/config/StoryBuilder";
 import { WidgetType } from "@/config/WidgetType";
 import Page from "@/types/EditorPage";
 import { StoryWidget, widgetConfig } from "@/types/StoryWidget";
+
+const validImgSuffix = ["jpg", "jpeg", "png", "gif", "bmp"];
+
+/**
+ * 校验文件是否为图片类型
+ *
+ * @param fileName 文件名
+ */
+function isImageFile(fileName: string) {
+  // 获取后缀名下标
+  const suffixIndex = fileName.lastIndexOf(".");
+  if (suffixIndex === -1) return false;
+
+  // 文件后缀
+  const fileSuffix = fileName.slice(suffixIndex + 1);
+
+  // 校验后缀名
+  return validImgSuffix.includes(fileSuffix.toLowerCase());
+}
 
 @Component
 export default class ImageChooser extends Vue {
@@ -53,22 +74,83 @@ export default class ImageChooser extends Vue {
   }
 
   loadGroup(node: TreeNode<string, MateGroup>, resolve: Function) {
-    api.matelib.findAllDir(node.data.id).then(res => {
+    const parentId = node.data.id ? node.data.id : "0";
+    api.matelib.findAllDir(parentId).then(res => {
       resolve(res.result);
     });
   }
 
-  selectImage(data: MateGroup) {
-    if (data.type === 0 || !this.state.currentPage) return;
+  async selectImage(data: MateGroup) {
+    if (data.type === 0 || !this.state.currentPage || !this.state.data) return;
 
+    // 图片校验
+    if (!isImageFile(data.name)) {
+      (this as any).$message.warning("请选择图片文件");
+      return;
+    }
+
+    // 获取图片原始宽高
+    const { imgWidth, imgHeight } = await promiseTimeout(new Promise((resolve, reject) => {
+      let img = new Image();
+      img.onload = () => {
+        resolve({
+          imgWidth: img.width,
+          imgHeight: img.height
+        });
+      }
+
+      img.src = data.url as string;
+    }), 1000);
+
+    // 构建图片组件对象
     const imgWidget = StoryBuilder.buildWidget(WidgetType.IMAGE, {
       x: 0,
       y: 0,
       z: this.state.currentPage.widgets.length
     }) as StoryWidget<widgetConfig.Image>;
 
+    // 添加 URL
     imgWidget.config.url = data.url;
-    this.state.currentPage?.widgets.push(imgWidget);
+
+    // 成功获取宽高时，覆盖默认宽高
+    if (imgWidth && imgHeight) {
+      // 判断是否超出画布标准尺寸
+      const standardSize = this.state.data.config.standardSize;
+      const standardWidth = standardSize.width;
+      const standardHeight = standardSize.height;
+      // 不超出，直接设置宽高
+      if (imgWidth < standardWidth && imgHeight < standardHeight) {
+        imgWidget.config.size = {
+          width: imgWidth,
+          height: imgHeight
+        }
+      } else {
+        /**
+         * 图片尺寸超出画布
+         */
+        const widthScale = imgWidth / standardWidth;
+        const heightScale = imgHeight / standardHeight;
+
+        const imgScale = Math.max(widthScale, heightScale);
+
+        const scaledWidth = parseInt(`${imgWidth / imgScale}`);
+        const scaledHeight = parseInt(`${imgHeight / imgScale}`);
+
+        imgWidget.config.size = {
+          width: Math.min(scaledWidth, standardWidth),
+          height: Math.min(scaledHeight, standardHeight)
+        }
+      }
+    }
+
+    // 组件数组追加组件
+    this.state.currentPage.widgets.push(imgWidget);
+
+    // 选中当前组件
+    this.state.currentWidget = imgWidget;
+
+    // 关闭抽屉
+    this.chooserVisible = false;
   }
 
   treeNodeRender(
@@ -90,7 +172,9 @@ export default class ImageChooser extends Vue {
     if (group.type === 0) {
       return <i class="fa fa-folder folder-tree-icon"></i>;
     } else {
-      return <i class="fa fa-tachometer-alt dash-tree-icon"></i>;
+      const isImg = isImageFile(group.name);
+      const iconClass = isImg ? "fa-image" : "fa-file";
+      return <i class={`fa ${iconClass} file-tree-icon`}></i>;
     }
   }
 }
@@ -114,37 +198,5 @@ interface MateGroup {
 <style lang="scss">
 .image-chooser {
   user-select: none;
-
-  .el-container {
-    height: 100%;
-  }
-
-  .el-drawer:focus {
-    outline: none;
-  }
-
-  .el-page-header {
-    padding: 14px 4px;
-
-    &.first-level {
-      .el-page-header__left {
-        display: none;
-      }
-    }
-  }
-
-  .el-tree {
-    [class$="tree-icon"] {
-      padding-right: 8px;
-    }
-
-    .folder-tree-icon {
-      color: #ffe17b;
-    }
-
-    .dash-tree-icon {
-      color: #409eff;
-    }
-  }
 }
 </style>

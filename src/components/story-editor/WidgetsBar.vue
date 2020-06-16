@@ -1,11 +1,7 @@
 <template>
   <div class="widgets-bar">
     <!-- 文本 -->
-    <button
-      class="block-btn draggable"
-      draggable="true"
-      @dragstart="dragWidgetHandle($event, 'text')"
-    >
+    <button class="block-btn draggable" draggable="true" @dragstart="dragText">
       <i class="fa fa-i-cursor"></i>
     </button>
 
@@ -13,20 +9,14 @@
     <button class="block-btn" @click="openImageChooser">
       <i class="fa fa-images"></i>
     </button>
-    <image-chooser
-      v-if="imgChooserVisible"
-      :visible.sync="imgChooserVisible"
-    ></image-chooser>
+    <image-chooser :visible.sync="imgChooserVisible"></image-chooser>
 
     <!-- 仪表盘 -->
     <button class="block-btn" @click="openDashboardChooser">
       <!-- @dragstart="" -->
       <i class="fa fa-tachometer-alt"></i>
     </button>
-    <dashboard-chooser
-      v-if="dashChooserVisible"
-      :visible.sync="dashChooserVisible"
-    ></dashboard-chooser>
+    <dashboard-chooser :visible.sync="dashChooserVisible"></dashboard-chooser>
   </div>
 </template>
 
@@ -37,6 +27,7 @@ import { WidgetType } from "@/config/WidgetType";
 
 import ImageChooser from "@/components/story-editor/ImageChooser.vue";
 import DashboardChooser from "@/components/story-editor/DashboardChooser.vue";
+import { dragUtil } from "@/util/drag-util";
 
 @Component({
   components: {
@@ -73,8 +64,8 @@ export default class WidgetsBar extends Vue {
     this.dashChooserVisible = true;
   }
 
-  dragWidgetHandle(event: DragEvent, widgetType: WidgetType) {
-    event.dataTransfer?.setData("widgetType", widgetType);
+  dragText(event: DragEvent) {
+    dragUtil.putText(event);
   }
 }
 </script>

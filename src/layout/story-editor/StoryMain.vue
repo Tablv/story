@@ -1,6 +1,6 @@
 <template>
   <el-container class="story-main">
-    <el-container class="container">
+    <el-container class="story-container" :class="{ 'is-edit': editMode }">
       <!-- 顶部文本工具栏 -->
       <el-header height="70px">
         <tool-bar></tool-bar>
@@ -13,9 +13,14 @@
     </el-container>
 
     <!-- 侧边工具栏 -->
-    <el-aside class="widgets-aside" width="auto">
-      <widgets-bar></widgets-bar>
-    </el-aside>
+    <transition
+      enter-active-class="animated fadeInRight"
+      leave-active-class="animated fadeOutRight"
+    >
+      <el-aside v-if="editMode" class="widgets-aside" width="auto">
+        <widgets-bar></widgets-bar>
+      </el-aside>
+    </transition>
 
     <!-- 预览 -->
     <story-screen
@@ -51,6 +56,9 @@ export default class StoryMain extends Vue {
   @Inject()
   state!: Page.State;
 
+  @Inject()
+  getter!: Page.Getter;
+
   /**
    * 预览
    */
@@ -80,6 +88,10 @@ export default class StoryMain extends Vue {
   get screenScale() {
     return this.state.screenScale;
   }
+
+  get editMode() {
+    return this.getter.pageLockedByMe;
+  }
 }
 </script>
 
@@ -87,17 +99,36 @@ export default class StoryMain extends Vue {
 .story-main {
   width: 100%;
   height: 100%;
+  position: relative;
+  overflow-x: hidden;
 
-  .canvas-wrapper {
-    padding: 0 20px;
+  .story-container {
+    transition: padding 0.5s;
+    transition-delay: 0.1s;
+
+    &.is-edit {
+      padding-right: 84px;
+    }
+
+    .canvas-wrapper {
+      padding: 0 20px;
+    }
+
+    .story-canvas {
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 9px 0px;
+    }
   }
 
-  .story-canvas {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 9px 0px;
+  .animated {
+    transition-duration: 0.3s !important;
   }
-}
 
-.widgets-aside {
-  border-left: 1px solid #e6e6e6;
+  .widgets-aside {
+    border-left: 1px solid #e6e6e6;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    right: 0;
+  }
 }
 </style>
