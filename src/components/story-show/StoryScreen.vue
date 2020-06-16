@@ -1,12 +1,25 @@
 <template>
   <section v-if="visible" class="story-screen">
     <div class="story-slide-wrapper" :style="slideSize">
-      <story-slide
-        :page="currentPage"
-        :scale="scale"
-        @next-page="toNextPage"
-        @click.native="toNextPage"
-      />
+      <main class="slides-box">
+        <transition-group
+          enter-active-class="animated fadeInRight"
+          leave-active-class="animated fadeOutLeft"
+        >
+          <div
+            class="slide"
+            v-for="page in [ currentPage ]"
+            :key="page.id"
+          >
+            <story-slide
+              :page="page"
+              :scale="scale"
+              @next-page="toNextPage"
+              @click.native="toNextPage"
+            />
+          </div>
+        </transition-group>
+      </main>
 
       <nav class="slide-controls">
         <el-button
@@ -208,6 +221,19 @@ export default class StoryScreen extends Vue {
     margin: auto;
     width: 80%;
     height: 100%;
+
+    .slides-box {
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      .slide {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
 
     .slide-controls {
       position: absolute;
