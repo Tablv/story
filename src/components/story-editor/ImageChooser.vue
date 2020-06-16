@@ -90,17 +90,20 @@ export default class ImageChooser extends Vue {
     }
 
     // 获取图片原始宽高
-    const { imgWidth, imgHeight } = await promiseTimeout(new Promise((resolve, reject) => {
-      let img = new Image();
-      img.onload = () => {
-        resolve({
-          imgWidth: img.width,
-          imgHeight: img.height
-        });
-      }
+    const { imgWidth, imgHeight } = await promiseTimeout(
+      new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = () => {
+          resolve({
+            imgWidth: img.width,
+            imgHeight: img.height
+          });
+        };
 
-      img.src = data.url as string;
-    }), 1000);
+        img.src = data.url as string;
+      }),
+      1000
+    );
 
     // 构建图片组件对象
     const imgWidget = StoryBuilder.buildWidget(WidgetType.IMAGE, {
@@ -123,7 +126,7 @@ export default class ImageChooser extends Vue {
         imgWidget.config.size = {
           width: imgWidth,
           height: imgHeight
-        }
+        };
       } else {
         /**
          * 图片尺寸超出画布
@@ -139,7 +142,7 @@ export default class ImageChooser extends Vue {
         imgWidget.config.size = {
           width: Math.min(scaledWidth, standardWidth),
           height: Math.min(scaledHeight, standardHeight)
-        }
+        };
       }
     }
 

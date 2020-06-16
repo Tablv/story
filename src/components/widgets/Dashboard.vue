@@ -6,7 +6,8 @@
         title="仪表盘暂不可用"
         description="当前仪表盘暂不可用 请稍后重试"
         show-icon
-        :closable="false" />
+        :closable="false"
+      />
     </div>
     <chart-component
       ref="chartComponent"
@@ -146,7 +147,8 @@ export default class DashboardWidget extends Vue {
     #{$deepColor} 50%,
     #{$deepColor} 75%,
     #{$lightColor} 75%,
-    #{$lightColor} 0);
+    #{$lightColor} 0
+  );
 
   background-size: $size $size;
 }
@@ -159,13 +161,13 @@ export default class DashboardWidget extends Vue {
     display: flex;
     justify-content: center;
     align-items: center;
-    @include zebraLines(rgba(0,0,0,.1), rgba(0,0,0,.02));
+    @include zebraLines(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.02));
     background-color: white;
 
     .el-alert {
       width: 70%;
       border-radius: 6px;
-      background: rgba(255,255,255,0.6);
+      background: rgba(255, 255, 255, 0.6);
       backdrop-filter: saturate(180%) blur(20px);
     }
   }

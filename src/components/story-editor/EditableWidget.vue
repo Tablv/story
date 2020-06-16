@@ -3,7 +3,7 @@
     :h="widget.config.size.height"
     :x="widget.config.position.x"
     :y="widget.config.position.y" -->
-    <!-- :parent="true" -->
+  <!-- :parent="true" -->
   <vdr
     class="widget-box"
     :class="widgetClassName"
