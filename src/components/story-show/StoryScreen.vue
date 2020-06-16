@@ -6,11 +6,7 @@
           enter-active-class="animated fadeInRight"
           leave-active-class="animated fadeOutLeft"
         >
-          <div
-            class="slide"
-            v-for="page in [ currentPage ]"
-            :key="page.id"
-          >
+          <div class="slide" v-for="page in [currentPage]" :key="page.id">
             <story-slide
               :page="page"
               :scale="scale"
