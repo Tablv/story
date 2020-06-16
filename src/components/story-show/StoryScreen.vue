@@ -3,10 +3,16 @@
     <div class="story-slide-wrapper" :style="slideSize">
       <main class="slides-box">
         <transition-group
-          enter-active-class="animated fadeInRight"
-          leave-active-class="animated fadeOutLeft"
+          :enter-active-class="flickAnimation[0]"
+          :leave-active-class="flickAnimation[1]"
+          :duration="flickAnimationDuration"
         >
-          <div class="slide" v-for="page in [currentPage]" :key="page.id">
+          <div
+            class="slide"
+            :style="{ 'animation-duration': flickAnimationDuration + 'ms' }"
+            v-for="page in [currentPage]"
+            :key="page.id"
+          >
             <story-slide
               :page="page"
               :scale="scale"
@@ -124,10 +130,26 @@ export default class StoryScreen extends Vue {
     return this.pageIndex === this.maxPageIndex;
   }
 
+  /**
+   * 页面过渡动画
+   */
+  // 是否往下一页（用于计算前进后退）
+  flickNext = true;
+
+  flickAnimationDuration = 800;
+
+  get flickAnimation() {
+    return this.flickNext
+      ? ["animated fadeInRight", "animated fadeOutLeft"]
+      : ["animated fadeInLeft", "animated fadeOutRight"];
+  }
+
   toPrevPage() {
     if (this.noPrevPage) {
       return;
     }
+
+    this.flickNext = false;
 
     this.pageIndex--;
   }
@@ -137,6 +159,8 @@ export default class StoryScreen extends Vue {
       this.exit();
       return;
     }
+
+    this.flickNext = true;
 
     this.pageIndex++;
   }
