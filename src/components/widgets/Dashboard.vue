@@ -38,6 +38,7 @@ import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 import { WidgetPageConfig } from "../Widget.vue";
 import api from "@/api/common";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
+import { promiseTimeout } from "../../util/promise-util";
 
 @Component({
   mixins: [BorderConfigurable],
@@ -80,7 +81,7 @@ export default class DashboardWidget extends Vue {
         this.dashboardData = dashboard;
 
         // 分析仪表盘数据
-        return api.dashboard.analysis(dashboard);
+        return promiseTimeout(api.dashboard.analysis(dashboard), 1000);
       })
       .then(res => {
         this.analysisResult = res.result;
