@@ -38,7 +38,37 @@ import ChartUIService from "glaway-bi-component/src/interfaces/ChartUIService";
 import { WidgetPageConfig } from "../Widget.vue";
 import api from "@/api/common";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
-import { promiseTimeout } from "../../util/promise-util";
+import { promiseTimeout } from "@/util/promise-util";
+
+/**
+ * 仪表盘加载状态
+ */
+enum DashLoadStatus {
+  /**
+   * 加载中
+   */
+  loading,
+
+  /**
+   * 加载出错
+   */
+  loadError,
+
+  /**
+   * 分析中
+   */
+  analysising,
+
+  /**
+   * 分析出错
+   */
+  analysisError,
+  
+  /**
+   * 分析成功
+   */
+  analysisSuccess
+}
 
 @Component({
   mixins: [BorderConfigurable],
@@ -55,22 +85,57 @@ export default class DashboardWidget extends Vue {
 
   analysisResult: AnalysisResults | null = null;
 
-  loading = false;
-  loadError = false;
+  loadStatus: DashLoadStatus = DashLoadStatus.loading;
 
-  created() {
-    this.loading = true;
+  get loading() {
+    switch (this.loadStatus) {
+      case DashLoadStatus.loading:
+      case DashLoadStatus.analysising:
+        return true;
+    }
 
-    this.loadDashboard().finally(() => {
-      this.loading = false;
-    });
+    return false;
   }
 
-  loadDashboard(): Promise<void> {
+  get loadError() {
+    switch (this.loadStatus) {
+      case DashLoadStatus.loadError:
+      case DashLoadStatus.analysisError:
+        return true;
+    }
+
+    return false;
+  }
+
+  get errorFeedback() {
+    switch (this.loadStatus) {
+      case DashLoadStatus.loadError:
+        return {
+          title: "仪表盘不存在",
+          msg: "找不到当前仪表盘 请检查仪表盘是否存在"
+        };
+      case DashLoadStatus.analysisError: 
+        return {
+          title: "仪表盘暂不可用",
+          msg: "当前仪表盘暂不可用 请稍后重试"
+        };
+    }
+
+    return {
+      title: "错误",
+      msg: "请稍后重试"
+    }
+  }
+
+  created() {
+    this.loadDashboard();
+  }
+
+  async loadDashboard(): Promise<void> {
     const dashboardId = this.data.config.dashboardId;
     if (!dashboardId) return Promise.reject(new Error("仪表盘ID为空"));
 
-    return api.dashboard
+    const dashboard = await api.dashboard
       .findById(dashboardId)
       .then(res => {
         const serialized = res.result;
@@ -79,22 +144,28 @@ export default class DashboardWidget extends Vue {
         // 反序列化、赋值
         const dashboard = ObjectUtil.deserialize(serialized);
         this.dashboardData = dashboard;
-
-        // 分析仪表盘数据
-        return promiseTimeout(api.dashboard.analysis(dashboard), 1000);
+        return Promise.resolve(dashboard);
       })
-      .then(res => {
-        this.analysisResult = res.result;
-        this.loadError = false;
-
-        this.$nextTick(() => {
-          this.chartComponent?.initChart();
-          this.chartComponent?.renderChart();
-        });
-      })
-      .catch(err => {
-        this.loadError = true;
+      .catch(() => {
+        this.loadStatus = DashLoadStatus.loadError;
       });
+
+      if (!dashboard) return;
+
+      // 分析仪表盘数据
+      promiseTimeout(api.dashboard.analysis(dashboard), 1000)
+        .then(res => {
+          this.analysisResult = res.result;
+          this.loadStatus = DashLoadStatus.analysisSuccess;
+
+          this.$nextTick(() => {
+            this.chartComponent?.initChart();
+            this.chartComponent?.renderChart();
+          });
+        })
+        .catch(err => {
+          this.loadStatus = DashLoadStatus.analysisError;
+        });
   }
 
   get dashId(): string {

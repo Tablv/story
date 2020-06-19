@@ -75,7 +75,8 @@ export default class StorySlide extends Vue {
       left: `${position.x}px`,
       top: `${position.y}px`,
       width: `${size.width}px`,
-      height: `${size.height}px`
+      height: `${size.height}px`,
+      zIndex: widget.config.position.z
     };
   }
 }
