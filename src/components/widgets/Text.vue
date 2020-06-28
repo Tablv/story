@@ -10,7 +10,7 @@
     <span v-show="showPlaceholder" class="placeholder-tip">
       <span>双击输入文本</span>
     </span>
-    
+
     <div
       class="text-box"
       :class="{ 'edit-box': widgetEditable }"
@@ -28,7 +28,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Inject, Prop, Watch } from "vue-property-decorator";
+import {
+  Vue,
+  Component,
+  Provide,
+  Inject,
+  Prop,
+  Watch
+} from "vue-property-decorator";
 
 import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
@@ -58,13 +65,20 @@ export default class TextWidget extends Vue {
   }
 
   get showPlaceholder() {
-    return this.widgetConfig.pageEditMode && this.textValue === "" && !this.widgetEditable;
+    return (
+      this.widgetConfig.pageEditMode &&
+      this.textValue === "" &&
+      !this.widgetEditable
+    );
   }
 
   @Watch("widgetEditable")
   onEditableChange() {
     // 启用编辑模式时，设置文本编辑光标至末尾
-    if (this.widgetEditable) this.$nextTick(() => { this.setLastIndex() })
+    if (this.widgetEditable)
+      this.$nextTick(() => {
+        this.setLastIndex();
+      });
   }
 
   /**

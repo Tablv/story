@@ -63,7 +63,7 @@ enum DashLoadStatus {
    * 分析出错
    */
   analysisError,
-  
+
   /**
    * 分析成功
    */
@@ -114,7 +114,7 @@ export default class DashboardWidget extends Vue {
           title: "仪表盘不存在",
           msg: "找不到当前仪表盘 请检查仪表盘是否存在"
         };
-      case DashLoadStatus.analysisError: 
+      case DashLoadStatus.analysisError:
         return {
           title: "仪表盘暂不可用",
           msg: "当前仪表盘暂不可用 请稍后重试"
@@ -124,7 +124,7 @@ export default class DashboardWidget extends Vue {
     return {
       title: "错误",
       msg: "请稍后重试"
-    }
+    };
   }
 
   created() {
@@ -150,22 +150,22 @@ export default class DashboardWidget extends Vue {
         this.loadStatus = DashLoadStatus.loadError;
       });
 
-      if (!dashboard) return;
+    if (!dashboard) return;
 
-      // 分析仪表盘数据
-      promiseTimeout(api.dashboard.analysis(dashboard), 1000)
-        .then(res => {
-          this.analysisResult = res.result;
-          this.loadStatus = DashLoadStatus.analysisSuccess;
+    // 分析仪表盘数据
+    promiseTimeout(api.dashboard.analysis(dashboard), 1000)
+      .then(res => {
+        this.analysisResult = res.result;
+        this.loadStatus = DashLoadStatus.analysisSuccess;
 
-          this.$nextTick(() => {
-            this.chartComponent?.initChart();
-            this.chartComponent?.renderChart();
-          });
-        })
-        .catch(err => {
-          this.loadStatus = DashLoadStatus.analysisError;
+        this.$nextTick(() => {
+          this.chartComponent?.initChart();
+          this.chartComponent?.renderChart();
         });
+      })
+      .catch(err => {
+        this.loadStatus = DashLoadStatus.analysisError;
+      });
   }
 
   get dashId(): string {
