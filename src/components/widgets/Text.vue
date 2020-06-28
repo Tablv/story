@@ -1,28 +1,34 @@
 <template>
   <div class="text-widget" :style="borderStyle">
-    <textarea
+    <!-- <textarea
       v-if="widgetEditable"
       class="text-box edit-box"
       v-model="textValue"
       :readonly="!widgetEditable"
       :style="textStyle"
-    ></textarea>
-
-    <div v-else class="text-box preview-box">
-      <span v-show="showPlaceholder" class="placeholder-tip">
-        <span>双击输入文本</span>
-      </span>
+    ></textarea> -->
+    <span v-show="showPlaceholder" class="placeholder-tip">
+      <span>双击输入文本</span>
+    </span>
+    
+    <div
+      class="text-box"
+      :class="{ 'edit-box': widgetEditable }"
+      :style="[textStyle, previewAlignment]"
+    >
       <span
-        class="preview-text"
-        :style="[textStyle, previewAlignment]"
-        v-html="formatedText"
+        ref="innerText"
+        :contenteditable="widgetEditable"
+        class="inner-text"
+        v-html="textValue"
+        @blur="changeText"
       ></span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
+import { Vue, Component, Provide, Inject, Prop, Watch } from "vue-property-decorator";
 
 import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
@@ -40,6 +46,10 @@ export default class TextWidget extends Vue {
   @Inject()
   widgetConfig!: WidgetPageConfig;
 
+  get editBox(): HTMLSpanElement {
+    return this.$refs.innerText as HTMLSpanElement;
+  }
+
   /**
    * 可编辑状态
    */
@@ -48,7 +58,30 @@ export default class TextWidget extends Vue {
   }
 
   get showPlaceholder() {
-    return this.widgetConfig.pageEditMode && this.textValue === "";
+    return this.widgetConfig.pageEditMode && this.textValue === "" && !this.widgetEditable;
+  }
+
+  @Watch("widgetEditable")
+  onEditableChange() {
+    // 启用编辑模式时，设置文本编辑光标至末尾
+    if (this.widgetEditable) this.$nextTick(() => { this.setLastIndex() })
+  }
+
+  /**
+   * 设置文本编辑光标至末尾
+   */
+  setLastIndex() {
+    // 解决ff不获取焦点无法定位问题
+    this.editBox.focus();
+
+    // 创建range
+    const range = window.getSelection();
+
+    // range 选择editBox下所有子内容
+    range?.selectAllChildren(this.editBox);
+
+    // 光标移至最后
+    range?.collapseToEnd();
   }
 
   /**
@@ -62,8 +95,12 @@ export default class TextWidget extends Vue {
     this.data.config.value = value;
   }
 
-  get formatedText() {
-    return this.textValue.replace(/\n/g, "<br>");
+  // get formatedText() {
+  //   return this.textValue.replace(/\n/g, "<br>");
+  // }
+
+  changeText() {
+    this.textValue = this.editBox.innerHTML;
   }
 
   /**
@@ -128,31 +165,36 @@ export default class TextWidget extends Vue {
 
 <style lang="scss">
 .text-widget {
-  .text-box {
-    font-family: auto;
-    width: 100%;
-    height: 100%;
-  }
+  font-family: auto;
+  position: relative;
 
-  .edit-box {
-    border: none;
-    resize: none;
+  [contenteditable] {
     outline: none;
   }
 
-  .preview-box {
-    .placeholder-tip {
-      width: 100%;
-      height: 100%;
-      font-size: 20px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      color: #858585;
+  .placeholder-tip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #858585;
+  }
+
+  .text-box {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    &.edit-box {
+      cursor: text;
     }
 
-    .preview-text {
-      display: flex;
+    .inner-text {
       width: 100%;
       height: 100%;
     }
