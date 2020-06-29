@@ -1,6 +1,8 @@
 <template>
   <div class="img-widget" :style="borderStyle">
-    <el-image v-if="imgUrl" :src="imgUrl" fit="contain"></el-image>
+    <el-image v-if="imgUrl" :src="imgUrl" fit="contain">
+      <div slot="placeholder" class="el-image__error">正在加载...</div>
+    </el-image>
 
     <div class="placeholder-tip" v-else>
       <i class="fa fa-image tip-icon"></i>
@@ -39,6 +41,11 @@ export default class ImageWidget extends Vue {
     width: 100%;
     height: 100%;
     background-color: #fff;
+
+    .placeholder {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .placeholder-tip {

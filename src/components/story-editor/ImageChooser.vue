@@ -102,8 +102,11 @@ export default class ImageChooser extends Vue {
 
         img.src = data.url as string;
       }),
-      1000
-    );
+      3000
+    ).catch(err => {
+      (this as any).$message("请求超时");
+      console.error(err);
+    });
 
     // 构建图片组件对象
     const imgWidget = StoryBuilder.buildWidget(WidgetType.IMAGE, {

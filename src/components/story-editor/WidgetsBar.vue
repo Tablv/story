@@ -2,7 +2,7 @@
   <div class="widgets-bar">
     <!-- 文本 -->
     <button class="block-btn draggable" draggable="true" @dragstart="dragText">
-      <i class="fa fa-i-cursor"></i>
+      <i class="fa fa-font"></i>
     </button>
 
     <!-- 图片 -->

@@ -1,38 +1,12 @@
-<template>
-  <ul
-    v-if="visible"
-    v-clickoutside="closeMenu"
-    class="el-dropdown-menu el-popper gw-context-menu"
-    :class="menuSize ? 'el-dropdown-menu--' + menuSize : ''"
-    :style="positionStyle"
-  >
-    <li
-      v-for="(menu, index) in menuList"
-      :key="index"
-      :class="{
-        'is-disabled': menu.disabled,
-        'el-dropdown-menu__item--divided': menu.divided
-      }"
-      class="el-dropdown-menu__item"
-      @click="handler($event, menu.handle)"
-    >
-      <span>{{ menu.name }}</span>
-    </li>
-  </ul>
-</template>
-
-<script lang="ts">
+<script lang="tsx">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { CreateElement, VNode } from "vue";
+import { CreateElement, VNode, VNodeData } from "vue";
 import clickoutside from "element-ui/src/utils/clickoutside";
 
 @Component({
   directives: { clickoutside }
 })
 export default class ContextMenu extends Vue {
-  @Prop()
-  list!: Array<ContextMenuItem>;
-
   @Prop({ default: false })
   visible!: boolean;
 
@@ -46,41 +20,84 @@ export default class ContextMenu extends Vue {
   @Prop({ default: true })
   hideOnClick!: boolean;
 
-  @Prop()
-  size!: undefined | "medium" | "small" | "mini";
+  render(h: CreateElement) {
+    if (!this.visible) return null;
 
-  get menuSize() {
-    return this.size || ((this as any).$ELEMENT || {}).size;
+    return (
+      <ul
+        v-clickoutside={this.closeMenu}
+        class="gw-context-menu"
+        style={this.positionStyle}
+      >
+        {this.menuItemsRenderer(h)}
+      </ul>
+    );
   }
 
-  get menuList() {
-    return this.list || this.slotList;
-  }
+  menuItemsRenderer(h: CreateElement): Array<VNode> {
+    const list = this.$slots.default?.reduce(
+      (nodesList: Array<VNode>, node: VNode) => {
+        // <li
+        //     v-for="(menu, index) in menuList"
+        //     :key="index"
+        //     :class="{
+        //       'is-disabled': menu.disabled,
+        //       'el-dropdown-menu__item--divided': menu.divided
+        //     }"
+        //     class="el-dropdown-menu__item"
+        //     @click="handler($event, menu.handle)"
+        //   >
+        //     <span>{{ menu.name }}</span>
+        //   </li>
 
-  get slotList(): Array<ContextMenuItem> {
-    const list = this.$slots.default?.map((node: VNode) => {
-      return {
-        name: node.children?.map((child: VNode) => child.text).join(""),
-        divided: node.data?.attrs?.divided !== undefined,
-        disabled: node.data?.attrs?.disabled !== undefined,
-        handle: (e: MouseEvent) => {
-          const clickEvents = node.data?.on?.click;
-          if (clickEvents) {
-            const callbacks =
-              typeof clickEvents === "function" ? [clickEvents] : clickEvents;
-            callbacks.forEach((callback: Function) => {
-              callback.apply(node.context, e);
-            });
+        // return {
+        //   name: node.children?.map((child: VNode) => child.text).join(""),
+        //   divided: node.data?.attrs?.divided !== undefined,
+        //   disabled: node.data?.attrs?.disabled !== undefined,
+        //   handle: (e: MouseEvent) => {
+        //     const clickEvents = node.data?.on?.click;
+        //     if (clickEvents) {
+        //       const callbacks =
+        //         typeof clickEvents === "function" ? [clickEvents] : clickEvents;
+        //       callbacks.forEach((callback: Function) => {
+        //         callback.apply(node.context, e);
+        //       });
+        //     }
+        //   }
+        // };
+        const $data = node.data as VNodeData;
+        const $attrs = $data?.attrs;
+
+        // 添加className
+        $data.class = $data.class ? ($data.class += " menu-item") : "menu-item";
+
+        // VNode 处理
+        if ($data && $attrs) {
+          if ($attrs?.hasOwnProperty("divided")) {
+            delete $attrs.divided;
+            nodesList.push(this.menuDividerRenderer(h));
+          }
+
+          if ($attrs?.hasOwnProperty("disabled")) {
+            $data.class += " is-disabled";
           }
         }
-      };
-    }) as Array<ContextMenuItem> | undefined;
+
+        // 代理事件
+        this.eventProxyHandler(node.data as VNode, node.context as Vue);
+
+        nodesList.push(node);
+
+        return nodesList;
+      },
+      []
+    );
 
     return list || [];
   }
 
-  created() {
-    const a = this.slotList;
+  menuDividerRenderer(h: CreateElement) {
+    return <li class="menu-item-divider"></li>;
   }
 
   get positionStyle() {
@@ -90,9 +107,31 @@ export default class ContextMenu extends Vue {
     };
   }
 
-  handler(event: Event, handle: Function) {
-    handle && handle(event);
+  /**
+   * 事件代理
+   */
+  eventProxyHandler(data: VNodeData, context: Vue) {
+    const events = data.on;
+    if (!events) return;
 
+    Object.entries(events).forEach(([eventName, fn]) => {
+      const originEvents =
+        typeof events[eventName] === "function"
+          ? [events[eventName]]
+          : (events[eventName] as Array<Function>);
+
+      events[eventName] = () => {
+        debugger;
+        originEvents.forEach((event: any) => {
+          event.call(context);
+        });
+
+        this.clickPostHandle();
+      };
+    });
+  }
+
+  clickPostHandle() {
     if (this.hideOnClick) {
       this.closeMenu();
     }
@@ -106,14 +145,43 @@ export default class ContextMenu extends Vue {
     this.$emit("update:visible", false);
   }
 }
-
-export interface ContextMenuItem {
-  name: string;
-
-  divided?: boolean;
-
-  disabled?: boolean;
-
-  handle: Function;
-}
 </script>
+
+<style lang="scss">
+// background-color: rgb(13,118,253);
+//     color: #fff;
+
+.gw-context-menu {
+  position: absolute;
+  background-color: rgba(236, 236, 236, 0.6);
+  backdrop-filter: blur(20px);
+  user-select: none;
+  padding: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 1px 2px 10px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  z-index: 3000;
+
+  .menu-item {
+    list-style: none;
+    margin: 0;
+    line-height: 27px;
+    padding: 0 15px;
+    font-size: 13px;
+    color: #4a4b50;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #0d76fd;
+      color: #fff;
+    }
+  }
+
+  .menu-item-divider {
+    height: 1px;
+    background: rgba(219, 219, 219, 0.6);
+    margin: 4px 6px 2px;
+    backdrop-filter: blur(10px);
+  }
+}
+</style>

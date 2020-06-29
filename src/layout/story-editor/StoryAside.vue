@@ -36,7 +36,7 @@ import draggable from "vuedraggable";
 import Page from "@/types/EditorPage";
 import StoryBuilder from "@/config/StoryBuilder";
 import PageThumbnail from "@/components/PageThumbnail.vue";
-import ContextMenu, { ContextMenuItem } from "@/components/ContextMenu.vue";
+import ContextMenu from "@/components/ContextMenu.vue";
 import ObjectUtil from "glaway-bi-util/ObjectUtil";
 import UUID from "glaway-bi-util/UUID";
 import { StoryPage } from "@/types/Story";
