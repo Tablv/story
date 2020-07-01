@@ -21,10 +21,12 @@ export function getCanvasScale(
 
   // 屏幕缩放 取最小值
   let screenScale = Math.min(widthScale, heightScale);
+
   // 取后6位
   screenScale = parseFloat(screenScale.toFixed(6));
 
-  return screenScale;
+  // 防止负数
+  return Math.max(screenScale, 0.01);
 }
 
 /**
@@ -49,7 +51,8 @@ export function getSlideScale(config: ContainerConfig) {
   // 取后6位
   slideScale = parseFloat(slideScale.toFixed(6));
 
-  return slideScale;
+  // 防止负数
+  return Math.max(slideScale, 0.01);
 }
 
 /**

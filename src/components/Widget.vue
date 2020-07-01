@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="tsx">
 import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/EditorPage";
 import { CreateElement } from "vue";
@@ -6,6 +6,9 @@ import text from "./widgets/Text.vue";
 import img from "./widgets/Image.vue";
 import dashboard from "./widgets/Dashboard.vue";
 import { StoryWidget } from "@/types/StoryWidget";
+
+import BorderConfigurable from "./widgets/style-mixins/Border";
+import BackgroundConfigurable from "./widgets/style-mixins/Background";
 
 /**
  * 组件页面配置项（Provide/Inject 注入）
@@ -27,7 +30,9 @@ export interface WidgetPageConfig {
   scale: number;
 }
 
-@Component
+@Component({
+  mixins: [BorderConfigurable, BackgroundConfigurable]
+})
 export default class Widget extends Vue {
   @Prop()
   data!: StoryWidget<any>;
@@ -41,13 +46,16 @@ export default class Widget extends Vue {
 
   render(h: CreateElement) {
     const component = this.widgetRegistry[this.data.type];
-    if (component)
-      return h(component, {
-        class: ["widget-item"],
-        props: {
-          data: this.data
-        }
-      });
+    if (!component) return null;
+
+    return (
+      <component
+        class="widget-item"
+        id={"widget-" + this.data.id}
+        data={this.data}
+        style={[(this as any).borderStyle, (this as any).backgroundStyle]}
+      ></component>
+    );
   }
 }
 </script>

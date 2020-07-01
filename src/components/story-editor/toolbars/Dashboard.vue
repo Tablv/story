@@ -2,6 +2,9 @@
   <div class="dash-tool-bar">
     <!-- 边框 -->
     <border-style :data="widget.config.border"></border-style>
+
+    <!-- 背景 -->
+    <background-style :data="widget.config.background"></background-style>
   </div>
 </template>
 
@@ -11,10 +14,12 @@ import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
 import BorderStyle from "./common/BorderStyle.vue";
+import BackgroundStyle from "./common/BackgroundStyle.vue";
 
 @Component({
   components: {
-    BorderStyle
+    BorderStyle,
+    BackgroundStyle
   }
 })
 export default class DashToolBar extends Vue {
@@ -26,11 +31,3 @@ export default class DashToolBar extends Vue {
   }
 }
 </script>
-
-<style lang="scss">
-.dash-tool-bar {
-  > * + * {
-    margin-left: 10px;
-  }
-}
-</style>

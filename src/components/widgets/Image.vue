@@ -1,5 +1,5 @@
 <template>
-  <div class="img-widget" :style="borderStyle">
+  <div class="img-widget">
     <el-image v-if="imgUrl" :src="imgUrl" fit="contain">
       <div slot="placeholder" class="el-image__error">正在加载...</div>
     </el-image>
@@ -16,12 +16,11 @@ import { Vue, Component, Provide, Inject, Prop } from "vue-property-decorator";
 import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
-import BorderConfigurable from "./mixins/BorderConfigurable";
 import { WidgetPageConfig } from "../Widget.vue";
+import BorderConfigurable from "./style-mixins/Border";
+import BackgroundConfigurable from "./style-mixins/Background";
 
-@Component({
-  mixins: [BorderConfigurable]
-})
+@Component({})
 export default class ImageWidget extends Vue {
   @Prop()
   data!: StoryWidget<widgetConfig.Image>;

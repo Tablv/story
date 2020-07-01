@@ -1,5 +1,5 @@
 <template>
-  <div class="dash-widget" v-loading="loading" :style="borderStyle">
+  <div class="dash-widget" v-loading="loading">
     <div v-if="loadError" class="error-mask">
       <el-alert
         type="error"
@@ -30,7 +30,6 @@ import {
 import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
-import BorderConfigurable from "./mixins/BorderConfigurable";
 import ChartComponent from "glaway-bi-component/src/components/ChartComponent.vue";
 import { AnalysisResults } from "glaway-bi-model/types/AnalysisResults";
 import Dashboard from "glaway-bi-model/view/dashboard/Dashboard";
@@ -71,7 +70,6 @@ enum DashLoadStatus {
 }
 
 @Component({
-  mixins: [BorderConfigurable],
   components: {
     ChartComponent
   }

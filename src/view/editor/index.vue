@@ -196,6 +196,7 @@ export default class StoryEditor extends Vue {
 
     .aside {
       border-right: 1px solid #e6e6e6;
+      overflow: hidden;
     }
 
     .main {

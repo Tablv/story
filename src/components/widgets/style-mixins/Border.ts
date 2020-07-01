@@ -20,9 +20,10 @@ export default class BorderConfigurable extends Vue {
     const borderProps = this.borderConfig.props;
 
     if (this.borderConfig.enable && borderProps) {
-      const { width, style, color } = borderProps;
+      const { width, style, color, radius } = borderProps;
       return {
-        border: `${width}px ${style} ${color}`
+        border: `${width}px ${style} ${color}`,
+        borderRadius: `${radius}px`
       };
     }
 

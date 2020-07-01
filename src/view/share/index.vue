@@ -17,25 +17,19 @@
 
 <script lang="ts">
 import { Component, Vue, Watch, Provide } from "vue-property-decorator";
-import ObjectUtil from "glaway-bi-util/ObjectUtil";
-import UUID from "glaway-bi-util/UUID";
-import PathUtil from "glaway-bi-util/PathUtil";
-import Page from "@/types/EditorPage";
+// import ObjectUtil from "glaway-bi-util/ObjectUtil";
+// import UUID from "glaway-bi-util/UUID";
+// import PathUtil from "glaway-bi-util/PathUtil";
+// import Page from "@/types/EditorPage";
 
-import StoryHeader from "@/layout/story-share/StoryHeader.vue";
-import StoryAside from "@/layout/story-share/StoryAside.vue";
-import StoryMain from "@/layout/story-share/StoryMain.vue";
-import { StoryPage, StoryContainer } from "@/types/Story";
+// import StoryHeader from "@/layout/story-share/StoryHeader.vue";
+// import StoryAside from "@/layout/story-share/StoryAside.vue";
+// import StoryMain from "@/layout/story-share/StoryMain.vue";
+// import { StoryPage, StoryContainer } from "@/types/Story";
 // import { pageState, pageGetter, pageAction } from "@/store/ShareStore";
-import StoryBuilder from "@/config/StoryBuilder";
+// import StoryBuilder from "@/config/StoryBuilder";
 
-@Component({
-  components: {
-    StoryHeader,
-    StoryAside,
-    StoryMain
-  }
-})
+@Component({})
 export default class StoryShare extends Vue {
   // @Provide()
   // state: Page.State = pageState;

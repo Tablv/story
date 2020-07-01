@@ -32,7 +32,7 @@ export namespace widgetConfig {
   };
 
   /**
-   *
+   * 元素尺寸
    */
   export type Size = {
     width: number;
@@ -40,13 +40,24 @@ export namespace widgetConfig {
   };
 
   /**
-   *
+   * 元素边框
    */
   export type Border = {
     enable: boolean;
     props: {
       width: number;
       style: "dotted" | "solid" | "double" | "dashed";
+      color: string; // Hex
+      radius: number;
+    } | null;
+  };
+
+  /**
+   * 元素背景
+   */
+  export type Background = {
+    enable: boolean;
+    props: {
       color: string; // Hex
     } | null;
   };
@@ -69,6 +80,11 @@ export namespace widgetConfig {
      * 边框
      */
     border: Border;
+
+    /**
+     * 背景
+     */
+    background: Background;
   };
 
   /**

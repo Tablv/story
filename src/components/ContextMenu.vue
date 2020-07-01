@@ -121,7 +121,6 @@ export default class ContextMenu extends Vue {
           : (events[eventName] as Array<Function>);
 
       events[eventName] = () => {
-        debugger;
         originEvents.forEach((event: any) => {
           event.call(context);
         });
@@ -157,8 +156,8 @@ export default class ContextMenu extends Vue {
   backdrop-filter: blur(20px);
   user-select: none;
   padding: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 1px 2px 10px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e4e4e4;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
   border-radius: 6px;
   z-index: 3000;
 

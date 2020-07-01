@@ -1,9 +1,14 @@
 <template>
   <!-- 边框 -->
-  <el-popover placement="bottom" width="180" trigger="click">
+  <el-popover
+    popper-class="style-config-popover"
+    placement="bottom"
+    width="180"
+    trigger="click"
+  >
     <el-button slot="reference" icon="fa fa-border-style"></el-button>
 
-    <el-form class="border-style-form" label-width="70px">
+    <el-form class="style-form" label-width="70px">
       <el-form-item label="边框">
         <el-switch
           v-model="border.enable"
@@ -12,43 +17,55 @@
         ></el-switch>
       </el-form-item>
 
-      <div v-if="borderProps">
-        <el-form-item label="宽度">
-          <!-- 宽度 -->
-          <el-slider
-            v-model="borderProps.width"
-            class="border-width-slider"
-            :min="1"
-            :max="10"
-          ></el-slider>
-        </el-form-item>
+      <el-collapse-transition>
+        <div v-if="borderProps">
+          <el-form-item label="宽度">
+            <!-- 宽度 -->
+            <el-slider
+              v-model="borderProps.width"
+              class="width-slider"
+              :min="1"
+              :max="10"
+            ></el-slider>
+          </el-form-item>
 
-        <el-form-item label="样式">
-          <!-- 样式 -->
-          <el-select
-            v-model="borderProps.style"
-            placeholder="请选择边框样式"
-            popper-class="border-style-selector"
-          >
-            <el-option
-              v-for="option in borderStyleOptions"
-              :key="option.value"
-              :value="option.value"
-              :label="option.label"
+          <el-form-item label="样式">
+            <!-- 样式 -->
+            <el-select
+              v-model="borderProps.style"
+              placeholder="请选择边框样式"
+              popper-class="border-style-selector"
             >
-              <span
-                class="border-style-example"
-                :style="{ 'border-style': option.value }"
-              ></span>
-            </el-option>
-          </el-select>
-        </el-form-item>
+              <el-option
+                v-for="option in borderStyleOptions"
+                :key="option.value"
+                :value="option.value"
+                :label="option.label"
+              >
+                <span
+                  class="border-style-example"
+                  :style="{ 'border-style': option.value }"
+                ></span>
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="颜色">
-          <!-- 颜色 -->
-          <el-color-picker v-model="borderProps.color"></el-color-picker>
-        </el-form-item>
-      </div>
+          <el-form-item label="颜色">
+            <!-- 颜色 -->
+            <el-color-picker v-model="borderProps.color"></el-color-picker>
+          </el-form-item>
+
+          <el-form-item label="圆角">
+            <!-- 圆角 -->
+            <el-slider
+              v-model="borderProps.radius"
+              class="width-slider"
+              :min="0"
+              :max="100"
+            ></el-slider>
+          </el-form-item>
+        </div>
+      </el-collapse-transition>
     </el-form>
   </el-popover>
 </template>
@@ -101,30 +118,6 @@ export default class BorderStyle extends Vue {
 </script>
 
 <style lang="scss">
-$sliderBtnSize: 8px;
-
-.border-style-form {
-  .el-form-item {
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .el-form-item__label {
-      padding-right: 30px;
-    }
-  }
-
-  .border-width-slider {
-    .el-slider__button {
-      width: $sliderBtnSize;
-      height: $sliderBtnSize;
-    }
-    .el-slider__runway {
-      margin: 13px 0;
-    }
-  }
-}
-
 .border-style-selector {
   .border-style-example {
     display: inline-block;

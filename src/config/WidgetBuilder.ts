@@ -23,20 +23,39 @@ export class WidgetBuilder {
     return configBuilder();
   }
 
+  /**
+   * 构建元素边框
+   *
+   * @param enable 是否启用
+   */
   public buildBorder(enable: boolean): widgetConfig.Border {
-    return enable
-      ? {
-          enable: true,
-          props: {
+    return {
+      enable,
+      props: enable
+        ? {
             width: 1,
             style: "solid",
-            color: "#000"
+            color: "#000",
+            radius: 0
           }
-        }
-      : {
-          enable: false,
-          props: null
-        };
+        : null
+    };
+  }
+
+  /**
+   * 构建元素背景
+   *
+   * @param enable 是否启用
+   */
+  public buildBackground(enable: boolean): widgetConfig.Background {
+    return {
+      enable,
+      props: enable
+        ? {
+            color: "#fff"
+          }
+        : null
+    };
   }
 
   private widgetConfigBuilders: { [type: string]: Function } = {
@@ -44,6 +63,7 @@ export class WidgetBuilder {
       return {
         position: this.position as widgetConfig.Position,
         border: this.buildBorder(false),
+        background: this.buildBackground(false),
         size: {
           width: 400,
           height: 100
@@ -66,6 +86,7 @@ export class WidgetBuilder {
       return {
         position: this.position as widgetConfig.Position,
         border: this.buildBorder(false),
+        background: this.buildBackground(true),
         size: {
           width: 400,
           height: 400
@@ -77,6 +98,7 @@ export class WidgetBuilder {
       return {
         position: this.position as widgetConfig.Position,
         border: this.buildBorder(false),
+        background: this.buildBackground(true),
         size: {
           width: 600,
           height: 400

@@ -1,27 +1,23 @@
 <template>
   <div class="story-aside">
-    <div class="thumbnail-list" v-if="state.data">
-      <!-- <draggable class="draggable" v-model="pages" :animation="200"> -->
-      <div
-        class="thumbnail-item"
-        v-for="page in pages"
-        :key="page.id"
-        @contextmenu.prevent="openMenu($event, page)"
-      >
-        <page-thumbnail :data="page" @select-story="setCurrentPage" />
-      </div>
-      <!-- </draggable> -->
-    </div>
-
-    <div class="thumbnail-container add-page-box">
-      <div class="thumbnail-box" @click="addPage">
-        <div class="thumbnail-main thumbnail-btn-box">
-          <button class="add-btn">
-            <i class="fa fa-plus"></i>
-          </button>
-        </div>
-      </div>
-    </div>
+    <el-container class="layout-container">
+      <el-header class="new-page-box" height="auto">
+        <el-button class="new-page-btn" @click="addPage">
+          <span>添加故事页</span>
+        </el-button>
+      </el-header>
+      <el-main class="thumbnail-list" v-if="state.data">
+        <!-- <draggable class="draggable" v-model="pages" :animation="200"> -->
+        <page-thumbnail
+          v-for="page in pages"
+          :key="page.id"
+          :data="page"
+          @contextmenu.native.prevent="openMenu($event, page)"
+          @select-story="setCurrentPage"
+        />
+        <!-- </draggable> -->
+      </el-main>
+    </el-container>
 
     <context-menu :visible.sync="menuVisible" :position="position">
       <li @click="copyPage">复制本页</li>
@@ -134,6 +130,11 @@ export default class StoryAside extends Vue {
   }
 
   copyPage() {
+    if (this.currentOperationPage.lockUser) {
+      (this as any).$message.warning("该故事页正在编辑中 无法完成复制");
+      return;
+    }
+
     if (this.state.data?.pages) {
       const lastIndex = this.state.data.pages.length - 1;
 
@@ -144,11 +145,17 @@ export default class StoryAside extends Vue {
       api.storyPage
         .copy(newPage)
         .then(async res => {
-          (this as any).$message.success("已复制页面");
+          // (this as any).$message.success("已复制页面");
           const sortNum = newPage.sortNum;
           const newSortNum = res.result;
+
+          // 不相等时，刷新页面
           if (newSortNum !== sortNum) {
             this.state.data = await this.action.loadStory(this.state.groupId);
+
+            this.state.data.pages.every(
+              page => page.id !== this.state.currentPage?.id
+            );
           }
 
           this.state.data?.pages.splice(lastIndex + 1, 0, newPage);
@@ -175,7 +182,7 @@ export default class StoryAside extends Vue {
     api.storyPage
       .remove(this.currentOperationPage.id)
       .then(async () => {
-        (this as any).$message.success("已删除页面");
+        // (this as any).$message.success("已删除页面");
 
         this.state.data = await this.action.loadStory(this.state.groupId);
 
@@ -205,10 +212,22 @@ $themeColor: (
 $thumbnailGap: 24px;
 
 .story-aside {
-  margin: $thumbnailGap 0;
   user-select: none;
+  height: 100%;
+
+  .layout-container {
+    height: 100%;
+  }
+
+  .new-page-box {
+    text-align: center;
+    padding: 20px 10px 0;
+  }
 
   .thumbnail-list {
+    padding: $thumbnailGap 0;
+    overflow: auto;
+
     .thumbnail-item {
       display: flex;
       justify-content: center;
@@ -218,41 +237,6 @@ $thumbnailGap: 24px;
       & + .thumbnail-item {
         margin-top: $thumbnailGap;
       }
-    }
-  }
-
-  .add-page-box {
-    margin-top: $thumbnailGap;
-  }
-
-  .thumbnail-btn-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .add-btn {
-      width: $addBtnSize;
-      height: $addBtnSize;
-      cursor: inherit;
-      border-radius: 50%;
-      background-color: transparent;
-      color: map-get($themeColor, normal);
-      border: 2px solid map-get($themeColor, normal);
-      transition: color 0.2s, border 0.2s;
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    &:hover .add-btn {
-      color: map-get($themeColor, hover);
-      border: 2px solid map-get($themeColor, hover);
-    }
-
-    &:active .add-btn {
-      color: map-get($themeColor, active);
-      border: 2px solid map-get($themeColor, active);
     }
   }
 }

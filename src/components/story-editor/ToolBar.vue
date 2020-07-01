@@ -130,7 +130,16 @@ export default class ToolBar extends Vue {
 
     return (
       <div class="tool-bar">
-        <toolbarInner class="tool-bar-inner" />
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          duration="200"
+        >
+          <toolbarInner
+            class="tool-bar-inner"
+            style={{ animationDuration: "200ms" }}
+          />
+        </transition>
       </div>
     );
   }
@@ -184,35 +193,5 @@ export default class ToolBar extends Vue {
 </script>
 
 <style lang="scss">
-.tool-bar-wrapper {
-  height: 100%;
-  overflow: hidden;
-
-  .tool-bar {
-    min-width: 700px;
-  }
-
-  .tool-bar-inner {
-    width: 100%;
-    height: 100%;
-    user-select: none;
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    .label-text {
-      margin-right: 6px;
-    }
-  }
-
-  .btn-group {
-    .save-button.is-disabled {
-      &,
-      &:focus,
-      &:hover {
-        cursor: default;
-      }
-    }
-  }
-}
+@import "./toolbar";
 </style>

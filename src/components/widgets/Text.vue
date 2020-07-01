@@ -1,12 +1,5 @@
 <template>
-  <div class="text-widget" :style="borderStyle">
-    <!-- <textarea
-      v-if="widgetEditable"
-      class="text-box edit-box"
-      v-model="textValue"
-      :readonly="!widgetEditable"
-      :style="textStyle"
-    ></textarea> -->
+  <div class="text-widget">
     <span v-show="showPlaceholder" class="placeholder-tip">
       <span>双击输入文本</span>
     </span>
@@ -15,12 +8,15 @@
       class="text-box"
       :class="{ 'edit-box': widgetEditable }"
       :style="[textStyle, previewAlignment]"
+      @click="setLastIndex"
     >
       <span
         ref="innerText"
         :contenteditable="widgetEditable"
         class="inner-text"
         v-html="textValue"
+        @click.stop
+        @paste.prevent="onPaste"
         @blur="changeText"
       ></span>
     </div>
@@ -40,12 +36,9 @@ import {
 import Page from "@/types/EditorPage";
 import { widgetConfig, StoryWidget } from "@/types/StoryWidget";
 import { WidgetType } from "@/config/WidgetType";
-import BorderConfigurable from "./mixins/BorderConfigurable";
 import { WidgetPageConfig } from "../Widget.vue";
 
-@Component({
-  mixins: [BorderConfigurable]
-})
+@Component({})
 export default class TextWidget extends Vue {
   @Prop()
   data!: StoryWidget<widgetConfig.TextArea>;
@@ -96,6 +89,13 @@ export default class TextWidget extends Vue {
 
     // 光标移至最后
     range?.collapseToEnd();
+  }
+
+  onPaste(event: ClipboardEvent) {
+    const text = event.clipboardData?.getData("text/plain");
+    if (!text) return;
+
+    document.execCommand("insertText", false, text);
   }
 
   /**
@@ -181,6 +181,7 @@ export default class TextWidget extends Vue {
 .text-widget {
   font-family: auto;
   position: relative;
+  overflow: visible !important;
 
   [contenteditable] {
     outline: none;
@@ -210,7 +211,7 @@ export default class TextWidget extends Vue {
 
     .inner-text {
       width: 100%;
-      height: 100%;
+      text-decoration: inherit;
     }
   }
 }
